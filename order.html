@@ -24,7 +24,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background-color: var(--cream); color: var(--primary); overflow-x: hidden; }
 
-        /* --- NAVBAR AREA --- */
+        /* --- NAVBAR AREA (Desktop & Mobile) --- */
         header {
             background: var(--white);
             position: sticky;
@@ -41,92 +41,81 @@
         .logo { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--primary); text-decoration: none; }
         .logo span { color: var(--accent); }
         
-        /* Desktop Links */
+        /* Nav Links (Laptop) */
         .nav-links { display: flex; gap: 35px; list-style: none; align-items: center; }
-        .nav-links a { text-decoration: none; color: var(--primary); font-weight: 500; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+        .nav-links a { text-decoration: none; color: var(--primary); font-weight: 500; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
         .nav-links a:hover, .nav-links a.active { color: var(--accent); }
 
         /* Mobile Dot Menu */
         .menu-dots { display: none; font-size: 1.5rem; cursor: pointer; color: var(--primary); padding: 5px; }
 
         /* --- CONTAINER --- */
-        .container { padding: 40px 8%; max-width: 1200px; margin: auto; min-height: 100vh; }
-        .section-title { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 25px; display: flex; align-items: center; gap: 15px; }
+        .container { padding: 40px 8%; max-width: 1200px; margin: auto; min-height: 80vh; }
+        .section-title { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 30px; display: flex; align-items: center; gap: 15px; }
         .section-title i { color: var(--accent); }
 
-        /* --- 1. TRACKING ACTIVE ORDERS (PESANAN YANG SEDANG BERJALAN) --- */
-        #tracking-container { margin-bottom: 60px; display: none; }
+        /* --- 1. TRACKING AREA (PESANAN AKTIF) --- */
+        #tracking-section { margin-bottom: 60px; display: none; }
         .track-card {
             background: white;
-            padding: 30px;
+            padding: 35px;
             border-radius: 30px;
             box-shadow: var(--shadow);
             border-left: 10px solid var(--accent);
-            margin-bottom: 25px;
+            margin-bottom: 30px;
             position: relative;
             animation: slideIn 0.5s ease;
         }
         .track-card.is-ready { border-left-color: var(--success); background: #fafffa; }
         
         .track-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
-        .track-info h4 { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin-bottom: 5px; }
-        .track-info small { color: #888; font-weight: 500; }
+        .track-info h4 { font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 5px; }
+        .track-info small { color: #888; font-weight: 600; text-transform: uppercase; }
 
-        .status-badge { padding: 6px 18px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .status-badge { padding: 8px 20px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
         .st-waiting { background: #fff3e0; color: #e65100; }
         .st-acc { background: #e3f2fd; color: #1976d2; }
         .st-ready { background: #e8f5e9; color: #2e7d32; }
 
-        .track-items-list { font-size: 0.9rem; color: #555; margin: 15px 0; padding-left: 20px; line-height: 1.8; }
-        .time-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--primary); color: white; padding: 10px 20px; border-radius: 12px; font-weight: 600; font-size: 0.9rem; margin-top: 10px; }
+        .track-items { font-size: 0.95rem; color: #555; margin: 20px 0; padding-left: 20px; line-height: 1.8; }
+        .time-badge { display: inline-flex; align-items: center; gap: 10px; background: var(--primary); color: white; padding: 12px 25px; border-radius: 15px; font-weight: 600; font-size: 0.95rem; }
         
-        /* Ceklis Siap Antar */
-        .check-icon { position: absolute; right: 30px; bottom: 30px; font-size: 4rem; color: var(--success); opacity: 0; transition: 0.5s; }
-        .track-card.is-ready .check-icon { opacity: 1; animation: popCheck 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        /* Ikon Ceklis Ready */
+        .check-icon { position: absolute; right: 40px; bottom: 40px; font-size: 5rem; color: var(--success); opacity: 0; transition: 0.5s; pointer-events: none; }
+        .track-card.is-ready .check-icon { opacity: 0.8; animation: popCheck 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
         /* --- 2. KERANJANG BARU (SHOPPING CART) --- */
         .cart-wrapper { display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; }
         .cart-card { background: white; padding: 35px; border-radius: 30px; box-shadow: var(--shadow); }
         
-        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #f0f0f0; animation: fadeIn 0.4s ease; }
-        .cart-item-info strong { display: block; font-size: 1.1rem; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; border-bottom: 1px solid #f0f0f0; animation: fadeIn 0.4s ease; }
+        .cart-item-info strong { display: block; font-size: 1.1rem; color: var(--primary); }
         .cart-item-info span { color: var(--accent); font-weight: 700; }
         
-        .btn-delete { color: #ddd; background: none; border: none; cursor: pointer; font-size: 1.3rem; transition: 0.3s; }
+        .btn-delete { color: #ddd; background: none; border: none; cursor: pointer; font-size: 1.4rem; transition: 0.3s; }
         .btn-delete:hover { color: var(--danger); transform: scale(1.2); }
 
-        .total-row { margin-top: 25px; padding-top: 20px; border-top: 2px dashed #eee; display: flex; justify-content: space-between; align-items: center; font-size: 1.5rem; font-weight: 800; }
+        .total-row { margin-top: 30px; padding-top: 25px; border-top: 2px dashed #eee; display: flex; justify-content: space-between; align-items: center; font-size: 1.6rem; font-weight: 800; color: var(--primary); }
 
-        /* --- 3. FORM PEMBAYARAN & DATA --- */
-        .payment-card { background: white; padding: 35px; border-radius: 30px; box-shadow: var(--shadow); border-top: 8px solid var(--accent); height: fit-content; position: sticky; top: 100px; }
+        /* --- 3. DETAIL PEMBAYARAN & FORM --- */
+        .payment-card { background: white; padding: 35px; border-radius: 30px; box-shadow: var(--shadow); border-top: 10px solid var(--accent); position: sticky; top: 100px; }
         
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 8px; color: #555; text-transform: uppercase; }
-        .form-group input, .form-group select { width: 100%; padding: 15px; border: 2px solid #f8f8f8; border-radius: 15px; background: #fafafa; font-size: 1rem; outline: none; transition: 0.3s; }
+        .form-group { margin-bottom: 25px; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 10px; color: #555; text-transform: uppercase; }
+        .form-group input, .form-group select { width: 100%; padding: 16px; border: 2px solid #f8f8f8; border-radius: 15px; background: #fafafa; font-size: 1rem; outline: none; transition: 0.3s; }
         .form-group input:focus { border-color: var(--accent); background: white; }
 
-        /* Payment Detail Boxes */
-        .pay-detail-box { display: none; background: #fffcf5; padding: 20px; border-radius: 20px; border: 2px solid var(--accent); margin-top: 20px; text-align: center; animation: zoomIn 0.3s ease; }
-        .pay-detail-box.active { display: block; }
+        /* Payment detail UI */
+        .pay-box { display: none; background: #fffcf5; padding: 25px; border-radius: 20px; border: 2px solid var(--accent); margin-top: 20px; text-align: center; animation: zoomIn 0.3s ease; }
+        .pay-box.active { display: block; }
         
-        .qr-placeholder { background: white; width: 200px; height: 200px; margin: 15px auto; border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
-        .bank-info h3 { font-size: 1.6rem; letter-spacing: 3px; margin: 10px 0; color: var(--primary); }
+        .barcode-img { background: white; width: 220px; height: 220px; margin: 15px auto; border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 25px rgba(0,0,0,0.06); }
+        .bank-details h3 { font-size: 1.8rem; letter-spacing: 4px; margin: 10px 0; color: var(--primary); }
 
-        .btn-submit { background: var(--primary); color: white; border: none; width: 100%; padding: 20px; border-radius: 20px; font-weight: 800; font-size: 1.1rem; cursor: pointer; transition: 0.3s; margin-top: 30px; box-shadow: 0 10px 25px rgba(44, 27, 14, 0.2); }
-        .btn-submit:hover { background: var(--accent); transform: translateY(-3px); }
+        .btn-submit { background: var(--primary); color: white; border: none; width: 100%; padding: 20px; border-radius: 20px; font-weight: 800; font-size: 1.1rem; cursor: pointer; transition: 0.3s; margin-top: 30px; box-shadow: 0 10px 30px rgba(44, 27, 14, 0.2); }
+        .btn-submit:hover { background: var(--accent); transform: translateY(-4px); }
 
-        /* --- ANIMATIONS --- */
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes zoomIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
-        @keyframes popCheck { 0% { transform: scale(0); } 80% { transform: scale(1.3); } 100% { transform: scale(1); } }
-
-        /* --- MOBILE RESPONSIVE --- */
-        @media (max-width: 992px) {
-            .cart-wrapper { grid-template-columns: 1fr; }
-            .payment-card { position: static; }
-        }
-
+        /* --- MOBILE NAV (Gambar Anda) --- */
         @media (max-width: 768px) {
             .navbar { padding: 1rem 5%; position: relative; }
             .nav-links { 
@@ -134,19 +123,26 @@
                 background: white; flex-direction: column; padding: 40px 0; gap: 30px; 
                 text-align: center; box-shadow: 0 15px 25px rgba(0,0,0,0.05); border-top: 1px solid #f0f0f0;
             }
-            .nav-links.show { display: flex; }
+            .nav-links.show { display: flex; animation: slideDown 0.4s ease; }
             .menu-dots { display: block; }
 
-            .container { padding: 20px 5%; }
+            .cart-wrapper { grid-template-columns: 1fr; }
+            .container { padding: 20px 4%; }
             .section-title { font-size: 1.5rem; }
-            .track-card { padding: 20px; }
-            .check-icon { font-size: 3rem; right: 20px; bottom: 20px; }
+            .track-card { padding: 25px; }
+            .total-row { font-size: 1.3rem; }
         }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes zoomIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        @keyframes popCheck { 0% { transform: scale(0); } 80% { transform: scale(1.3); } 100% { transform: scale(1); } }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <!-- NAVBAR HEADER -->
+    <!-- HEADER & NAVBAR -->
     <header>
         <nav class="navbar">
             <a href="index.html" class="logo">SESA <span>Coffee</span></a>
@@ -166,79 +162,79 @@
 
     <div class="container">
         
-        <!-- SECTION 1: PELACAKAN PESANAN AKTIF -->
-        <div id="tracking-container">
-            <h2 class="section-title"><i class="fas fa-satellite-dish"></i> Lacak Pesanan Aktif</h2>
-            <div id="active-list-ui">
-                <!-- Pesanan Real-time Muncul Di Sini -->
+        <!-- BAGIAN 1: LACAK PESANAN AKTIF -->
+        <div id="tracking-section">
+            <h2 class="section-title"><i class="fas fa-stream"></i> Lacak Pesanan Anda</h2>
+            <div id="active-orders-list">
+                <!-- Pesanan otomatis muncul di sini -->
             </div>
         </div>
 
-        <!-- SECTION 2 & 3: KERANJANG & PEMBAYARAN -->
+        <!-- BAGIAN 2: KERANJANG & CHECKOUT BARU -->
         <div class="cart-wrapper">
             
-            <!-- Kolom Keranjang -->
+            <!-- List Keranjang Belanja -->
             <div class="cart-card">
                 <h2 class="section-title"><i class="fas fa-shopping-basket"></i> Keranjang Baru</h2>
-                <div id="cart-list-ui">
-                    <!-- Javascript renders here -->
+                <div id="cart-items-ui">
+                    <!-- Item render here -->
                 </div>
                 
                 <div style="margin-top: 30px; text-align: center;">
-                    <a href="menu.html" style="color: var(--accent); text-decoration: none; font-weight: 700; font-size: 0.9rem;">
+                    <a href="menu.html" style="color: var(--accent); text-decoration: none; font-weight: 700; font-size: 0.95rem;">
                         <i class="fas fa-plus-circle"></i> Tambah Menu Lainnya
                     </a>
                 </div>
             </div>
 
-            <!-- Kolom Pembayaran -->
-            <div class="payment-card" id="payment-section" style="display:none;">
-                <h2 class="section-title"><i class="fas fa-wallet"></i> Pembayaran</h2>
+            <!-- Form Data & Pembayaran -->
+            <div class="payment-card" id="payment-area" style="display:none;">
+                <h2 class="section-title"><i class="fas fa-user-tag"></i> Check Out</h2>
                 
                 <div class="form-group">
-                    <label>Nama Pemesan</label>
-                    <input type="text" id="cust-name" placeholder="Atas Nama">
+                    <label>Atas Nama</label>
+                    <input type="text" id="cust-name" placeholder="Nama lengkap Anda">
                 </div>
                 <div class="form-group">
                     <label>Nomor Meja</label>
-                    <input type="number" id="cust-table" placeholder="Contoh: 07">
+                    <input type="number" id="cust-table" placeholder="Contoh: 05">
                 </div>
                 <div class="form-group">
-                    <label>Pilih Metode</label>
-                    <select id="pay-select" onchange="updatePayMethodUI()">
-                        <option value="qris">Scan QRIS (Ovo/Dana/Gopay)</option>
+                    <label>Metode Pembayaran</label>
+                    <select id="pay-method" onchange="togglePayDetail()">
+                        <option value="qris">Scan Barcode QRIS</option>
                         <option value="bank">Transfer Bank BCA</option>
-                        <option value="kasir">Bayar Langsung di Kasir</option>
+                        <option value="kasir">Bayar Tunai di Kasir</option>
                     </select>
                 </div>
 
-                <!-- Box Detail QRIS -->
-                <div id="pay-qris" class="pay-detail-box active">
-                    <p style="font-weight:600; font-size:0.9rem;">Scan Kode QR SESA Coffee</p>
-                    <div class="qr-placeholder">
-                        <i class="fas fa-qrcode fa-7x" style="color:#333;"></i>
+                <!-- Detail QRIS -->
+                <div id="box-qris" class="pay-box active">
+                    <p style="font-weight:600;">Scan QRIS SESA Coffee</p>
+                    <div class="barcode-img">
+                        <i class="fas fa-qrcode fa-8x" style="color:#222;"></i>
                     </div>
-                    <small style="color:#888;">Screenshot & gunakan aplikasi e-wallet Anda</small>
+                    <small style="color:#888;">Screenshot barcode ini & bayar melalui Dana/Ovo/Gopay/Mobile Banking</small>
                 </div>
 
-                <!-- Box Detail BANK -->
-                <div id="pay-bank" class="pay-detail-box">
-                    <p style="font-weight:600; font-size:0.9rem;">Transfer Ke Rekening BCA</p>
-                    <div class="bank-info">
-                        <h3>8830 0812 3456 789</h3>
+                <!-- Detail BANK -->
+                <div id="box-bank" class="pay-box">
+                    <p style="font-weight:600;">Transfer Bank BCA</p>
+                    <div class="bank-details">
+                        <h3 id="bca-num">8830 0219 9283 112</h3>
                         <p style="font-weight:700; color:var(--accent);">A/N SESA COFFEE PIK 2</p>
                     </div>
-                    <small style="color:#888;">Simpan bukti transfer untuk divalidasi</small>
+                    <small style="color:#888;">Silahkan salin nomor rekening di atas</small>
                 </div>
 
-                <!-- Box Detail KASIR -->
-                <div id="pay-kasir" class="pay-detail-box">
-                    <i class="fas fa-cash-register fa-3x" style="color:var(--accent); margin-bottom:10px;"></i>
-                    <p style="font-size:0.9rem;">Silahkan sebutkan nama Anda di kasir untuk melakukan pembayaran tunai.</p>
+                <!-- Detail KASIR -->
+                <div id="box-kasir" class="pay-box">
+                    <i class="fas fa-hand-holding-usd fa-3x" style="color:var(--accent); margin-bottom:15px;"></i>
+                    <p style="font-size:0.9rem;">Pesanan akan masuk ke sistem. Silahkan sebutkan nama Anda saat membayar tunai di kasir.</p>
                 </div>
 
-                <button class="btn-submit" onclick="handleFinalCheckout()">
-                    <i class="fas fa-check-circle"></i> KONFIRMASI & PESAN
+                <button class="btn-submit" onclick="handleCheckoutProcess()">
+                    <i class="fas fa-paper-plane"></i> KIRIM PESANAN SEKARANG
                 </button>
             </div>
 
@@ -246,10 +242,10 @@
 
     </div>
 
-    <!-- FIREBASE MODULE -->
+    <!-- FIREBASE SYSTEM -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, push, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, push, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
         // Konfigurasi Database Sesuai Firebase Kamu
         const firebaseConfig = {
@@ -265,20 +261,20 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // --- 1. RENDER KERANJANG (CART) ---
+        // --- 1. RENDER SHOPPING CART (KERANJANG BARU) ---
         window.renderCart = function() {
-            const listUI = document.getElementById('cart-list-ui');
-            const paySection = document.getElementById('payment-section');
+            const listUI = document.getElementById('cart-items-ui');
+            const paymentArea = document.getElementById('payment-area');
             let cart = JSON.parse(localStorage.getItem('sesa_cart')) || [];
             
             listUI.innerHTML = "";
             if(cart.length === 0) {
-                listUI.innerHTML = `<div style="text-align:center; padding:40px;"><i class="fas fa-shopping-cart fa-3x" style="color:#eee; margin-bottom:15px;"></i><br><p style="color:#aaa;">Keranjang baru kosong.</p></div>`;
-                paySection.style.display = "none";
+                listUI.innerHTML = `<div style="text-align:center; padding:50px;"><i class="fas fa-shopping-cart fa-3x" style="color:#eee; margin-bottom:20px;"></i><br><p style="color:#aaa;">Belum ada item di keranjang.</p></div>`;
+                paymentArea.style.display = "none";
                 return;
             }
 
-            paySection.style.display = "block";
+            paymentArea.style.display = "block";
             let total = 0;
             cart.forEach((item, index) => {
                 total += item.price;
@@ -288,82 +284,83 @@
                             <strong>${item.name}</strong>
                             <span>Rp ${item.price.toLocaleString()}</span>
                         </div>
-                        <button class="btn-delete" onclick="removeItem(${index})"><i class="fas fa-trash-alt"></i></button>
+                        <button class="btn-delete" onclick="removeItemFromCart(${index})"><i class="fas fa-trash-alt"></i></button>
                     </div>`;
             });
-            listUI.innerHTML += `<div class="total-row"><span>Total Bayar</span><span style="color:var(--accent)">Rp ${total.toLocaleString()}</span></div>`;
+            listUI.innerHTML += `<div class="total-row"><span>Subtotal</span><span style="color:var(--accent)">Rp ${total.toLocaleString()}</span></div>`;
         }
 
-        window.removeItem = (idx) => {
+        window.removeItemFromCart = (idx) => {
             let cart = JSON.parse(localStorage.getItem('sesa_cart')) || [];
             cart.splice(idx, 1);
             localStorage.setItem('sesa_cart', JSON.stringify(cart));
             renderCart();
         }
 
-        // --- 2. LOGIKA CHECKOUT (KIRIM KE ADMIN) ---
-        window.handleFinalCheckout = function() {
+        // --- 2. LOGIKA KIRIM PESANAN KE ADMIN ---
+        window.handleCheckoutProcess = function() {
             const name = document.getElementById('cust-name').value;
             const table = document.getElementById('cust-table').value;
             let cart = JSON.parse(localStorage.getItem('sesa_cart')) || [];
 
-            if(!name || !table) return alert("Mohon isi Nama dan Nomor Meja!");
-            if(!confirm("Sudah tidak ada pesanan tambahan? Pesanan akan segera dikirim ke dapur.")) return;
+            if(!name || !table) return alert("Mohon lengkapi Nama dan Nomor Meja!");
+            if(!confirm("Apakah Anda yakin sudah tidak ada pesanan lagi? Pesanan akan segera dikirim ke dapur SESA.")) return;
 
-            const orderId = "order_" + Date.now();
+            const orderId = "SESA_ORD_" + Date.now();
             const orderData = {
                 customer: name,
                 table: table,
                 items: cart,
                 total: cart.reduce((s,i) => s + i.price, 0),
-                payment: document.getElementById('pay-select').value.toUpperCase(),
+                payment: document.getElementById('pay-method').value.toUpperCase(),
                 status: "MENUNGGU",
                 time: new Date().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'})
             };
 
             set(ref(db, 'orders/' + orderId), orderData).then(() => {
-                // Simpan ID agar browser bisa melacak pesanan ini
-                let historyIds = JSON.parse(localStorage.getItem('sesa_active_ids')) || [];
-                historyIds.push(orderId);
-                localStorage.setItem('sesa_active_ids', JSON.stringify(historyIds));
+                // Simpan ID agar pelanggan bisa melacak pesanan ini tanpa refresh
+                let activeTrackIds = JSON.parse(localStorage.getItem('sesa_tracking_list')) || [];
+                activeTrackIds.push(orderId);
+                localStorage.setItem('sesa_tracking_list', JSON.stringify(activeTrackIds));
                 
                 localStorage.removeItem('sesa_cart');
-                alert("Pesanan Berhasil Terkirim! Silahkan cek status di atas.");
-                location.reload(); // Refresh untuk trigger tracking
+                alert("Pesanan Masuk Sistem! Silahkan lacak status pesanan di bagian atas halaman ini.");
+                location.reload(); 
             });
         }
 
-        // --- 3. TRACKING REAL-TIME (DENGAN CEKLIS HIJAU) ---
-        function startTracking() {
-            const activeIds = JSON.parse(localStorage.getItem('sesa_active_ids')) || [];
+        // --- 3. PELACAKAN REAL-TIME (DENGAN CEKLIS HIJAU) ---
+        function runRealtimeTracking() {
+            const activeIds = JSON.parse(localStorage.getItem('sesa_tracking_list')) || [];
             if(activeIds.length === 0) return;
 
-            document.getElementById('tracking-container').style.display = "block";
-            const container = document.getElementById('active-list-ui');
+            document.getElementById('tracking-section').style.display = "block";
+            const container = document.getElementById('active-orders-list');
 
             activeIds.forEach(id => {
                 onValue(ref(db, 'orders/' + id), (snapshot) => {
                     const order = snapshot.val();
                     
-                    // Jika data dihapus Admin (Pesanan Selesai), hapus dari daftar pelacakan lokal
+                    // Jika pesanan sudah diselesaikan Admin (Arsip), hapus dari list lokal
                     if(!order) {
-                        const card = document.getElementById(`track-${id}`);
-                        if(card) card.remove();
-                        // Bersihkan localStorage jika tidak ada lagi pesanan aktif
-                        let currentIds = JSON.parse(localStorage.getItem('sesa_active_ids')) || [];
-                        let filtered = currentIds.filter(cid => cid !== id);
-                        localStorage.setItem('sesa_active_ids', JSON.stringify(filtered));
-                        if(filtered.length === 0) document.getElementById('tracking-container').style.display = "none";
+                        const existingCard = document.getElementById(`track-card-${id}`);
+                        if(existingCard) existingCard.remove();
+                        
+                        let currentList = JSON.parse(localStorage.getItem('sesa_tracking_list')) || [];
+                        let updatedList = currentList.filter(oId => oId !== id);
+                        localStorage.setItem('sesa_tracking_list', JSON.stringify(updatedList));
+                        
+                        if(updatedList.length === 0) document.getElementById('tracking-section').style.display = "none";
                         return;
                     }
 
-                    const isAcc = order.status === "ACC";
                     const isReady = order.status === "READY";
-                    const badgeClass = isReady ? 'badge-ready' : (isAcc ? 'badge-process' : 'badge-waiting');
-                    const badgeText = isReady ? 'SIAP DIANTAR' : (isAcc ? 'SEDANG DIBUAT' : 'MENUNGGU ACC');
+                    const isAcc = order.status === "ACC";
+                    const badgeClass = isReady ? 'st-ready' : (isAcc ? 'st-acc' : 'st-waiting');
+                    const badgeText = isReady ? 'SIAP ANTAR' : (isAcc ? 'SEDANG DIBUAT' : 'MENUNGGU ACC');
 
                     let trackHtml = `
-                        <div class="track-card ${isReady ? 'is-ready' : ''}" id="track-${id}">
+                        <div class="track-card ${isReady ? 'is-ready' : ''}" id="track-card-${id}">
                             <div class="track-header">
                                 <div class="track-info">
                                     <h4>Pesanan: ${order.customer}</h4>
@@ -371,14 +368,13 @@
                                 </div>
                                 <span class="status-badge ${badgeClass}">${badgeText}</span>
                             </div>
-                            <ul class="track-items-list">${order.items.map(i => `<li>${i.name} (x1)</li>`).join('')}</ul>
+                            <ul class="track-items">${order.items.map(it => `<li>${it.name} (x1)</li>`).join('')}</ul>
                             ${isAcc && order.waitTime ? `<div class="time-badge"><i class="fas fa-hourglass-half"></i> Estimasi Tunggu: ${order.waitTime} Menit</div>` : ''}
                             <div class="check-icon"><i class="fas fa-check-circle"></i></div>
                         </div>
                     `;
 
-                    // Update UI jika kartu sudah ada, jika belum tambahkan
-                    const existing = document.getElementById(`track-${id}`);
+                    const existing = document.getElementById(`track-card-${id}`);
                     if(existing) {
                         existing.outerHTML = trackHtml;
                     } else {
@@ -390,23 +386,30 @@
 
         window.onload = () => {
             renderCart();
-            startTracking();
+            runRealtimeTracking();
         };
     </script>
 
     <script>
-        // --- UI INTERACTION (HAMBURGER & PAYMENT) ---
-        function toggleMenu() {
-            document.getElementById('navLinks').classList.toggle('show');
-            const icon = document.querySelector('#menuToggle i');
-            icon.className = document.getElementById('navLinks').classList.contains('show') ? 'fas fa-times' : 'fas fa-ellipsis-v';
+        // --- UI INTERACTION LOGIC ---
+
+        // Toggle Navbar Mobile (Titik 3)
+        const menuBtn = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        menuBtn.onclick = () => {
+            navLinks.classList.toggle('show');
+            const icon = menuBtn.querySelector('i');
+            icon.className = navLinks.classList.contains('show') ? 'fas fa-times' : 'fas fa-ellipsis-v';
         }
 
-        function updatePayMethodUI() {
-            const val = document.getElementById('pay-select').value;
-            document.querySelectorAll('.pay-detail-box').forEach(el => el.classList.remove('active'));
-            document.getElementById('pay-' + val).classList.add('active');
+        // Toggle Payment Boxes
+        window.togglePayDetail = () => {
+            const method = document.getElementById('pay-method').value;
+            document.querySelectorAll('.pay-box').forEach(box => box.classList.remove('active'));
+            document.getElementById('box-' + method).classList.add('active');
         }
     </script>
+
 </body>
 </html>
