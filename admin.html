@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SESA COMMAND CENTER | Professional Admin</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1a120b;
+            --sidebar: #2c1b0e;
+            --accent: #c5a059;
+            --bg: #f4f7f6;
+            --white: #ffffff;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --text-muted: #888;
+            --shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg); display: flex; min-height: 100vh; color: var(--primary); }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 280px; background: var(--sidebar); color: white;
+            display: flex; flex-direction: column; padding: 40px 20px;
+            position: fixed; height: 100vh; z-index: 1000; transition: 0.3s;
+        }
+        .sidebar h2 { font-family: 'Playfair Display', serif; margin-bottom: 50px; text-align: center; font-size: 1.8rem; letter-spacing: 2px; }
+        .sidebar span { color: var(--accent); }
+        
+        .nav-item {
+            padding: 16px 20px; border-radius: 15px; margin-bottom: 10px;
+            cursor: pointer; display: flex; align-items: center; gap: 15px;
+            color: #bdc3c7; transition: 0.3s; border: none; background: none; width: 100%; text-align: left;
+            font-size: 0.95rem; font-weight: 500;
+        }
+        .nav-item i { width: 20px; font-size: 1.1rem; }
+        .nav-item.active { background: var(--accent); color: white; box-shadow: 0 8px 20px rgba(197, 160, 89, 0.3); }
+        .nav-item:hover:not(.active) { background: rgba(255,255,255,0.05); color: white; }
+
+        /* MAIN CONTENT */
+        .main-content { flex: 1; margin-left: 280px; padding: 30px 50px; transition: 0.3s; }
+        
+        /* TOP BAR */
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .search-box { position: relative; width: 300px; }
+        .search-box input { width: 100%; padding: 12px 40px; border-radius: 12px; border: 1px solid #ddd; outline: none; background: var(--white); }
+        .search-box i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #aaa; }
+        .status-badge { background: #d4edda; color: var(--success); padding: 8px 20px; border-radius: 50px; font-size: 0.75rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+
+        /* TAB SYSTEM */
+        .tab-content { display: none; animation: slideUp 0.4s ease-out; }
+        .tab-content.active { display: block; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* STATS */
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-bottom: 40px; }
+        .stat-card { background: var(--white); padding: 30px; border-radius: 25px; display: flex; align-items: center; gap: 20px; box-shadow: var(--shadow); position: relative; overflow: hidden; }
+        .stat-card::after { content: ''; position: absolute; width: 100px; height: 100px; background: var(--accent); opacity: 0.05; border-radius: 50%; right: -20px; top: -20px; }
+        .stat-icon { width: 60px; height: 60px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+        .stat-info h3 { font-size: 1.8rem; font-weight: 700; margin-bottom: 5px; }
+        .stat-info p { color: var(--text-muted); font-size: 0.85rem; font-weight: 500; }
+
+        /* ORDERS CARD */
+        .order-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 25px; }
+        .order-card { background: var(--white); padding: 25px; border-radius: 30px; box-shadow: var(--shadow); position: relative; border: 1px solid rgba(0,0,0,0.02); }
+        .order-card .meja-tag { position: absolute; top: 20px; right: 20px; background: var(--primary); color: white; padding: 6px 15px; border-radius: 10px; font-weight: 700; font-size: 0.8rem; }
+        
+        .customer-header { margin-bottom: 20px; }
+        .customer-header h4 { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin-bottom: 4px; }
+        .customer-header small { color: #aaa; font-weight: 500; }
+
+        .items-box { background: #fdfaf5; border-radius: 15px; padding: 15px; margin-bottom: 20px; }
+        .item-line { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 8px; font-weight: 500; }
+
+        .btn-finish {
+            background: var(--success); color: white; border: none; width: 100%; padding: 15px; border-radius: 15px;
+            font-weight: 700; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .btn-finish:hover { transform: scale(1.02); box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3); }
+
+        /* TABLES */
+        .history-table { width: 100%; border-collapse: collapse; background: white; border-radius: 25px; overflow: hidden; box-shadow: var(--shadow); }
+        .history-table th { background: #fcfcfc; padding: 20px; text-align: left; font-size: 0.8rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
+        .history-table td { padding: 20px; border-top: 1px solid #f8f8f8; font-size: 0.9rem; font-weight: 500; }
+
+        /* STOCK TOGGLE */
+        .toggle-btn { padding: 8px 16px; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; font-size: 0.75rem; text-transform: uppercase; }
+        .btn-in { background: #e8f5e9; color: var(--success); }
+        .btn-out { background: #ffebee; color: var(--danger); }
+
+        /* MOBILE HEADER */
+        .mobile-nav { display: none; background: var(--sidebar); color: white; padding: 20px; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 2000; }
+
+        @media (max-width: 1024px) {
+            .sidebar { width: 80px; }
+            .sidebar h2, .nav-item span { display: none; }
+            .main-content { margin-left: 80px; }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); width: 280px; }
+            .sidebar.open h2, .sidebar.open .nav-item span { display: block; }
+            .main-content { margin-left: 0; padding: 20px; }
+            .mobile-nav { display: flex; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .top-bar { flex-direction: column; gap: 20px; align-items: flex-start; }
+            .search-box { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mobile-nav">
+        <h3 style="font-family: 'Playfair Display'">SESA Admin</h3>
+        <i class="fas fa-bars" onclick="toggleSidebar()" style="cursor: pointer; font-size: 1.5rem;"></i>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar">
+        <h2>SESA <span>Admin</span></h2>
+        <button class="nav-item active" onclick="switchTab('tab-dash', this)"><i class="fas fa-rocket"></i> <span>Dashboard</span></button>
+        <button class="nav-item" onclick="switchTab('tab-history', this)"><i class="fas fa-receipt"></i> <span>Riwayat</span></button>
+        <button class="nav-item" onclick="switchTab('tab-stock', this)"><i class="fas fa-box"></i> <span>Kelola Stok</span></button>
+        <a href="index.html" class="nav-item" style="margin-top: 50px; text-decoration: none;"><i class="fas fa-external-link-alt"></i> <span>Lihat Toko</span></a>
+        
+        <div style="margin-top: auto; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 15px; text-align: center;">
+            <p style="font-size: 0.7rem; color: #777;">SESA POS System v4.2</p>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        
+        <div class="top-bar">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Cari pesanan atau pelanggan...">
+            </div>
+            <div class="status-badge">
+                <i class="fas fa-circle" style="font-size: 0.5rem; animation: pulse 1s infinite;"></i>
+                REAL-TIME DATABASE CONNECTED
+            </div>
+        </div>
+
+        <!-- 1. DASHBOARD TAB -->
+        <div id="tab-dash" class="tab-content active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #e3f2fd; color: #2196f3;"><i class="fas fa-shopping-basket"></i></div>
+                    <div class="stat-info"><h3 id="count-active">0</h3><p>Pesanan Aktif</p></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #e8f5e9; color: #4caf50;"><i class="fas fa-chart-line"></i></div>
+                    <div class="stat-info"><h3 id="income-active">Rp 0</h3><p>Omzet Aktif</p></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: #fff3e0; color: #ff9800;"><i class="fas fa-chair"></i></div>
+                    <div class="stat-info"><h3 id="table-active">0</h3><p>Meja Terisi</p></div>
+                </div>
+            </div>
+
+            <h2 style="font-family: 'Playfair Display', serif; margin-bottom: 25px;">Pesanan Masuk</h2>
+            <div class="order-grid" id="order-display">
+                <!-- Data Pesanan Masuk -->
+            </div>
+        </div>
+
+        <!-- 2. HISTORY TAB -->
+        <div id="tab-history" class="tab-content">
+            <h2 style="font-family: 'Playfair Display', serif; margin-bottom: 30px;">Riwayat Penjualan</h2>
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>Pelanggan</th>
+                        <th>Waktu</th>
+                        <th>Meja</th>
+                        <th>Metode</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="history-display">
+                    <!-- Data Riwayat -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 3. STOCK TAB -->
+        <div id="tab-stock" class="tab-content">
+            <h2 style="font-family: 'Playfair Display', serif; margin-bottom: 30px;">Manajemen Stok Menu</h2>
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>Nama Menu</th>
+                        <th>Status Sekarang</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="stock-display">
+                    <!-- Data Stok -->
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <audio id="notifPing" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
+
+    <!-- FIREBASE LOGIC -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, onValue, set, push, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBAB3uy7JyIA38KMKGOFJb9_r5lJ3hTaNE",
+            authDomain: "sesa-coffee.firebaseapp.com",
+            databaseURL: "https://sesa-coffee-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "sesa-coffee",
+            storageBucket: "sesa-coffee.firebasestorage.app",
+            messagingSenderId: "767835800976",
+            appId: "1:767835800976:web:21ab01c3ff9bb29aae5f15"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const ping = document.getElementById('notifPing');
+        let firstLoad = true;
+
+        // 1. MONITOR PESANAN AKTIF
+        onValue(ref(db, 'orders'), (snapshot) => {
+            const data = snapshot.val();
+            const container = document.getElementById('order-display');
+            container.innerHTML = "";
+            
+            if(!data) {
+                container.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding:50px; background:white; border-radius:20px; color:#aaa;">Menunggu pesanan baru...</div>`;
+                updateStats(0,0,0);
+                return;
+            }
+
+            if(!firstLoad) ping.play().catch(e => {});
+            firstLoad = false;
+
+            let c=0, i=0, t=new Set();
+
+            Object.keys(data).reverse().forEach(key => {
+                const o = data[key];
+                c++; i += o.total; t.add(o.table);
+                const itemsList = o.items.map(it => `<div class="item-line"><span>${it.name}</span><strong>x1</strong></div>`).join('');
+
+                container.innerHTML += `
+                    <div class="order-card">
+                        <span class="meja-tag">MEJA ${o.table}</span>
+                        <div class="customer-header">
+                            <h4>${o.customer}</h4>
+                            <small><i class="far fa-clock"></i> ${o.time}</small>
+                        </div>
+                        <div class="items-box">${itemsList}</div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                            <span style="font-size:0.7rem; color:#aaa; font-weight:600;">METODE: ${o.payment}</span>
+                            <span class="total-price">Rp ${o.total.toLocaleString()}</span>
+                        </div>
+                        <button class="btn-finish" onclick="completeOrder('${key}')">
+                            <i class="fas fa-check-circle"></i> SELESAI & KIRIM RIWAYAT
+                        </button>
+                    </div>`;
+            });
+            updateStats(c, i, t.size);
+        });
+
+        window.completeOrder = (key) => {
+            if(!confirm("Pesanan sudah diantar dan dibayar?")) return;
+            onValue(ref(db, 'orders/'+key), (s) => {
+                const d = s.val();
+                if(d) push(ref(db, 'history'), d).then(() => remove(ref(db, 'orders/'+key)));
+            }, {onlyOnce: true});
+        }
+
+        // 2. MONITOR RIWAYAT
+        onValue(ref(db, 'history'), (snap) => {
+            const container = document.getElementById('history-display');
+            container.innerHTML = "";
+            const data = snap.val();
+            if(!data) return;
+            Object.keys(data).reverse().forEach(k => {
+                const h = data[k];
+                container.innerHTML += `<tr><td><strong>${h.customer}</strong></td><td>${h.time}</td><td>Meja ${h.table}</td><td>${h.payment}</td><td>Rp ${h.total.toLocaleString()}</td><td><span style="color:var(--success)">● Lunas</span></td></tr>`;
+            });
+        });
+
+        // 3. KELOLA STOK (Sync ke Menu.html)
+        const allKeys = ["americano", "cappuccino", "white_mocha", "matcha", "straw_rose", "nasgor_seafood", "ayam_madu", "sate_kambing", "esp_martini", "mojito"];
+        onValue(ref(db, 'menu'), (snap) => {
+            const data = snap.val() || {};
+            const container = document.getElementById('stock-display');
+            container.innerHTML = "";
+            allKeys.forEach(key => {
+                const s = (data[key] && data[key].status) || 'tersedia';
+                const isHabis = s === 'habis';
+                container.innerHTML += `<tr><td><strong>${key.toUpperCase().replace('_',' ')}</strong></td><td><span style="color:${isHabis?'red':'green'}">${s.toUpperCase()}</span></td><td><button class="toggle-btn ${isHabis?'btn-out':'btn-in'}" onclick="toggleStock('${key}','${s}')">${isHabis?'Aktifkan':'Set Habis'}</button></td></tr>`;
+            });
+        });
+
+        window.toggleStock = (k, s) => set(ref(db, 'menu/'+k+'/status'), s==='tersedia'?'habis':'tersedia');
+
+        function updateStats(count, income, tables) {
+            document.getElementById('count-active').innerText = count;
+            document.getElementById('income-active').innerText = 'Rp ' + income.toLocaleString();
+            document.getElementById('table-active').innerText = tables;
+        }
+    </script>
+
+    <script>
+        function switchTab(id, el) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            el.classList.add('active');
+            if(window.innerWidth <= 768) toggleSidebar();
+        }
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+    </script>
+</body>
+</html>

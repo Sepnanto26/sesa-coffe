@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | SESA Coffee Official</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #2c1b0e;
+            --accent: #c5a059;
+            --cream: #fdfaf5;
+            --white: #ffffff;
+            --danger: #e74c3c;
+            --success: #27ae60;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--cream); color: var(--primary); overflow-x: hidden; }
+
+        /* NAVBAR */
+        .navbar {
+            background: var(--white);
+            padding: 1rem 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 4000;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+        }
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--primary); text-decoration: none; }
+        .logo span { color: var(--accent); }
+        
+        .nav-links { display: flex; gap: 25px; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--primary); font-weight: 500; font-size: 0.9rem; text-transform: uppercase; transition: 0.3s; }
+        .nav-links a:hover { color: var(--accent); }
+        .menu-toggle { display: none; font-size: 1.5rem; cursor: pointer; color: var(--primary); }
+
+        /* MAIN LAYOUT */
+        .order-wrapper { max-width: 1100px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: 1.3fr 1fr; gap: 30px; }
+
+        .card { background: var(--white); padding: 30px; border-radius: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.02); }
+        .card h2 { font-family: 'Playfair Display', serif; margin-bottom: 25px; font-size: 1.8rem; display: flex; align-items: center; gap: 10px; }
+        .card h2 i { color: var(--accent); font-size: 1.5rem; }
+
+        /* CART LIST */
+        #cart-list { min-height: 100px; }
+        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #f1f1f1; animation: slideIn 0.4s ease; }
+        .item-info strong { display: block; font-size: 1.1rem; }
+        .item-info span { color: var(--accent); font-weight: 600; }
+        .btn-del { color: #ccc; background: none; border: none; cursor: pointer; font-size: 1.2rem; transition: 0.3s; }
+        .btn-del:hover { color: var(--danger); transform: scale(1.1); }
+
+        .total-box { margin-top: 25px; padding-top: 20px; border-top: 2px dashed #eee; display: flex; justify-content: space-between; align-items: center; font-size: 1.4rem; font-weight: bold; }
+
+        /* FORM INPUT */
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; color: #555; text-transform: uppercase; letter-spacing: 1px; }
+        .form-group input, .form-group select { width: 100%; padding: 14px; border: 2px solid #f1f1f1; border-radius: 15px; font-size: 1rem; transition: 0.3s; outline: none; }
+        .form-group input:focus { border-color: var(--accent); background: #fffcf9; }
+
+        /* PAYMENT BOXES */
+        .pay-display { background: #fdfcf9; padding: 20px; border-radius: 20px; border: 2px solid var(--accent); margin-top: 20px; text-align: center; display: none; animation: zoomIn 0.3s ease; }
+        .pay-display.active { display: block; }
+        .qr-img { background: white; width: 180px; height: 180px; margin: 15px auto; border-radius: 15px; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+
+        .btn-confirm { background: var(--primary); color: white; border: none; width: 100%; padding: 18px; border-radius: 15px; font-weight: bold; cursor: pointer; font-size: 1.1rem; margin-top: 25px; box-shadow: 0 10px 20px rgba(44, 27, 14, 0.2); transition: 0.3s; }
+        .btn-confirm:hover { background: var(--accent); transform: translateY(-3px); }
+
+        /* SUCCESS OVERLAY (THANK YOU SCREEN) */
+        #success-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--white); z-index: 5000; display: none; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        #success-overlay i { font-size: 6rem; color: var(--success); margin-bottom: 20px; animation: bounceIn 0.8s ease; }
+        #success-overlay h1 { font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--primary); }
+        #success-overlay p { color: #666; margin-bottom: 30px; }
+
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes zoomIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        @keyframes bounceIn { 0% { transform: scale(0); } 70% { transform: scale(1.2); } 100% { transform: scale(1); } }
+
+        /* MOBILE RESPONSIVE */
+        @media (max-width: 768px) {
+            .order-wrapper { grid-template-columns: 1fr; margin-top: 20px; }
+            .nav-links { display: none; position: absolute; top: 100%; left: 0; width: 100%; background: white; flex-direction: column; padding: 25px; text-align: center; box-shadow: 0 15px 20px rgba(0,0,0,0.1); }
+            .nav-links.show { display: flex; }
+            .menu-toggle { display: block; }
+            .card { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">SESA <span>Coffee</span></a>
+        <!-- Hamburger Menu (3 Titik/Baris) -->
+        <div class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="menu.html">Menu</a></li>
+            <li><a href="order.html" style="color:var(--accent)">Order</a></li>
+            <li><a href="location.html">Location</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <div class="order-wrapper">
+        <!-- SEKSI 1: KERANJANG -->
+        <div class="card">
+            <h2><i class="fas fa-shopping-bag"></i> Pesanan Anda</h2>
+            <div id="cart-list">
+                <!-- Javascript will render items here -->
+            </div>
+            <div class="total-box">
+                <span>Total Bayar</span>
+                <span id="total-price" style="color: var(--accent);">Rp 0</span>
+            </div>
+            <div style="margin-top: 20px; text-align: center;">
+                <a href="menu.html" style="color: #888; text-decoration: none; font-size: 0.9rem;"><i class="fas fa-plus-circle"></i> Tambah pesanan lagi?</a>
+            </div>
+        </div>
+
+        <!-- SEKSI 2: FORM & PEMBAYARAN -->
+        <div class="card">
+            <h2><i class="fas fa-user-check"></i> Detail Pesanan</h2>
+            
+            <div class="form-group">
+                <label>Atas Nama:</label>
+                <input type="text" id="cust-name" placeholder="Contoh: Budi Sudarsono">
+            </div>
+
+            <div class="form-group">
+                <label>Nomor Meja / Bangku:</label>
+                <input type="number" id="table-num" placeholder="Nomor meja anda">
+            </div>
+
+            <div class="form-group">
+                <label>Metode Pembayaran:</label>
+                <select id="pay-method" onchange="switchPayment()">
+                    <option value="qris">QRIS (GoPay/OVO/Dana)</option>
+                    <option value="bank">Transfer Bank BCA</option>
+                    <option value="kasir">Bayar Tunai di Kasir</option>
+                </select>
+            </div>
+
+            <!-- Tampilan Bayar QRIS -->
+            <div id="box-qris" class="pay-display active">
+                <p>Silahkan Scan QRIS SESA Coffee</p>
+                <div class="qr-img">
+                    <i class="fas fa-qrcode fa-6x" style="color: #444;"></i>
+                </div>
+                <small style="color: #888;">Screenshot & scan di aplikasi pembayaran Anda</small>
+            </div>
+
+            <!-- Tampilan Bayar Bank -->
+            <div id="box-bank" class="pay-display">
+                <p>Transfer Bank BCA</p>
+                <h3 style="letter-spacing: 3px; font-size: 1.5rem; margin: 10px 0;">8830 0812 3456 789</h3>
+                <small>A/N SESA COFFEE PIK 2</small>
+            </div>
+
+            <!-- Tampilan Bayar Kasir -->
+            <div id="box-kasir" class="pay-display">
+                <i class="fas fa-cash-register fa-3x" style="color: var(--accent); margin-bottom: 10px;"></i>
+                <p>Pesanan akan segera masuk dapur. Silahkan sebutkan Nama Anda saat membayar di kasir nanti.</p>
+            </div>
+
+            <button class="btn-confirm" onclick="processPayment()">
+                <i class="fas fa-check-circle"></i> Konfirmasi & Bayar Sekarang
+            </button>
+        </div>
+    </div>
+
+    <!-- SUCCESS SCREEN (THANK YOU) -->
+    <div id="success-overlay">
+        <i class="fas fa-heart"></i>
+        <h1>Terima Kasih!</h1>
+        <p id="success-msg">Pesanan Anda sudah kami terima dan sedang diproses.</p>
+        <a href="index.html" class="btn-confirm" style="width: auto; padding: 15px 40px; text-decoration: none;">Kembali ke Home</a>
+    </div>
+
+    <!-- FIREBASE & LOGIC -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        // GUNAKAN CONFIG FIREBASE MILIKMU
+        const firebaseConfig = {
+            apiKey: "AIzaSyBAB3uy7JyIA38KMKGOFJb9_r5lJ3hTaNE",
+            authDomain: "sesa-coffee.firebaseapp.com",
+            databaseURL: "https://sesa-coffee-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "sesa-coffee",
+            storageBucket: "sesa-coffee.firebasestorage.app",
+            messagingSenderId: "767835800976",
+            appId: "1:767835800976:web:21ab01c3ff9bb29aae5f15"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        let cart = JSON.parse(localStorage.getItem('sesa_cart')) || [];
+
+        // RENDER CART
+        window.renderOrder = function() {
+            const list = document.getElementById('cart-list');
+            const totalDisplay = document.getElementById('total-price');
+            list.innerHTML = "";
+            let total = 0;
+
+            if(cart.length === 0) {
+                list.innerHTML = `<div style="text-align:center; padding:40px; color:#aaa;">Keranjang Anda masih kosong.</div>`;
+                totalDisplay.innerText = "Rp 0";
+                return;
+            }
+
+            cart.forEach((item, index) => {
+                total += item.price;
+                list.innerHTML += `
+                    <div class="item-row">
+                        <div class="item-info">
+                            <strong>${item.name}</strong>
+                            <span>Rp ${item.price.toLocaleString()}</span>
+                        </div>
+                        <button class="btn-del" onclick="removeItem(${index})"><i class="fas fa-trash-alt"></i></button>
+                    </div>
+                `;
+            });
+            totalDisplay.innerText = `Rp ${total.toLocaleString()}`;
+        }
+
+        window.removeItem = function(index) {
+            cart.splice(index, 1);
+            localStorage.setItem('sesa_cart', JSON.stringify(cart));
+            renderOrder();
+        }
+
+        window.switchPayment = function() {
+            const method = document.getElementById('pay-method').value;
+            document.querySelectorAll('.pay-display').forEach(el => el.classList.remove('active'));
+            document.getElementById('box-' + method).classList.add('active');
+        }
+
+        // FUNGSI UTAMA PEMBAYARAN
+        window.processPayment = function() {
+            const name = document.getElementById('cust-name').value;
+            const table = document.getElementById('table-num').value;
+            const method = document.getElementById('pay-method').value;
+
+            if(cart.length === 0) return alert("Keranjang kosong!");
+            if(!name || !table) return alert("Mohon lengkapi Nama dan Nomor Meja!");
+
+            // TANYA KONFIRMASI (LOGIKA PESANAN LAGI)
+            const yakin = confirm("Apakah Anda yakin sudah tidak ada pesanan lagi? Pesanan akan segera dikirim ke dapur.");
+            
+            if(!yakin) {
+                // Balik ke menu
+                window.location.href = 'menu.html';
+                return;
+            }
+
+            // JIKA YAKIN -> KIRIM KE FIREBASE (ADMIN)
+            const orderData = {
+                customer: name,
+                table: table,
+                items: cart,
+                total: cart.reduce((s, i) => s + i.price, 0),
+                payment: method.toUpperCase(),
+                time: new Date().toLocaleTimeString('id-ID'),
+                status: "BARU"
+            };
+
+            const ordersRef = ref(db, 'orders');
+            push(ordersRef, orderData).then(() => {
+                // TAMPILKAN LAYAR SUKSES
+                document.getElementById('success-msg').innerText = `Terima kasih ${name}, pesanan untuk meja ${table} sedang disiapkan!`;
+                document.getElementById('success-overlay').style.display = 'flex';
+                
+                // Hapus localstorage
+                localStorage.removeItem('sesa_cart');
+            }).catch(err => alert("Gagal mengirim pesanan: " + err));
+        }
+
+        // Navigasi Mobile
+        window.toggleMenu = function() {
+            document.getElementById('navLinks').classList.toggle('show');
+        }
+
+        renderOrder();
+    </script>
+</body>
+</html>

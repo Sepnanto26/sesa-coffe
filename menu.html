@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Menu | SESA Coffee Official</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --primary: #2c1b0e; --accent: #c5a059; --cream: #fdfaf5; --white: #ffffff; --danger: #e74c3c; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--cream); color: var(--primary); overflow-x: hidden; }
+
+        /* NAVBAR */
+        .navbar { background: var(--white); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 4000; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--primary); text-decoration: none; }
+        .logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 20px; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--primary); font-weight: 500; font-size: 0.9rem; text-transform: uppercase; }
+        .menu-toggle { display: none; font-size: 1.5rem; cursor: pointer; }
+
+        /* CATEGORY NAV */
+        .category-nav { background: var(--white); padding: 15px 5%; display: flex; gap: 10px; overflow-x: auto; position: sticky; top: 70px; z-index: 3500; box-shadow: 0 5px 15px rgba(0,0,0,0.05); scrollbar-width: none; }
+        .category-nav::-webkit-scrollbar { display: none; }
+        .cat-btn { padding: 10px 22px; border: 1.5px solid var(--primary); background: transparent; color: var(--primary); cursor: pointer; border-radius: 30px; font-weight: 600; white-space: nowrap; transition: 0.3s; }
+        .cat-btn.active, .cat-btn:hover { background: var(--primary); color: white; }
+
+        /* MENU GRID */
+        .container { padding: 40px 5%; max-width: 1400px; margin: auto; }
+        .menu-group { display: none; animation: fadeIn 0.6s ease forwards; }
+        .menu-group.active { display: block; }
+        .section-title { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin: 40px 0 25px; border-left: 8px solid var(--accent); padding-left: 20px; }
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
+
+        /* CARD DESIGN */
+        .card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05); transition: 0.4s; display: flex; flex-direction: column; position: relative; }
+        .card:hover { transform: translateY(-10px); }
+        .card-img { width: 100%; height: 200px; object-fit: cover; }
+        .card-body { padding: 20px; flex-grow: 1; }
+        .card-body h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 8px; }
+        .card-body p { font-size: 0.8rem; color: #666; margin-bottom: 15px; height: 35px; overflow: hidden; }
+        .card-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #eee; padding-top: 15px; }
+        .price { font-weight: bold; font-size: 1.1rem; }
+        .btn-group { display: flex; gap: 5px; }
+        .btn-detail { background: var(--accent); color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: bold; }
+        .btn-order { background: var(--primary); color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: bold; }
+
+        /* SOLD OUT STYLE */
+        .sold-out-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 20; color: var(--danger); font-weight: bold; }
+        .card.is-habis .sold-out-overlay { display: flex; }
+        .card.is-habis .btn-order { background: #ccc !important; pointer-events: none; }
+
+        /* MODAL POPUP */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 5000; justify-content: center; align-items: center; padding: 20px; }
+        .modal-content { background: white; padding: 35px; border-radius: 25px; max-width: 550px; width: 100%; position: relative; animation: zoomIn 0.3s ease; }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; }
+
+        /* FLOATING CART */
+        .floating-cart { position: fixed; bottom: 30px; right: 30px; background: var(--accent); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 5px 20px rgba(0,0,0,0.3); text-decoration: none; z-index: 3000; }
+        .cart-count { position: absolute; top: 0; right: 0; background: red; width: 20px; height: 20px; border-radius: 50%; font-size: 0.7rem; display: flex; justify-content: center; align-items: center; font-weight: bold; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes zoomIn { from { transform: scale(0.9); } to { transform: scale(1); } }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; position: absolute; top: 100%; left: 0; width: 100%; background: white; flex-direction: column; padding: 20px; box-shadow: 0 5px 10px rgba(0,0,0,0.1); }
+            .nav-links.show { display: flex; }
+            .menu-toggle { display: block; }
+            .menu-grid { grid-template-columns: 1fr 1fr; gap: 15px; }
+            .card-img { height: 140px; }
+            .card-body p { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">SESA <span>Coffee</span></a>
+        <div class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="menu.html" class="active">Menu</a></li>
+            <li><a href="order.html">Order</a></li>
+            <li><a href="location.html">Location</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <div class="category-nav">
+        <button class="cat-btn active" onclick="filterMenu('all')">All Menu</button>
+        <button class="cat-btn" onclick="filterMenu('espresso')">Espresso</button>
+        <button class="cat-btn" onclick="filterMenu('milk')">Milk Based</button>
+        <button class="cat-btn" onclick="filterMenu('indo')">Indonesian Food</button>
+        <button class="cat-btn" onclick="filterMenu('cocktail')">Cocktails</button>
+    </div>
+
+    <div class="container">
+        
+        <!-- SECTION ESPRESSO -->
+        <section id="espresso" class="menu-group active">
+            <h2 class="section-title">Espresso Based</h2>
+            <div class="menu-grid">
+                <div class="card" data-name="americano">
+                    <div class="sold-out-overlay"><i class="fas fa-clock"></i><br>HABIS</div>
+                    <img src="https://images.unsplash.com/photo-1551033406-611cf9a28f67?w=500" class="card-img">
+                    <div class="card-body">
+                        <h3>Americano</h3>
+                        <p>Kopi hitam murni dari biji Arabica pilihan.</p>
+                        <div class="card-footer">
+                            <span class="price">Rp 10.000</span>
+                            <div class="btn-group">
+                                <button class="btn-detail" onclick="showDetail('americano')">Detail</button>
+                                <button class="btn-order" onclick="addToCart('Americano', 10000)">+ Order</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card" data-name="cappuccino">
+                    <div class="sold-out-overlay"><i class="fas fa-clock"></i><br>HABIS</div>
+                    <img src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=500" class="card-img">
+                    <div class="card-body">
+                        <h3>Cappuccino</h3>
+                        <p>Keseimbangan sempurna kopi dan susu foam tebal.</p>
+                        <div class="card-footer">
+                            <span class="price">Rp 15.000</span>
+                            <div class="btn-group">
+                                <button class="btn-detail" onclick="showDetail('cappuccino')">Detail</button>
+                                <button class="btn-order" onclick="addToCart('Cappuccino', 15000)">+ Order</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card" data-name="latte"><div class="sold-out-overlay">HABIS</div><img src="https://images.unsplash.com/photo-1541167760496-1628856ab772?w=500" class="card-img"><div class="card-body"><h3>Latte</h3><p>Espresso lembut dengan susu creamy.</p><div class="card-footer"><span class="price">Rp 15.000</span><div class="btn-group"><button class="btn-detail" onclick="showDetail('latte')">Detail</button><button class="btn-order" onclick="addToCart('Latte', 15000)">+ Order</button></div></div></div></div>
+            </div>
+        </section>
+
+        <!-- SECTION MILK BASED -->
+        <section id="milk" class="menu-group active">
+            <h2 class="section-title">Milk Based</h2>
+            <div class="menu-grid">
+                <div class="card" data-name="matcha_latte"><div class="sold-out-overlay">HABIS</div><img src="https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=500" class="card-img"><div class="card-body"><h3>Matcha Latte</h3><p>Teh hijau Jepang murni dan susu segar.</p><div class="card-footer"><span class="price">Rp 15.000</span><div class="btn-group"><button class="btn-detail" onclick="showDetail('matcha')">Detail</button><button class="btn-order" onclick="addToCart('Matcha Latte', 15000)">+ Order</button></div></div></div></div>
+                <div class="card" data-name="straw_rose"><div class="sold-out-overlay">HABIS</div><img src="https://images.unsplash.com/photo-1546173159-319746d518e4?w=500" class="card-img"><div class="card-body"><h3>Strawberry Rose</h3><p>Susu mawar segar dengan bulir stroberi.</p><div class="card-footer"><span class="price">Rp 18.000</span><div class="btn-group"><button class="btn-detail" onclick="showDetail('strawberry')">Detail</button><button class="btn-order" onclick="addToCart('Strawberry Rose', 18000)">+ Order</button></div></div></div></div>
+            </div>
+        </section>
+
+        <!-- SECTION INDONESIAN FOOD (SANGAT LENGKAP) -->
+        <section id="indo" class="menu-group active">
+            <h2 class="section-title">Masakan Indonesia</h2>
+            <div class="menu-grid">
+                <div class="card" data-name="ayam_madu"><div class="sold-out-overlay">HABIS</div><img src="https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=500" class="card-img"><div class="card-body"><h3>Ayam Bakar Madu</h3><p>Ayam bakar bumbu madu manis gurih.</p><div class="card-footer"><span class="price">Rp 17.000</span><div class="btn-group"><button class="btn-detail" onclick="showDetail('ayambakar')">Detail</button><button class="btn-order" onclick="addToCart('Ayam Bakar Madu', 17000)">+ Order</button></div></div></div></div>
+                <div class="card" data-name="nasgor_seafood"><div class="sold-out-overlay">HABIS</div><img src="https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?w=500" class="card-img"><div class="card-body"><h3>Nasi Goreng Seafood</h3><p>Nasi goreng udang, cumi, dan bakso ikan.</p><div class="card-footer"><span class="price">Rp 20.000</span><div class="btn-group"><button class="btn-detail" onclick="showDetail('nasgor')">Detail</button><button class="btn-order" onclick="addToCart('Nasi Goreng Seafood', 20000)">+ Order</button></div></div></div></div>
+                <div class="card" data-name="sate_kambing"><div class="sold-out-overlay">HABIS</div><img src="https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?w=500" class="card-img"><div class="card-body"><h3>Sate Kambing</h3><p>Daging kambing muda empuk bumbu kecap.</p><div class="card-footer"><span class="price">Rp 25.000</span><div class="btn-group"><button class="btn-detail" onclick="showDetail('sate')">Detail</button><button class="btn-order" onclick="addToCart('Sate Kambing', 25000)">+ Order</button></div></div></div></div>
+                <!-- Tambah menu lain di sini -->
+            </div>
+        </section>
+
+    </div>
+
+    <!-- MODAL DETAIL -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div id="modalBody">
+                <h2 id="mTitle" style="font-family:'Playfair Display'; border-bottom:2px solid var(--accent); padding-bottom:10px;">Judul</h2>
+                <h4 style="margin-top:20px; color:var(--accent)">SPESIFIKASI & DESKRIPSI:</h4>
+                <p id="mDesc" style="margin-top:5px; font-size:0.95rem; line-height:1.7;"></p>
+                <h4 style="margin-top:15px; color:var(--accent)">BAHAN UTAMA:</h4>
+                <p id="mIng" style="margin-top:5px; font-size:0.9rem;"></p>
+            </div>
+        </div>
+    </div>
+
+    <a href="order.html" class="floating-cart">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-count" id="cartBadge">0</span>
+    </a>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBAB3uy7JyIA38KMKGOFJb9_r5lJ3hTaNE",
+            authDomain: "sesa-coffee.firebaseapp.com",
+            databaseURL: "https://sesa-coffee-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "sesa-coffee",
+            storageBucket: "sesa-coffee.firebasestorage.app",
+            messagingSenderId: "767835800976",
+            appId: "1:767835800976:web:21ab01c3ff9bb29aae5f15"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // SYNC STOK REAL-TIME DARI ADMIN
+        onValue(ref(db, 'menu'), (snapshot) => {
+            const data = snapshot.val() || {};
+            Object.keys(data).forEach(key => {
+                const card = document.querySelector(`.card[data-name="${key}"]`);
+                if(card) {
+                    if(data[key].status === 'habis') card.classList.add('is-habis');
+                    else card.classList.remove('is-habis');
+                }
+            });
+        });
+    </script>
+
+    <script>
+        const details = {
+            americano: { t: "Americano Classic", d: "Americano SESA diseduh menggunakan biji Arabica pilihan yang dipanggang medium-dark. Memiliki profil rasa bold dengan acidity rendah.", i: "Double Shot Espresso, Air Mineral PH 7.2" },
+            cappuccino: { t: "Traditional Cappuccino", d: "Kombinasi klasik dengan rasio 1:1:1 antara espresso, susu panas, dan busa mikro lembut. Sangat creamy di mulut.", i: "Espresso House Blend, Fresh Milk, Cocoa Powder" },
+            ayambakar: { t: "Ayam Bakar Madu Hutan", d: "Ayam kampung yang dimarinasi bumbu kuning selama 12 jam, lalu dibakar perlahan dengan olesan madu hutan asli untuk efek karamel.", i: "Ayam Pilihan, Madu Hutan, Kecap Manis, Rempah Nusantara" },
+            nasgor: { t: "Nasi Goreng Seafood PIK 2", d: "Dimasak dengan api besar (Wok Hei) untuk aroma smokey. Berisi potongan udang besar dan cumi segar dari nelayan setempat.", i: "Nasi Putih, Udang, Cumi, Bakso Ikan, Telur, Bumbu Rahasia" },
+            sate: { t: "Sate Kambing Muda SESA", d: "Daging kambing muda bawah 5 bulan yang sangat empuk dan tidak berbau. Dibakar menggunakan arang batok kelapa.", i: "Daging Kambing Muda, Lemak Pilihan, Kecap Pedas, Irisan Bawang" }
+        };
+
+        function showDetail(key) {
+            const d = details[key];
+            if(!d) return;
+            document.getElementById('mTitle').innerText = d.t;
+            document.getElementById('mDesc').innerText = d.d;
+            document.getElementById('mIng').innerText = d.i;
+            document.getElementById('detailModal').style.display = 'flex';
+        }
+
+        function closeModal() { document.getElementById('detailModal').style.display = 'none'; }
+        function toggleMenu() { document.getElementById('navLinks').classList.toggle('show'); }
+        function filterMenu(cat) {
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            document.querySelectorAll('.menu-group').forEach(g => {
+                g.classList.remove('active');
+                if(cat === 'all' || g.id === cat) g.classList.add('active');
+            });
+        }
+
+        let cart = JSON.parse(localStorage.getItem('sesa_cart')) || [];
+        function updateBadge() { document.getElementById('cartBadge').innerText = cart.length; }
+        function addToCart(name, price) {
+            cart.push({ id: Date.now(), name, price });
+            localStorage.setItem('sesa_cart', JSON.stringify(cart));
+            updateBadge();
+            alert(name + " ditambahkan!");
+        }
+        window.onload = updateBadge;
+    </script>
+</body>
+</html>
