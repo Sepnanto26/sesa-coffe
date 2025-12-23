@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SESA Coffee | Digital Menu</title>
+    <title>Menu | SESA Coffee Official</title>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
@@ -16,13 +16,13 @@
             --cream: #fdfaf5;
             --white: #ffffff;
             --danger: #e74c3c;
-            --shadow: 0 10px 30px rgba(0,0,0,0.05);
+            --shadow: 0 10px 40px rgba(0,0,0,0.06);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background-color: var(--cream); color: var(--primary); overflow-x: hidden; }
 
-        /* --- NAVBAR (Header & Mobile Logic) --- */
+        /* --- NAVBAR AREA --- */
         header {
             background: var(--white);
             position: sticky;
@@ -38,66 +38,90 @@
         }
         .logo { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--primary); text-decoration: none; }
         .logo span { color: var(--accent); }
+
+        /* Desktop Nav */
         .nav-links { display: flex; gap: 35px; list-style: none; align-items: center; }
         .nav-links a { text-decoration: none; color: var(--primary); font-weight: 500; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
         .nav-links a:hover, .nav-links a.active { color: var(--accent); }
-        .menu-toggle { display: none; font-size: 1.5rem; cursor: pointer; color: var(--primary); padding: 5px; }
 
-        /* --- CATEGORY FILTER BAR --- */
-        .category-nav {
-            background: var(--white); padding: 15px 5%;
-            display: flex; gap: 10px; overflow-x: auto;
-            position: sticky; top: 72px;
-            z-index: 3500;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
-            scrollbar-width: none;
-        }
-        .category-nav::-webkit-scrollbar { display: none; }
-        .cat-btn {
-            padding: 10px 22px; border: 1.5px solid var(--primary); background: transparent;
-            color: var(--primary); cursor: pointer; border-radius: 30px;
-            font-weight: 600; white-space: nowrap; transition: 0.4s;
-        }
-        .cat-btn.active, .cat-btn:hover { background: var(--primary); color: white; transform: scale(1.05); }
+        /* Mobile Dot Menu */
+        .menu-dots { display: none; font-size: 1.5rem; cursor: pointer; color: var(--primary); padding: 5px; }
 
         /* --- MAIN CONTAINER --- */
-        .container { padding: 40px 8%; max-width: 1400px; margin: auto; min-height: 70vh; }
-        
-        /* --- ALL MENU SECTION (PENGERTIAN) --- */
-        #intro-section { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; animation: fadeIn 0.8s ease; }
-        .intro-card { background: white; padding: 30px; border-radius: 20px; box-shadow: var(--shadow); border-left: 6px solid var(--accent); transition: 0.3s; cursor: pointer; }
-        .intro-card:hover { transform: translateY(-5px); border-left-color: var(--primary); }
-        .intro-card h3 { font-family: 'Playfair Display', serif; margin-bottom: 10px; color: var(--primary); font-size: 1.4rem; }
-        .intro-card p { font-size: 0.9rem; color: #666; line-height: 1.6; }
-        .intro-card i { font-size: 2rem; color: var(--accent); margin-bottom: 15px; display: block; }
+        .container { padding: 40px 8%; max-width: 1400px; margin: auto; min-height: 80vh; }
 
-        /* --- ACTUAL MENU GRID --- */
-        #menu-grid { display: none; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; animation: fadeInUp 0.6s ease; }
+        /* --- CATEGORY INTRO GRID (PENGERTIAN) --- */
+        #category-intro {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            animation: fadeIn 0.8s ease;
+        }
+        .intro-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            border-left: 8px solid var(--accent);
+            cursor: pointer;
+            transition: 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+        .intro-card:hover {
+            transform: translateY(-10px);
+            border-left-color: var(--primary);
+            background: var(--white);
+        }
+        .intro-card i { font-size: 2.5rem; color: var(--accent); margin-bottom: 20px; display: block; }
+        .intro-card h3 { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 12px; color: var(--primary); }
+        .intro-card p { font-size: 0.95rem; color: #666; line-height: 1.7; }
+        .intro-card .btn-explore {
+            margin-top: 20px;
+            display: inline-block;
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 0.9rem;
+        }
+
+        /* --- ACTUAL MENU LIST (HIDDEN BY DEFAULT) --- */
+        #menu-view { display: none; animation: fadeInUp 0.6s ease; }
+        .back-nav { display: flex; align-items: center; gap: 10px; cursor: pointer; color: var(--accent); font-weight: 600; margin-bottom: 30px; transition: 0.3s; }
+        .back-nav:hover { color: var(--primary); transform: translateX(-5px); }
+
+        .section-title { font-family: 'Playfair Display', serif; font-size: 2.5rem; margin-bottom: 30px; }
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; }
 
         /* CARD DESIGN */
         .card { background: white; border-radius: 25px; overflow: hidden; box-shadow: var(--shadow); transition: 0.4s; display: flex; flex-direction: column; position: relative; }
         .card:hover { transform: translateY(-10px); box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
-        .card-img-wrapper { width: 100%; height: 230px; overflow: hidden; background: #eee; }
+        .card-img-wrapper { width: 100%; height: 240px; overflow: hidden; background: #eee; }
         .card-img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+        
         .sold-out { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.85); display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 100; font-weight: bold; color: var(--danger); text-align: center; }
         .card.is-habis .sold-out { display: flex; }
         .card.is-habis .btn-order { background: #ccc !important; pointer-events: none; }
+
         .card-body { padding: 25px; flex-grow: 1; }
-        .card-body h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; margin-bottom: 8px; }
+        .card-body h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 10px; }
         .card-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #f5f5f5; padding-top: 20px; }
+        .price { font-weight: 800; font-size: 1.2rem; }
+
+        .btn-group { display: flex; gap: 8px; }
         .btn-detail { background: var(--accent); color: white; border: none; padding: 10px 15px; border-radius: 12px; cursor: pointer; font-size: 0.8rem; font-weight: bold; }
         .btn-order { background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 12px; cursor: pointer; font-size: 0.8rem; font-weight: bold; }
 
-        /* --- MODAL POPUP --- */
+        /* MODAL POPUP */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 6000; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(8px); }
-        .modal-content { background: white; padding: 40px; border-radius: 35px; max-width: 600px; width: 100%; position: relative; animation: zoomIn 0.3s ease; max-height: 90vh; overflow-y: auto; }
+        .modal-content { background: white; padding: 40px; border-radius: 35px; max-width: 600px; width: 100%; position: relative; animation: zoomIn 0.3s ease; }
         .close-modal { position: absolute; top: 20px; right: 25px; font-size: 2rem; cursor: pointer; color: #333; }
         .modal-body h2 { font-family: 'Playfair Display', serif; font-size: 2.2rem; color: var(--primary); border-bottom: 3px solid var(--accent); padding-bottom: 10px; margin-bottom: 20px; }
         .modal-body h4 { color: var(--accent); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1.5px; font-weight: 700; margin-top: 20px; }
+        .modal-body p { font-size: 1rem; line-height: 1.8; color: #333; margin-top: 8px; }
 
-        /* --- FLOATING CART --- */
+        /* FLOATING CART */
         .floating-cart { position: fixed; bottom: 30px; right: 30px; background: var(--accent); color: white; width: 70px; height: 70px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-decoration: none; z-index: 3000; transition: 0.3s; }
-        .cart-count { position: absolute; top: 0; right: 0; background: #e74c3c; width: 22px; height: 22px; border-radius: 50%; font-size: 0.75rem; display: flex; justify-content: center; align-items: center; font-weight: bold; border: 2px solid white; }
+        .cart-count { position: absolute; top: 0; right: 0; background: #e74c3c; width: 25px; height: 25px; border-radius: 50%; font-size: 0.8rem; display: flex; justify-content: center; align-items: center; font-weight: bold; border: 2px solid white; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
@@ -105,29 +129,36 @@
 
         /* --- MOBILE NAVIGATION --- */
         @media (max-width: 768px) {
+            .navbar { padding: 1rem 5%; position: relative; }
             .nav-links { 
                 display: none; position: absolute; top: 100%; left: 0; width: 100%; height: auto; 
                 background: var(--white); flex-direction: column; padding: 40px 0; gap: 30px; 
                 text-align: center; box-shadow: 0 15px 20px rgba(0,0,0,0.05); border-top: 1px solid #f0f0f0;
             }
-            .nav-links.show { display: flex; animation: slideIn 0.4s ease-out; }
-            .menu-toggle { display: block; }
-            .menu-grid, #intro-section { grid-template-columns: 1fr 1fr; gap: 15px; }
-            .intro-card { padding: 15px; }
-            .intro-card h3 { font-size: 1rem; }
-            .intro-card p { display: none; } /* Hanya judul di HP untuk intro */
+            .nav-links.show { display: flex; animation: slideDown 0.4s ease-out; }
+            .menu-dots { display: block; }
+            
+            .menu-grid, #category-intro { grid-template-columns: 1fr; gap: 20px; }
+            .intro-card { padding: 25px; }
+            .intro-card h3 { font-size: 1.4rem; }
             .card-body p { display: none; }
-            .card-img-wrapper { height: 150px; }
-            .container { padding: 20px 4%; }
+            .card-img-wrapper { height: 180px; }
+            .container { padding: 30px 5%; }
         }
+
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
+    <!-- NAVIGATION HEADER -->
     <header>
         <nav class="navbar">
             <a href="index.html" class="logo">SESA <span>Coffee</span></a>
-            <div class="menu-toggle" id="menuToggle"><i class="fas fa-bars"></i></div>
+            
+            <!-- Icon Titik 3 Mobile -->
+            <div class="menu-dots" id="menuToggle"><i class="fas fa-ellipsis-v"></i></div>
+            
             <ul class="nav-links" id="navLinks">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="menu.html" class="active">Menu</a></li>
@@ -138,75 +169,88 @@
         </nav>
     </header>
 
-    <div class="category-nav" id="filterBar">
-        <button class="cat-btn active" onclick="changeCategory('all')">All Menu</button>
-        <button class="cat-btn" onclick="changeCategory('makanan_berat')">Makanan Berat</button>
-        <button class="cat-btn" onclick="changeCategory('cemilan')">Cemilan</button>
-        <button class="cat-btn" onclick="changeCategory('coffee')">Coffee Based</button>
-        <button class="cat-btn" onclick="changeCategory('non_coffee')">Non-Coffee</button>
-        <button class="cat-btn" onclick="changeCategory('cocktail')">Cocktail</button>
-        <button class="cat-btn" onclick="changeCategory('mocktail')">Mocktail</button>
-    </div>
-
     <div class="container">
-        <!-- DEFAULT: PENGERTIAN KATEGORI -->
-        <div id="intro-section">
-            <div class="intro-card" onclick="changeCategory('makanan_berat')">
+        
+        <!-- SECTION 1: PENGERTIAN KATEGORI (Default Tampil) -->
+        <div id="category-intro">
+            <div class="intro-card" onclick="openCategory('makanan_berat')">
                 <i class="fas fa-utensils"></i>
                 <h3>Makanan Berat</h3>
-                <p>Hidangan utama yang mengenyangkan, mulai dari Nasi Goreng Signature hingga pilihan Pasta yang menggugah selera.</p>
+                <p>Hidangan utama yang mengenyangkan, diracik dengan bumbu Nusantara pilihan. Cocok untuk makan siang atau makan malam Anda di PIK 2.</p>
+                <span class="btn-explore">Lihat Menu <i class="fas fa-arrow-right"></i></span>
             </div>
-            <div class="intro-card" onclick="changeCategory('cemilan')">
+
+            <div class="intro-card" onclick="openCategory('cemilan')">
                 <i class="fas fa-cookie-bite"></i>
                 <h3>Cemilan</h3>
-                <p>Teman santai minum kopi. Kudapan ringan yang renyah dan gurih untuk menemani obrolan Anda.</p>
+                <p>Teman santai minum kopi. Kudapan ringan yang renyah dan gurih, pas untuk menemani waktu santai atau obrolan sore hari.</p>
+                <span class="btn-explore">Lihat Menu <i class="fas fa-arrow-right"></i></span>
             </div>
-            <div class="intro-card" onclick="changeCategory('coffee')">
+
+            <div class="intro-card" onclick="openCategory('coffee')">
                 <i class="fas fa-coffee"></i>
                 <h3>Coffee Based</h3>
-                <p>Ekstraksi biji kopi Arabica pilihan. Dari Espresso yang kuat hingga Latte yang lembut dan creamy.</p>
+                <p>Ekstraksi biji kopi Arabica pilihan dari petani lokal terbaik. Mulai dari Espresso yang kuat hingga Latte yang lembut dan creamy.</p>
+                <span class="btn-explore">Lihat Menu <i class="fas fa-arrow-right"></i></span>
             </div>
-            <div class="intro-card" onclick="changeCategory('non_coffee')">
+
+            <div class="intro-card" onclick="openCategory('non_coffee')">
                 <i class="fas fa-mug-hot"></i>
                 <h3>Non-Coffee</h3>
-                <p>Minuman segar tanpa kafein. Pilihan Matcha premium, Cokelat artisan, dan teh bunga yang menenangkan.</p>
+                <p>Minuman segar dan menenangkan bagi Anda yang tidak ingin kafein. Tersedia Matcha premium, Cokelat artisan, dan teh spesial.</p>
+                <span class="btn-explore">Lihat Menu <i class="fas fa-arrow-right"></i></span>
             </div>
-            <div class="intro-card" onclick="changeCategory('cocktail')">
+
+            <div class="intro-card" onclick="openCategory('cocktail')">
                 <i class="fas fa-glass-martini-alt"></i>
                 <h3>Cocktail</h3>
-                <p>Paduan alkohol premium dengan bahan segar racikan barista profesional untuk suasana malam yang elegan.</p>
+                <p>Racikan minuman beralkohol premium dengan bahan segar. Kreasi mixologist kami untuk suasana malam yang elegan dan mewah.</p>
+                <span class="btn-explore">Lihat Menu <i class="fas fa-arrow-right"></i></span>
             </div>
-            <div class="intro-card" onclick="changeCategory('mocktail')">
+
+            <div class="intro-card" onclick="openCategory('mocktail')">
                 <i class="fas fa-glass-whiskey"></i>
                 <h3>Mocktail</h3>
-                <p>Kesegaran buah asli dan soda tanpa alkohol. Minuman cantik dengan gradasi warna yang menyegarkan dahaga.</p>
+                <p>Kesegaran tanpa batas. Perpaduan buah-buahan segar, sirup homemade, dan soda dingin yang menyejukkan dahaga Anda.</p>
+                <span class="btn-explore">Lihat Menu <i class="fas fa-arrow-right"></i></span>
             </div>
         </div>
 
-        <!-- DAFTAR MENU ASLI (FETCHED FROM FIREBASE) -->
-        <div id="menu-grid">
-            <!-- Isi menu muncul di sini setelah user pilih kategori -->
+        <!-- SECTION 2: LIST MENU NYATA (Akan tampil saat kategori diklik) -->
+        <div id="menu-view">
+            <div class="back-nav" onclick="backToCategories()">
+                <i class="fas fa-chevron-left"></i> Kembali ke Pilih Kategori
+            </div>
+            <h1 class="section-title" id="selected-cat-title">Menu List</h1>
+            <div class="menu-grid" id="menu-display">
+                <!-- Data menu dari Admin masuk ke sini -->
+            </div>
         </div>
+
     </div>
 
-    <!-- MODAL DETAIL -->
+    <!-- MODAL DETAIL (SPESIFIKASI LENGKAP) -->
     <div id="detailModal" class="modal">
         <div class="modal-content">
             <span class="close-modal" id="closeModal">&times;</span>
-            <div class="modal-body" id="modalContent"></div>
+            <div class="modal-body" id="modal-body-content">
+                <!-- Diisi otomatis -->
+            </div>
         </div>
     </div>
 
+    <!-- KERANJANG MELAYANG -->
     <a href="order.html" class="floating-cart">
         <i class="fas fa-shopping-cart"></i>
         <span class="cart-count" id="cartBadge">0</span>
     </a>
 
-    <!-- FIREBASE & SCRIPT -->
+    <!-- FIREBASE & LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
+        // Konfigurasi Firebase Kamu
         const firebaseConfig = {
             apiKey: "AIzaSyBAB3uy7JyIA38KMKGOFJb9_r5lJ3hTaNE",
             authDomain: "sesa-coffee.firebaseapp.com",
@@ -220,105 +264,137 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        let menuCache = {};
+        let menuDataCache = {}; 
 
-        // Pre-fetch data agar transisi cepat
-        onValue(ref(db, 'store_menu'), (snap) => {
-            menuCache = snap.val() || {};
-            // Jika kategori sudah bukan ALL, update grid
-            const currentCat = document.querySelector('.cat-btn.active').innerText.toLowerCase().replace(' ', '_');
-            if (currentCat !== 'all_menu') renderMenuItems(currentCat);
+        // AMBIL DATA MENU DARI ADMIN SECARA REAL-TIME
+        onValue(ref(db, 'store_menu'), (snapshot) => {
+            menuDataCache = snapshot.val() || {};
         });
 
-        // FUNGSI RENDER MENU
-        window.renderMenuItems = function(catKey) {
-            const intro = document.getElementById('intro-section');
-            const grid = document.getElementById('menu-grid');
-            
-            if (catKey === 'all') {
-                intro.style.display = "grid";
-                grid.style.display = "none";
-                return;
-            }
+        // FUNGSI MEMBUKA KATEGORI (FILTER)
+        window.openCategory = function(catKey) {
+            const intro = document.getElementById('category-intro');
+            const menuView = document.getElementById('menu-view');
+            const display = document.getElementById('menu-display');
+            const title = document.getElementById('selected-cat-title');
 
-            intro.style.display = "none";
-            grid.style.display = "grid";
-            grid.innerHTML = "";
+            // Ubah Judul Header sesuai kategori
+            const titles = {
+                'makanan_berat': 'Makanan Berat',
+                'cemilan': 'Cemilan & Snack',
+                'coffee': 'Coffee Based',
+                'non_coffee': 'Non-Coffee Selection',
+                'cocktail': 'Signatures Cocktail',
+                'mocktail': 'Fresh Mocktail'
+            };
+            title.innerText = titles[catKey] || 'Our Menu';
 
-            const items = Object.keys(menuCache).filter(key => menuCache[key].category === catKey);
+            // Filter data dari cache
+            display.innerHTML = "";
+            let hasItems = false;
 
-            if (items.length === 0) {
-                grid.innerHTML = `<p style="grid-column:1/-1; text-align:center; padding:50px;">Menu kategori ini belum tersedia.</p>`;
-                return;
-            }
-
-            items.forEach(id => {
-                const m = menuCache[id];
-                const isHabis = m.status === 'habis';
-                grid.innerHTML += `
-                    <div class="card ${isHabis ? 'is-habis' : ''}">
-                        <div class="sold-out"><i class="fas fa-clock"></i><br>HABIS</div>
-                        <div class="card-img-wrapper"><img src="${m.image}" alt="${m.name}"></div>
-                        <div class="card-body">
-                            <h3>${m.name}</h3>
-                            <div class="card-footer">
-                                <span class="price">Rp ${parseInt(m.price).toLocaleString()}</span>
-                                <div class="btn-group">
-                                    <button class="btn-detail" onclick="openDetail('${id}')">Detail</button>
-                                    <button class="btn-order" onclick="addToCart('${id}', '${m.name}', ${m.price})">+ Order</button>
+            Object.keys(menuDataCache).forEach(id => {
+                const item = menuDataCache[id];
+                if(item.category === catKey) {
+                    hasItems = true;
+                    const isHabis = item.status === 'habis';
+                    const card = `
+                        <div class="card ${isHabis ? 'is-habis' : ''}">
+                            <div class="sold-out"><i class="fas fa-times-circle"></i><br>HABIS</div>
+                            <div class="card-img-wrapper">
+                                <img src="${item.image}" alt="${item.name}" onerror="this.src='https://images.unsplash.com/photo-1511920170033-f8396924c348?q=80&w=600'">
+                            </div>
+                            <div class="card-body">
+                                <h3>${item.name}</h3>
+                                <div class="card-footer">
+                                    <span class="price">Rp ${parseInt(item.price).toLocaleString()}</span>
+                                    <div class="btn-group">
+                                        <button class="btn-detail" onclick="showDetail('${id}')">Spesifikasi</button>
+                                        <button class="btn-order" onclick="addToCart('${id}', '${item.name}', ${item.price})">+ Order</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>`;
+                    `;
+                    display.innerHTML += card;
+                }
             });
-        };
 
-        window.openDetail = (id) => {
-            const m = menuCache[id];
-            document.getElementById('modalContent').innerHTML = `
-                <h2>${m.name}</h2>
-                <h4>Spesifikasi:</h4><p>${m.description || '-'}</p>
-                <h4>Bahan Utama:</h4><p>${m.ingredients || '-'}</p>
-                <h4>Penyajian:</h4><p>${m.serving || '-'}</p>`;
+            if(!hasItems) {
+                display.innerHTML = "<p style='grid-column:1/-1; text-align:center; padding: 50px;'>Maaf, menu di kategori ini belum tersedia saat ini.</p>";
+            }
+
+            // Ganti Tampilan
+            intro.style.display = "none";
+            menuView.style.display = "block";
+            window.scrollTo(0,0);
+        }
+
+        // FUNGSI KEMBALI
+        window.backToCategories = function() {
+            document.getElementById('category-intro').style.display = "grid";
+            document.getElementById('menu-view').style.display = "none";
+        }
+
+        // FUNGSI DETAIL POPUP
+        window.showDetail = function(id) {
+            const item = menuDataCache[id];
+            const modalBody = document.getElementById('modal-body-content');
+            modalBody.innerHTML = `
+                <h2>${item.name}</h2>
+                <h4>Spesifikasi & Deskripsi Lengkap:</h4><p>${item.description || '-'}</p>
+                <h4>Bahan-Bahan Utama:</h4><p>${item.ingredients || '-'}</p>
+                <h4>Metode Penyajian:</h4><p>${item.serving || '-'}</p>
+            `;
             document.getElementById('detailModal').style.display = 'flex';
         }
 
-        window.addToCart = (id, name, price) => {
+        // FUNGSI TAMBAH KERANJANG
+        window.addToCart = function(id, name, price) {
+            if(menuDataCache[id].status === 'habis') {
+                alert("Menu ini sedang kosong."); return;
+            }
             let cart = JSON.parse(localStorage.getItem('sesa_cart')) || [];
-            cart.push({ id: Date.now(), name, price });
+            cart.push({ id: Date.now(), name: name, price: price });
             localStorage.setItem('sesa_cart', JSON.stringify(cart));
             document.getElementById('cartBadge').innerText = cart.length;
-            alert(`${name} ditambahkan!`);
-        };
+            
+            const btn = event.target;
+            const original = btn.innerText;
+            btn.innerText = "Sukes ✓";
+            btn.style.background = "#27ae60";
+            setTimeout(() => { btn.innerText = original; btn.style.background = "#2c1b0e"; }, 800);
+        }
     </script>
 
     <script>
-        // UI LOGIC
-        function toggleMenu() {
-            const nav = document.getElementById('navLinks');
-            nav.classList.toggle('show');
-            const icon = document.querySelector('#menuToggle i');
-            icon.className = nav.classList.contains('show') ? 'fas fa-times' : 'fas fa-bars';
-        }
+        // UI INTERACTIONS
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
 
-        function changeCategory(cat) {
-            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
-            // Cari tombol yang sesuai
-            const targetBtn = Array.from(document.querySelectorAll('.cat-btn')).find(b => b.onclick.toString().includes(cat));
-            if(targetBtn) targetBtn.classList.add('active');
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('show');
+            const icon = menuToggle.querySelector('i');
+            icon.className = navLinks.classList.contains('show') ? 'fas fa-times' : 'fas fa-ellipsis-v';
+        });
 
-            // Panggil fungsi render yang ada di script module
-            if(window.renderMenuItems) window.renderMenuItems(cat);
-        }
+        // Tutup menu jika link diklik
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('show');
+                menuToggle.querySelector('i').className = 'fas fa-ellipsis-v';
+            });
+        });
 
         function closeModal() { document.getElementById('detailModal').style.display = 'none'; }
         document.getElementById('closeModal').onclick = closeModal;
 
         window.onload = () => {
-            document.getElementById('cartBadge').innerText = (JSON.parse(localStorage.getItem('sesa_cart')) || []).length;
+            const cart = JSON.parse(localStorage.getItem('sesa_cart')) || [];
+            document.getElementById('cartBadge').innerText = cart.length;
         };
 
-        window.onclick = (e) => { if(e.target.className === 'modal') closeModal(); }
+        window.onclick = (e) => { if (e.target == document.getElementById('detailModal')) closeModal(); }
     </script>
 </body>
 </html>
