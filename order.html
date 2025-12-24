@@ -1,64 +1,267 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tracking & Checkout | SESA Coffee Official</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Checkout & Live Tracking | SESA Coffee Official v31.0</title>
+    <!-- Premium Luxury Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Pro Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        :root { --primary: #2c1b0e; --accent: #c5a059; --cream: #fdfaf5; --white: #ffffff; --success: #27ae60; }
+        :root {
+            --primary: #1a120b;
+            --secondary: #2c1b0e;
+            --accent: #c5a059;
+            --cream: #fdfaf5;
+            --white: #ffffff;
+            --danger: #e74c3c;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --shadow-lux: 0 25px 60px rgba(0,0,0,0.12);
+            --transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        /* --- GLOBAL BASE --- */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background-color: var(--cream); color: var(--primary); }
+        html { scroll-behavior: smooth; }
+        body { background-color: var(--cream); color: var(--primary); overflow-x: hidden; }
 
-        header { background: var(--white); position: sticky; top: 0; z-index: 4000; box-shadow: 0 2px 15px rgba(0,0,0,0.05); }
-        .navbar { padding: 1.2rem 8%; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-family: 'Playfair Display'; font-size: 1.8rem; font-weight: 700; color: var(--primary); text-decoration: none; }
-        .nav-links { display: flex; gap: 30px; list-style: none; align-items: center; }
-        .nav-links a { text-decoration: none; color: var(--primary); font-weight: 500; text-transform: uppercase; font-size: 0.85rem; }
-        .menu-dots { display: none; cursor: pointer; font-size: 1.5rem; }
+        /* --- PREMIUM NAVIGATION (TRANSPARENT LIKE HOME) --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 9000;
+            transition: var(--transition);
+            padding: 2rem 0;
+        }
+        header.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 0;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(10px);
+        }
 
-        .container { padding: 40px 8%; max-width: 1000px; margin: auto; }
-        .card { background: white; padding: 40px; border-radius: 35px; box-shadow: 0 15px 45px rgba(0,0,0,0.05); margin-bottom: 35px; }
+        .navbar {
+            padding: 0 8%;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            max-width: 1600px;
+            margin: auto;
+        }
+
+        .logo { 
+            font-family: 'Playfair Display', serif; 
+            font-size: 2.2rem; 
+            font-weight: 900; 
+            color: var(--white); 
+            text-decoration: none; 
+            letter-spacing: 1px;
+            transition: var(--transition);
+        }
+        header.scrolled .logo { color: var(--primary); }
+        .logo span { color: var(--accent); }
+
+        .nav-links { display: flex; gap: 40px; list-style: none; align-items: center; }
+        .nav-links a { 
+            text-decoration: none; 
+            color: var(--white); 
+            font-weight: 600; 
+            text-transform: uppercase; 
+            font-size: 0.85rem; 
+            letter-spacing: 2px; 
+            transition: var(--transition); 
+            position: relative; 
+        }
+        header.scrolled .nav-links a { color: var(--primary); }
+        .nav-links a::after { content: ''; position: absolute; width: 0; height: 3px; bottom: -8px; left: 0; background: var(--accent); transition: 0.3s; }
+        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+        .nav-links a.active { color: var(--accent) !important; }
+
+        .menu-toggle { display: none; cursor: pointer; font-size: 1.8rem; color: var(--white); transition: var(--transition); }
+        header.scrolled .menu-toggle { color: var(--primary); }
+
+        /* --- PAGE HEADER --- */
+        .page-banner {
+            padding: 180px 5% 100px;
+            text-align: center;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1500');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--white);
+            border-bottom: 8px solid var(--accent);
+            margin-bottom: 60px;
+        }
+        .page-banner h1 { font-family: 'Playfair Display', serif; font-size: 4rem; font-weight: 900; margin-bottom: 10px; }
+        .page-banner p { color: var(--accent); letter-spacing: 6px; text-transform: uppercase; font-weight: 600; }
+
+        /* --- CONTAINER --- */
+        .container { max-width: 1200px; margin: auto; padding: 0 8% 100px; min-height: 80vh; }
+
+        /* --- ELEGANT BACK BUTTON --- */
+        .back-nav-wrapper { margin-bottom: 40px; animation: fadeInLeft 0.6s ease; }
+        .elegant-back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--primary);
+            color: var(--white);
+            padding: 16px 45px;
+            border-radius: 100px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid var(--primary);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-decoration: none;
+        }
+        .elegant-back-btn:hover { background: var(--white); color: var(--primary); border-color: var(--accent); transform: translateX(-10px); }
+
+        /* --- CHECKOUT CARD --- */
+        .order-card-luxury { 
+            background: var(--white); 
+            padding: 55px; 
+            border-radius: 50px; 
+            box-shadow: var(--shadow-lux); 
+            margin-bottom: 40px; 
+            border: 1px solid rgba(0,0,0,0.02);
+            animation: fadeInUp 0.8s ease;
+        }
+        .section-title { font-family: 'Playfair Display', serif; font-size: 2.8rem; margin-bottom: 40px; border-bottom: 6px solid var(--accent); display: inline-block; padding-bottom: 8px; }
+
+        .cart-item-row { display: flex; justify-content: space-between; align-items: center; padding: 25px 0; border-bottom: 1px solid #f2f2f2; }
+        .cart-item-row:last-child { border-bottom: none; }
+        .item-details b { font-size: 1.3rem; color: var(--primary); display: block; }
+        .item-details small { color: var(--accent); font-weight: 700; font-size: 1rem; }
         
-        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #f5f5f5; }
-        .qty-btn { background: #f0f0f0; border: none; width: 35px; height: 35px; border-radius: 10px; cursor: pointer; font-weight: 800; }
-        
-        .form-group { margin-bottom: 25px; }
-        .form-group label { display: block; font-weight: 700; font-size: 0.8rem; margin-bottom: 10px; color: #777; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 18px; border: 2px solid #f5f5f5; border-radius: 18px; outline: none; }
+        .qty-box { display: flex; align-items: center; gap: 20px; }
+        .qty-btn { width: 45px; height: 45px; border: none; background: #f5f5f5; border-radius: 15px; cursor: pointer; font-weight: 900; font-size: 1.4rem; transition: 0.2s; color: var(--primary); }
+        .qty-btn:hover { background: var(--accent); color: white; transform: scale(1.1); }
 
-        .pay-box { display: none; background: #fffcf5; padding: 30px; border-radius: 25px; border-left: 6px solid var(--accent); margin-top: 20px; text-align: center; }
-        .btn-order { background: var(--primary); color: white; border: none; padding: 22px; border-radius: 25px; width: 100%; font-weight: 800; font-size: 1.2rem; cursor: pointer; transition: 0.3s; }
+        .grand-total-section { margin-top: 40px; padding-top: 35px; border-top: 3px dashed #eee; display: flex; justify-content: space-between; align-items: center; }
+        .grand-total-section span { font-size: 1.4rem; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: 2px; }
+        .grand-total-section h2 { font-size: 3rem; font-weight: 900; color: var(--primary); }
 
-        /* CLOCK ANIMATION */
-        .clock-wall { width: 80px; height: 80px; border: 6px solid var(--primary); border-radius: 50%; position: relative; margin: 20px auto; }
-        .hand { width: 4px; background: var(--primary); position: absolute; bottom: 50%; left: 50%; transform-origin: bottom center; border-radius: 4px; }
-        .hour { height: 20px; animation: rot 12s linear infinite; }
-        .minute { height: 30px; animation: rot 2s linear infinite; }
-        @keyframes rot { from { transform: translateX(-50%) rotate(0deg); } to { transform: translateX(-50%) rotate(360deg); } }
+        /* --- FORM DETAILS --- */
+        .form-grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 30px; }
+        .input-lux-group { margin-bottom: 25px; }
+        .input-lux-group label { display: block; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; margin-bottom: 12px; color: #555; letter-spacing: 1.5px; }
+        .input-lux-group input, .input-lux-group select, .input-lux-group textarea { width: 100%; padding: 22px; border: 2px solid #f5f5f5; border-radius: 25px; outline: none; background: #fafafa; font-size: 1.1rem; transition: 0.3s; color: var(--primary); }
+        .input-lux-group input:focus, .input-lux-group textarea:focus { border-color: var(--accent); background: white; box-shadow: 0 0 20px rgba(197, 160, 89, 0.1); }
 
-        /* TRACK SLIDER */
-        .track-slider { display: flex; overflow-x: auto; gap: 20px; padding-bottom: 20px; scrollbar-width: none; }
-        .track-card { min-width: 300px; background: #fffcf5; border: 3px dashed var(--accent); padding: 30px; border-radius: 30px; text-align: center; }
-        .ready-anim { background: var(--success); color: white; padding: 15px; border-radius: 15px; font-weight: 800; animation: pulse 1s infinite; margin-top: 20px; }
-        @keyframes pulse { 0%, 100% { opacity:0.8; } 50% { opacity:1; } }
+        /* PAYMENT DETAILS */
+        .pay-info-card { display: none; background: #fffcf5; padding: 45px; border-radius: 40px; border-left: 12px solid var(--accent); margin-top: 35px; text-align: center; animation: fadeIn 0.6s ease; }
+        .pay-info-card i { color: var(--accent); margin-bottom: 25px; }
+        .pay-info-card strong { font-size: 1.5rem; display: block; margin-bottom: 15px; color: var(--primary); }
+        .pay-info-card p { line-height: 1.8; color: #666; font-size: 1rem; }
+
+        .btn-order-execute { background: var(--primary); color: white; border: none; padding: 28px; border-radius: 35px; width: 100%; font-weight: 900; font-size: 1.5rem; cursor: pointer; transition: 0.4s; box-shadow: 0 20px 40px rgba(0,0,0,0.15); margin-top: 30px; letter-spacing: 2px; }
+        .btn-order-execute:hover { background: var(--accent); transform: translateY(-8px); box-shadow: 0 25px 50px rgba(197, 160, 89, 0.4); }
+
+        /* --- TRACKING SYSTEM (SLIDER FOR HP) --- */
+        .tracking-title-section { margin-top: 100px; text-align: center; }
+        .tracking-title-section h2 { font-family: 'Playfair Display'; font-size: 3.5rem; margin-bottom: 15px; }
+
+        /* SLIDER CONTAINER */
+        .track-slider-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 30px;
+            padding: 40px 10px;
+            scrollbar-width: none; /* Hide scrollbar for Firefox */
+            -ms-overflow-style: none; /* Hide scrollbar for IE */
+            scroll-snap-type: x mandatory;
+        }
+        .track-slider-container::-webkit-scrollbar { display: none; } /* Hide scrollbar for Chrome/Safari */
+
+        .track-lux-card { 
+            min-width: 450px; 
+            background: var(--white); 
+            padding: 60px 45px; 
+            border-radius: 60px; 
+            box-shadow: var(--shadow-lux); 
+            text-align: center; 
+            position: relative; 
+            border: 2px solid transparent; 
+            transition: 0.4s; 
+            scroll-snap-align: center;
+        }
+        .track-lux-card.ready-state { border-color: var(--success); background: #fafffa; }
+
+        /* LUXURY CLOCK ANIMATION */
+        .luxury-clock-icon { width: 130px; height: 130px; border: 8px solid var(--primary); border-radius: 50%; position: relative; margin: 0 auto 40px; background: white; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .luxury-clock-icon::after { content: ''; position: absolute; width: 10px; height: 10px; background: var(--accent); border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; }
+        .clock-hand-lux { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom center; background: var(--primary); border-radius: 10px; }
+        .h-hour-lux { width: 6px; height: 35px; animation: rotateLuxClock 12s linear infinite; }
+        .h-min-lux { width: 4px; height: 55px; animation: rotateLuxClock 2s linear infinite; }
+
+        @keyframes rotateLuxClock { from { transform: translateX(-50%) rotate(0deg); } to { transform: translateX(-50%) rotate(360deg); } }
+
+        .status-label-top { font-size: 0.9rem; font-weight: 800; text-transform: uppercase; color: #bbb; letter-spacing: 3px; margin-bottom: 12px; display: block; }
+        .status-main-val { font-size: 2.8rem; font-weight: 900; color: var(--accent); font-family: 'Playfair Display'; letter-spacing: 1px; }
+
+        .ready-notif-box { background: var(--success); color: white; padding: 22px; border-radius: 20px; font-weight: 800; font-size: 1rem; margin-top: 35px; animation: pulseLux 1.2s infinite; }
+        @keyframes pulseLux { 0%, 100% { opacity: 0.8; transform: scale(1); } 50% { opacity: 1; transform: scale(1.03); } }
+
+        /* --- RESPONSIVE OPTIMIZATION --- */
+        @media (max-width: 1024px) {
+            .navbar { padding: 0 5%; }
+            .track-lux-card { min-width: 400px; }
+        }
 
         @media (max-width: 768px) {
-            .nav-links { display: none; position: absolute; top: 100%; left: 0; width: 100%; background: white; flex-direction: column; padding: 25px; }
-            .nav-links.show { display: flex; }
-            .menu-dots { display: block; }
-            .container { padding: 20px 5%; }
+            header { padding: 1.2rem 0; }
+            header.scrolled { background: var(--white); }
+            .logo, .nav-links a { color: var(--primary) !important; }
+            
+            .nav-links {
+                position: fixed; top: 0; right: -100%; width: 85%; height: 100vh;
+                background: rgba(26, 18, 11, 0.98); backdrop-filter: blur(20px);
+                flex-direction: column; justify-content: center; padding: 60px;
+                transition: 0.6s cubic-bezier(0.165, 0.84, 0.44, 1); z-index: 9998; gap: 30px;
+            }
+            .nav-links.show { right: 0; }
+            .nav-links a { color: var(--white) !important; font-size: 1.6rem; font-weight: 700; }
+            
+            .menu-toggle { display: block; color: var(--primary) !important; z-index: 9999; }
+
+            .page-banner h1 { font-size: 2.8rem; }
+            .container { padding: 30px 6%; }
+            .order-card-luxury { padding: 35px 25px; border-radius: 40px; }
+            .section-title { font-size: 2rem; }
+            .form-grid-layout { grid-template-columns: 1fr; }
+            .grand-total-section h2 { font-size: 2rem; }
+            
+            /* HP TRACK SLIDER */
+            .track-lux-card { min-width: 90%; padding: 40px 25px; border-radius: 45px; }
+            .status-main-val { font-size: 2.2rem; }
+            .elegant-back-btn { width: 100%; justify-content: center; }
         }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInLeft { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-    <header>
+    <!-- LUXURY NAVIGATION -->
+    <header id="main-header">
         <nav class="navbar">
-            <a href="index.html" class="logo">SESA <span>Coffee</span></a>
-            <div class="menu-dots" onclick="toggleN()"><i class="fas fa-ellipsis-v"></i></div>
-            <ul class="nav-links" id="nav-o">
+            <a href="index.html" class="logo">SESA <span>COFFEE</span></a>
+            
+            <div class="menu-toggle" onclick="toggleLuxuryNav()">
+                <i class="fas fa-bars"></i>
+            </div>
+
+            <ul class="nav-links" id="nav-list-lux">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="menu.html">Menu</a></li>
                 <li><a href="order.html" class="active">Order</a></li>
@@ -68,63 +271,111 @@
         </nav>
     </header>
 
+    <!-- PAGE HEADER -->
+    <div class="page-banner">
+        <p>Crafting Perfection</p>
+        <h1>Your SESA Order</h1>
+    </div>
+
     <div class="container">
         
-        <!-- SECTION 1: CHECKOUT -->
-        <div id="check-area">
-            <button class="back-btn" style="background:none; border:none; color:var(--accent); font-weight:800; cursor:pointer; margin-bottom:20px;" onclick="location.href='menu.html'"><i class="fas fa-arrow-left"></i> KEMBALI KE MENU</button>
-            <div class="card">
-                <h2 style="font-family:'Playfair Display'; font-size:2rem; margin-bottom:25px;">Detail Keranjang</h2>
-                <div id="cart-list"></div>
-                <div style="margin-top:30px; border-top:3px dashed #eee; padding-top:25px; display:flex; justify-content:space-between; font-size:1.6rem; font-weight:900;">
-                    <span>Total</span><span id="g-total" style="color:var(--accent);">Rp 0</span>
+        <!-- SECTION 1: CHECKOUT VIEW -->
+        <div id="checkout-view-lux">
+            <div class="back-nav-wrapper">
+                <a href="menu.html" class="elegant-back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Return to Menu</span>
+                </a>
+            </div>
+
+            <div class="order-card-luxury">
+                <h2 class="section-title">Order Summary</h2>
+                <div id="luxury-cart-list">
+                    <!-- Dynamic Cart Items -->
+                </div>
+                
+                <div class="grand-total-section">
+                    <span>Final Amount</span>
+                    <h2 id="grand-total-lux">Rp 0</h2>
                 </div>
             </div>
 
-            <div class="card">
-                <h2 style="font-family:'Playfair Display'; font-size:2rem; margin-bottom:25px;">Data Pengiriman</h2>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
-                    <div class="form-group"><label>Nama Lengkap</label><input type="text" id="c-name" placeholder="Atas nama siapa?"></div>
-                    <div class="form-group"><label>Nomor Meja</label><input type="number" id="c-table" placeholder="00"></div>
+            <div class="order-card-luxury">
+                <h2 class="section-title">Delivery & Payment</h2>
+                
+                <div class="form-grid-layout">
+                    <div class="input-lux-group">
+                        <label>Customer Full Name</label>
+                        <input type="text" id="cust-name-lux" placeholder="Enter your name">
+                    </div>
+                    <div class="input-lux-group">
+                        <label>Dining Table No.</label>
+                        <input type="number" id="cust-table-lux" placeholder="e.g. 05">
+                    </div>
                 </div>
-                <div class="form-group"><label>Instruksi / Catatan Khusus</label><textarea id="c-note" rows="3" placeholder="Contoh: Kurang gula, ekstra es..."></textarea></div>
-                <div class="form-group">
-                    <label>Metode Pembayaran</label>
-                    <select id="p-method" onchange="showP()">
-                        <option value="">-- PILIH PEMBAYARAN --</option>
-                        <option value="qris">SCAN QRIS (DARI HP ANDA)</option>
+                
+                <div class="input-lux-group">
+                    <label>Special Note for Barista (Optional)</label>
+                    <textarea id="cust-note-lux" rows="3" placeholder="e.g. No sugar, extra ice cubes, milk substitution..."></textarea>
+                </div>
+
+                <div class="input-lux-group">
+                    <label>Preferred Payment Method</label>
+                    <select id="pay-method-lux" onchange="toggleLuxuryPayBox()">
+                        <option value="">-- SELECT PAYMENT METHOD --</option>
+                        <option value="qris">SCAN QRIS (IN-APP DISPLAY)</option>
                         <option value="bank">TRANSFER BCA (8830192332)</option>
-                        <option value="kasir">BAYAR TUNAI DI KASIR</option>
+                        <option value="cash">PAY AT CASHIER COUNTER</option>
                     </select>
                 </div>
 
-                <div id="p-qris" class="pay-box">
-                    <i class="fas fa-qrcode fa-5x"></i><br><br>
-                    <strong>SCAN QRIS SESA OFFICIAL:</strong><br>Silahkan scan barcode di atas langsung dari layar HP Anda. Pesanan akan diproses otomatis.
+                <!-- PAYMENT INFO BOXES -->
+                <div id="p-box-qris" class="pay-info-card">
+                    <i class="fas fa-qrcode fa-6x"></i>
+                    <strong>SESA QRIS INSTANT</strong>
+                    <p>Please scan the code above using your mobile banking or e-wallet app. Our system will detect your transaction and alert the kitchen immediately.</p>
                 </div>
-                <div id="p-bank" class="pay-box">
-                    <i class="fas fa-university fa-3x"></i><br><br>
-                    <strong>BCA: 8830 192 332</strong><br>A/N PT SESA COFFEE INDONESIA. Simpan bukti transfer untuk divalidasi.
+                <div id="p-box-bank" class="pay-info-card">
+                    <i class="fas fa-university fa-4x"></i>
+                    <strong>BANK CENTRAL ASIA (BCA)</strong>
+                    <p>Account No: <b>8830 192 332</b><br>A/N: <b>PT SESA COFFEE INDONESIA</b><br>Please keep your proof of transfer for our staff to verify upon delivery.</p>
                 </div>
-                <div id="p-kasir" class="pay-box">
-                    <i class="fas fa-cash-register fa-3x"></i><br><br>
-                    <strong>BAYAR DI KASIR:</strong><br>Sebutkan nama Anda di meja kasir untuk pembayaran tunai sebelum pesanan diproses.
+                <div id="p-box-cash" class="pay-info-card">
+                    <i class="fas fa-cash-register fa-4x"></i>
+                    <strong>CASHIER PAYMENT</strong>
+                    <p>Please proceed to our main counter, mention your name and table number, and finalize your payment before our team starts brewing.</p>
                 </div>
 
-                <button class="btn-order" style="margin-top:30px;" onclick="submitOrder()">KIRIM PESANAN KE DAPUR <i class="fas fa-paper-plane"></i></button>
+                <button class="btn-order-execute" onclick="submitLuxuryOrder()">
+                    SEND ORDER TO KITCHEN <i class="fas fa-paper-plane"></i>
+                </button>
             </div>
         </div>
 
-        <!-- SECTION 2: MULTI TRACKING -->
-        <div id="track-area">
-            <h2 style="font-family:'Playfair Display'; margin-bottom:25px;"><i class="fas fa-history"></i> Lacak Pesanan Anda</h2>
-            <div class="track-slider" id="active-tracks">
-                <!-- Pesanan-pesanan yang sedang berjalan -->
+        <!-- SECTION 2: LIVE MULTI TRACKING (SLIDER) -->
+        <div id="tracking-view-lux">
+            <div class="tracking-header">
+                <h2>Real-time Order Status</h2>
+                <p style="opacity:0.6;">Swipe horizontally to view all your active orders.</p>
+            </div>
+            
+            <!-- HORIZONTAL SLIDER FOR MOBILE -->
+            <div class="track-slider-container" id="tracking-slider-target">
+                <!-- Multiple Session Cards Injected Here -->
+            </div>
+            
+            <div style="text-align:center; margin-top:80px;">
+                <p style="font-weight:600; margin-bottom:25px; opacity:0.6;">Would you like to explore more flavors?</p>
+                <a href="menu.html" class="elegant-back-btn" style="background:var(--accent); border-color:var(--accent);">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Order Something New</span>
+                </a>
             </div>
         </div>
 
     </div>
 
+    <!-- FIREBASE LOGIC ENGINE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
@@ -138,104 +389,158 @@
             messagingSenderId: "767835800976",
             appId: "1:767835800976:web:21ab01c3ff9bb29aae5f15"
         };
+        
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        let cart = JSON.parse(localStorage.getItem('sesa_cart')) || [];
+        let cartData = JSON.parse(localStorage.getItem('sesa_cart')) || [];
         
-        window.renderOrder = () => {
-            const list = document.getElementById('cart-list'); list.innerHTML = "";
+        window.renderLuxuryCart = () => {
+            const list = document.getElementById('luxury-cart-list'); list.innerHTML = "";
             let total = 0;
-            if(cart.length === 0) {
-                list.innerHTML = "<p style='text-align:center; padding:30px; color:#aaa;'>Keranjang kosong.</p>";
-                document.getElementById('check-area').style.display = 'none';
+            if(cartData.length === 0) {
+                list.innerHTML = "<div style='text-align:center; padding:50px; opacity:0.4;'><i class='fas fa-shopping-cart fa-4x'></i><p style='margin-top:20px; font-weight:700;'>Your cart is currently empty.</p></div>";
+                document.getElementById('checkout-view-lux').style.display = 'none';
             } else {
-                document.getElementById('check-area').style.display = 'block';
+                document.getElementById('checkout-view-lux').style.display = 'block';
             }
-            cart.forEach((i, idx) => {
-                total += (i.price * i.qty);
+
+            cartData.forEach((item, index) => {
+                total += (item.price * item.qty);
                 list.innerHTML += `
-                    <div class="item-row">
-                        <div><b>${i.name}</b><br><small>Rp ${i.price.toLocaleString()}</small></div>
-                        <div class="qty-ctrl">
-                            <button class="qty-btn" onclick="upQ(${idx},-1)">-</button>
-                            <span style="font-weight:700;">${i.qty}</span>
-                            <button class="qty-btn" onclick="upQ(${idx},1)">+</button>
+                    <div class="cart-item-row">
+                        <div class="item-details">
+                            <b>${item.name}</b>
+                            <small>Rp ${item.price.toLocaleString()}</small>
+                        </div>
+                        <div class="qty-box">
+                            <button class="qty-btn" onclick="modifyLuxuryQty(${index}, -1)">-</button>
+                            <span style="font-weight:900; font-size:1.2rem;">${item.qty}</span>
+                            <button class="qty-btn" onclick="modifyLuxuryQty(${index}, 1)">+</button>
                         </div>
                     </div>`;
             });
-            document.getElementById('g-total').innerText = "Rp " + total.toLocaleString();
-            localStorage.setItem('sesa_cart', JSON.stringify(cart));
+            document.getElementById('grand-total-lux').innerText = "Rp " + total.toLocaleString();
+            localStorage.setItem('sesa_cart', JSON.stringify(cartData));
         };
 
-        window.upQ = (idx, c) => { cart[idx].qty += c; if(cart[idx].qty < 1) cart.splice(idx,1); renderOrder(); };
-
-        window.showP = () => {
-            document.querySelectorAll('.pay-box').forEach(b => b.style.display = "none");
-            const v = document.getElementById('p-method').value;
-            if(v) document.getElementById('p-'+v).style.display = "block";
+        window.modifyLuxuryQty = (idx, delta) => {
+            cartData[idx].qty += delta;
+            if(cartData[idx].qty < 1) cartData.splice(idx, 1);
+            renderLuxuryCart();
         };
 
-        window.submitOrder = () => {
-            const name = document.getElementById('c-name').value;
-            const table = document.getElementById('c-table').value;
-            const pay = document.getElementById('p-method').value;
-            if(!name || !table || !pay || cart.length === 0) return alert("Mohon lengkapi data!");
+        window.toggleLuxuryPayBox = () => {
+            document.querySelectorAll('.pay-info-card').forEach(box => box.style.display = 'none');
+            const selected = document.getElementById('pay-method-lux').value;
+            if(selected) document.getElementById('p-box-'+selected).style.display = 'block';
+        };
 
-            const id = "ORD_" + Date.now();
+        window.submitLuxuryOrder = () => {
+            const nameVal = document.getElementById('cust-name-lux').value;
+            const tableVal = document.getElementById('cust-table-lux').value;
+            const payVal = document.getElementById('pay-method-lux').value;
+
+            if(!nameVal || !tableVal || !payVal || cartData.length === 0) return alert("Please fill in all details before sending to kitchen!");
+
+            const orderID = "SESA_ORD_" + Date.now();
             const now = new Date();
-            set(ref(db, 'orders/' + id), {
-                id, customer: name, table, note: document.getElementById('c-note').value,
-                payment: pay.toUpperCase(), items: cart,
-                total: cart.reduce((s,i) => s+(i.price*i.qty), 0),
-                status: 'MENUNGGU', fullTime: now.toLocaleString('id-ID'),
-                month: now.toLocaleString('id-ID', {month:'long'}).toUpperCase()
+            
+            set(ref(db, 'orders/' + orderID), {
+                id: orderID,
+                customer: nameVal,
+                table: tableVal,
+                note: document.getElementById('cust-note-lux').value,
+                payment: payVal.toUpperCase(),
+                items: cartData,
+                total: cartData.reduce((acc, item) => acc + (item.price * item.qty), 0),
+                status: 'MENUNGGU',
+                fullTime: now.toLocaleString('id-ID'),
+                month: now.toLocaleString('id-ID', {month: 'long'}).toUpperCase()
             }).then(() => {
-                let tracks = JSON.parse(localStorage.getItem('sesa_tracks')) || [];
-                tracks.push(id);
-                localStorage.setItem('sesa_tracks', JSON.stringify(tracks));
+                // Persistent Tracking for this user device
+                let trackHistory = JSON.parse(localStorage.getItem('sesa_track_history')) || [];
+                trackHistory.push(orderID);
+                localStorage.setItem('sesa_track_history', JSON.stringify(trackHistory));
+                
                 localStorage.removeItem('sesa_cart');
-                alert("Pesanan Terkirim! Anda bisa pesan lagi.");
+                alert("Order Placed Successfully! Your baristas have been notified.");
                 location.reload();
             });
         };
 
-        // --- MULTI TRACKING LOGIC ---
-        const activeTracks = JSON.parse(localStorage.getItem('sesa_tracks')) || [];
-        const trackListUI = document.getElementById('active-orders-list');
-        if(activeTracks.length === 0) document.getElementById('track-area').style.display = 'none';
+        // --- REAL-TIME MULTI-TRACKER ---
+        const activeSessionIDs = JSON.parse(localStorage.getItem('sesa_track_history')) || [];
+        const sliderTarget = document.getElementById('tracking-slider-target');
 
-        activeTracks.forEach(tid => {
-            onValue(ref(db, 'orders/' + tid), (snap) => {
-                const o = snap.val();
-                let ex = document.getElementById('trk-'+tid);
-                if(!o) {
-                    if(ex) ex.innerHTML = "<div class='track-card'><h3>PESANAN SELESAI!</h3><p>Diterima & Nikmati!</p><button class='btn-order' style='padding:10px; font-size:0.7rem;' onclick='delTrk(\""+tid+"\")'>TUTUP INFO</button></div>";
+        if(activeSessionIDs.length === 0) {
+            document.getElementById('tracking-view-lux').style.display = 'none';
+        } else {
+            document.getElementById('tracking-view-lux').style.display = 'block';
+        }
+
+        activeSessionIDs.forEach(id => {
+            onValue(ref(db, 'orders/' + id), (snap) => {
+                const data = snap.val();
+                let existingCard = document.getElementById('track-node-' + id);
+                
+                if(!data) {
+                    if(existingCard) existingCard.innerHTML = `
+                        <div class="track-lux-card">
+                            <i class="fas fa-heart fa-5x" style="color:var(--accent); margin-bottom:30px;"></i>
+                            <h2 style="font-family:'Playfair Display'; margin-bottom:15px;">ORDER COMPLETE</h2>
+                            <p style="opacity:0.6; line-height:1.8;">Thank you for your visit. We hope you enjoyed your crafted SESA moment.</p>
+                            <button class="btn-order-execute" style="padding:15px; font-size:0.9rem;" onclick="dismissTrackID('${id}')">DISMISS INFO</button>
+                        </div>`;
                     return;
                 }
-                const html = `
-                    <div class="track-card" id="trk-${tid}">
-                        <h2 style="font-family:'Playfair Display'; color:var(--accent); font-size:1.2rem;">${o.customer}</h2>
-                        <div class="clock-wall"><div class="hand hour"></div><div class="hand minute"></div></div>
-                        <p style="font-size:0.8rem;">Status: <b>${o.status}</b></p>
-                        ${o.status === 'PROSES' ? `<p style="font-size:0.8rem;">Estimasi: <b>${o.estTime} Menit</b></p>` : ''}
-                        ${o.status === 'SIAP' ? `<div class="ready-anim">PESANAN AKAN SEGERA DIANTAR!</div>` : ''}
-                        <button class="btn-order" style="padding:10px; margin-top:15px; font-size:0.7rem; background:#f0f0f0; color:#333;" onclick="location.href='menu.html'">PESAN LAGI</button>
+
+                const cardHTML = `
+                    <div class="track-lux-card ${data.status === 'SIAP' ? 'ready-state' : ''}" id="track-node-${id}">
+                        <span class="status-label-top">LIVE TRACKING: ${data.id}</span>
+                        <div class="luxury-clock-icon">
+                            <div class="clock-hand-lux h-hour-lux"></div>
+                            <div class="clock-hand-lux h-min-lux"></div>
+                        </div>
+                        <h2 class="status-main-val">${data.status}</h2>
+                        <div style="margin-top:25px; font-weight:700;">
+                            FOR <b>${data.customer}</b> <br>
+                            <span style="color:var(--accent);">TABLE ${data.table}</span>
+                        </div>
+                        ${data.status === 'PROSES' ? `<p style="margin-top:20px; font-weight:800; font-size:1.1rem; color:var(--primary);">Estimasi: <span style="color:var(--accent)">${data.estTime} Mins</span></p>` : ''}
+                        ${data.status === 'SIAP' ? `<div class="ready-notif-box"><i class="fas fa-concierge-bell"></i> YOUR ORDER IS COMING TO YOUR TABLE!</div>` : ''}
                     </div>`;
-                if(ex) ex.outerHTML = html;
-                else document.getElementById('active-tracks').innerHTML += html;
+
+                if(existingCard) existingCard.outerHTML = cardHTML;
+                else sliderTarget.innerHTML += cardHTML;
             });
         });
 
-        window.delTrk = (id) => {
-            let t = JSON.parse(localStorage.getItem('sesa_tracks'));
-            t = t.filter(x => x !== id);
-            localStorage.setItem('sesa_tracks', JSON.stringify(t));
+        window.dismissTrackID = (id) => {
+            let currentIDs = JSON.parse(localStorage.getItem('sesa_track_history'));
+            currentIDs = currentIDs.filter(item => item !== id);
+            localStorage.setItem('sesa_track_history', JSON.stringify(currentIDs));
             location.reload();
         };
 
-        window.toggleN = () => document.getElementById('nav-o').classList.toggle('show');
-        window.onload = renderOrder;
+        window.toggleLuxuryNav = () => document.getElementById('nav-list-lux').classList.toggle('show');
+        window.onload = renderLuxuryCart;
+    </script>
+
+    <script>
+        // Navbar Scroll Script
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('main-header');
+            if (window.scrollY > 80) header.classList.add('scrolled');
+            else header.classList.remove('scrolled');
+        });
+
+        // Close mobile nav on click
+        document.querySelectorAll('.nav-links a').forEach(l => {
+            l.addEventListener('click', () => {
+                document.getElementById('nav-list-lux').classList.remove('show');
+            });
+        });
     </script>
 </body>
 </html>

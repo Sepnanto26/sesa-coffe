@@ -1,240 +1,465 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SESA Coffee | Crafted Experience in PIK 2</title>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
+    <title>SESA Coffee | Luxury Experience PIK 2 v26.0</title>
+    <!-- Google Fonts: Luxury Serif & Modern Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Pro -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
         :root {
-            --primary: #2c1b0e;
+            --primary: #1a120b;
+            --secondary: #2c1b0e;
             --accent: #c5a059;
             --cream: #fdfaf5;
             --white: #ffffff;
-            --dark: #1a1a1a;
+            --dark-overlay: rgba(0, 0, 0, 0.5);
+            --glass: rgba(255, 255, 255, 0.1);
+            --transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            --shadow-lg: 0 25px 60px rgba(0,0,0,0.12);
         }
 
+        /* --- GLOBAL BASE --- */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         html { scroll-behavior: smooth; }
         body { background-color: var(--cream); color: var(--primary); overflow-x: hidden; }
 
-        /* NAVBAR PREMIUM */
-        .navbar {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 1rem 5%;
-            display: flex; justify-content: space-between; align-items: center;
-            position: fixed; top: 0; width: 100%; z-index: 2000;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
-            transition: 0.3s;
+        /* --- PREMIUM NAVIGATION (TRANSPARENT TO SOLID) --- */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 9000;
+            transition: var(--transition);
+            padding: 2rem 0;
         }
-        .logo { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--primary); text-decoration: none; }
+        header.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 0;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+            backdrop-filter: blur(10px);
+        }
+
+        .navbar {
+            padding: 0 8%;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            max-width: 1600px;
+            margin: auto;
+        }
+
+        .logo { 
+            font-family: 'Playfair Display', serif; 
+            font-size: 2.2rem; 
+            font-weight: 900; 
+            color: var(--white); 
+            text-decoration: none; 
+            letter-spacing: 1px; 
+            transition: var(--transition);
+            z-index: 9999;
+        }
+        header.scrolled .logo { color: var(--primary); }
         .logo span { color: var(--accent); }
 
-        .nav-links { display: flex; gap: 25px; list-style: none; }
-        .nav-links a { text-decoration: none; color: var(--primary); font-weight: 500; font-size: 0.9rem; text-transform: uppercase; transition: 0.3s; }
-        .nav-links a:hover { color: var(--accent); }
+        .nav-links { display: flex; gap: 45px; list-style: none; align-items: center; }
+        .nav-links a { 
+            text-decoration: none; 
+            color: var(--white); 
+            font-weight: 600; 
+            text-transform: uppercase; 
+            font-size: 0.85rem; 
+            letter-spacing: 2px; 
+            transition: var(--transition); 
+            position: relative; 
+        }
+        header.scrolled .nav-links a { color: var(--primary); }
+        
+        .nav-links a::after { 
+            content: ''; position: absolute; width: 0; height: 3px; 
+            bottom: -8px; left: 0; background: var(--accent); 
+            transition: 0.3s ease; 
+        }
+        .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+        .nav-links a.active { color: var(--accent) !important; }
 
-        /* Mobile Hamburger (3 Garis/Titik) */
-        .menu-toggle { display: none; font-size: 1.5rem; cursor: pointer; color: var(--primary); }
+        /* Mobile Trigger */
+        .menu-btn { 
+            display: none; cursor: pointer; font-size: 2rem; color: var(--white); 
+            transition: var(--transition); z-index: 9999;
+        }
+        header.scrolled .menu-btn { color: var(--primary); }
 
-        /* HERO SECTION */
+        /* --- HERO LUXURY SECTION --- */
         .hero {
             height: 100vh;
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
-                        url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1500&auto=format&fit=crop');
-            background-size: cover; background-position: center;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            color: white; text-align: center; padding: 0 20px;
+            width: 100%;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.3)), 
+                        url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* Parallax */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: var(--white);
+            padding: 0 8%;
         }
-        .hero h1 { font-family: 'Playfair Display', serif; font-size: 4.5rem; margin-bottom: 10px; animation: fadeInUp 1s ease; }
-        .hero p { font-size: 1.2rem; font-weight: 300; margin-bottom: 30px; letter-spacing: 2px; }
-        .btn-main { 
-            padding: 15px 40px; background: var(--accent); color: white; 
-            text-decoration: none; border-radius: 50px; font-weight: bold; 
-            transition: 0.3s; border: 2px solid var(--accent);
+
+        .hero-tag {
+            font-size: 1.2rem;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            font-weight: 500;
+            margin-bottom: 25px;
+            color: var(--accent);
+            animation: fadeInDown 1.2s ease;
         }
-        .btn-main:hover { background: transparent; color: var(--accent); }
 
-        /* SPECIFICATIONS / WHY US */
-        .section { padding: 80px 5%; max-width: 1200px; margin: auto; }
-        .grid-spec { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; text-align: center; }
-        .spec-item i { font-size: 3rem; color: var(--accent); margin-bottom: 20px; }
-        .spec-item h3 { font-family: 'Playfair Display', serif; margin-bottom: 10px; font-size: 1.5rem; }
-        .spec-item p { color: #666; font-size: 0.9rem; line-height: 1.6; }
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 6.5rem;
+            line-height: 1;
+            margin-bottom: 30px;
+            font-weight: 900;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: fadeInUp 1.4s ease;
+        }
 
-        /* AMBIANCE VIEW (GALLERY) */
-        .ambiance-section { background: var(--white); padding: 80px 0; }
-        .ambiance-title { text-align: center; margin-bottom: 50px; }
-        .ambiance-title h2 { font-family: 'Playfair Display', serif; font-size: 2.5rem; }
+        .hero p {
+            font-size: 1.4rem;
+            max-width: 850px;
+            margin-bottom: 50px;
+            opacity: 0.9;
+            line-height: 1.8;
+            font-weight: 300;
+            animation: fadeInUp 1.6s ease;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--accent);
+            color: var(--white);
+            padding: 24px 60px;
+            border-radius: 100px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: var(--transition);
+            box-shadow: 0 15px 40px rgba(197, 160, 89, 0.4);
+            animation: fadeInUp 1.8s ease;
+        }
+        .cta-button:hover {
+            background: var(--white);
+            color: var(--primary);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+        }
+
+        /* --- PHILOSOPHY SECTION --- */
+        .content-section { padding: 140px 8%; max-width: 1600px; margin: auto; }
         
-        .gallery-grid { display: grid; grid-template-columns: repeat(4, 1fr); height: 500px; gap: 10px; padding: 0 10px; }
-        .gallery-item { position: relative; overflow: hidden; border-radius: 10px; }
-        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; cursor: pointer; }
-        .gallery-item:hover img { transform: scale(1.1); filter: brightness(70%); }
-        .gallery-overlay { 
-            position: absolute; bottom: -50px; left: 20px; color: white; 
-            transition: 0.3s; opacity: 0; pointer-events: none;
-        }
-        .gallery-item:hover .gallery-overlay { bottom: 20px; opacity: 1; }
-
-        /* LOCATION PREVIEW */
-        .loc-preview { display: flex; align-items: center; gap: 50px; margin-top: 50px; background: var(--primary); color: white; border-radius: 30px; overflow: hidden; }
-        .loc-text { padding: 50px; flex: 1; }
-        .loc-text h2 { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-bottom: 20px; color: var(--accent); }
-        .loc-img { flex: 1; height: 400px; }
-        .loc-img img { width: 100%; height: 100%; object-fit: cover; }
-
-        /* FOOTER */
-        footer { background: var(--dark); color: #888; padding: 50px 5%; text-align: center; }
-        .social-icons { margin-bottom: 20px; }
-        .social-icons a { color: var(--accent); font-size: 1.5rem; margin: 0 15px; transition: 0.3s; }
-        .social-icons a:hover { color: white; }
-
-        /* ANIMATIONS */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+        .philosophy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 60px;
         }
 
-        /* RESPONSIVE HP */
+        .phil-card {
+            background: var(--white);
+            padding: 70px 45px;
+            border-radius: 50px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+        .phil-card:hover { transform: translateY(-20px); box-shadow: 0 40px 80px rgba(0,0,0,0.1); }
+        .phil-card i { font-size: 4.5rem; color: var(--accent); margin-bottom: 35px; }
+        .phil-card h3 { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-bottom: 20px; color: var(--primary); }
+        .phil-card p { color: #666; line-height: 2; font-size: 1rem; }
+
+        /* --- AMBIANCE GALLERY (ULTRA SMOOTH) --- */
+        .ambiance-box { background: var(--secondary); padding: 140px 0; color: var(--white); }
+        .head-title { text-align: center; margin-bottom: 100px; }
+        .head-title h2 { font-family: 'Playfair Display', serif; font-size: 4rem; margin-bottom: 20px; }
+        .head-title p { color: var(--accent); font-weight: 700; letter-spacing: 5px; text-transform: uppercase; font-size: 0.9rem; }
+
+        .gallery-layout {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            height: 700px;
+            gap: 20px;
+            padding: 0 20px;
+        }
+        .gallery-item { position: relative; overflow: hidden; border-radius: 40px; cursor: pointer; }
+        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: 1.2s cubic-bezier(0.165, 0.84, 0.44, 1); }
+        .gallery-item:hover img { transform: scale(1.2) rotate(1deg); filter: brightness(50%); }
+        
+        .gallery-desc {
+            position: absolute; bottom: -100px; left: 40px; right: 40px;
+            transition: var(--transition); opacity: 0;
+        }
+        .gallery-item:hover .gallery-desc { bottom: 40px; opacity: 1; }
+        .gallery-desc h4 { font-family: 'Playfair Display'; font-size: 1.8rem; margin-bottom: 10px; }
+        .gallery-desc p { color: var(--accent); font-weight: 600; font-size: 0.8rem; letter-spacing: 2px; }
+
+        /* --- LOCATION TEASER --- */
+        .location-teaser {
+            display: flex;
+            align-items: center;
+            background: var(--white);
+            border-radius: 60px;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            margin-top: 100px;
+        }
+        .teaser-text { flex: 1; padding: 100px; }
+        .teaser-text h2 { font-family: 'Playfair Display', serif; font-size: 3.5rem; margin-bottom: 30px; line-height: 1.1; }
+        .teaser-text p { font-size: 1.15rem; line-height: 2.2; color: #555; margin-bottom: 50px; }
+        
+        .teaser-img { flex: 1; height: 650px; position: relative; }
+        .teaser-img img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* --- FOOTER --- */
+        footer {
+            background: var(--primary);
+            padding: 120px 8% 60px;
+            color: rgba(255,255,255,0.5);
+            text-align: center;
+            border-top: 4px solid var(--accent);
+        }
+        .f-logo { font-family: 'Playfair Display'; font-size: 3rem; color: var(--white); margin-bottom: 40px; font-weight: 900; }
+        .f-logo span { color: var(--accent); }
+        
+        .f-socials { display: flex; justify-content: center; gap: 35px; margin-bottom: 60px; }
+        .f-socials a { 
+            color: var(--white); font-size: 2rem; transition: 0.4s; 
+            background: rgba(255,255,255,0.03); width: 75px; height: 75px;
+            display: flex; align-items: center; justify-content: center; border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .f-socials a:hover { background: var(--accent); transform: translateY(-10px) rotate(10deg); color: var(--white); border-color: var(--accent); }
+
+        .f-copy { border-top: 1px solid rgba(255,255,255,0.05); padding-top: 50px; font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase; }
+
+        /* --- KEYFRAMES --- */
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-50px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- RESPONSIVE OPTIMIZATION FOR ALL MOBILE PHONES --- */
+        @media (max-width: 1024px) {
+            .navbar { padding: 0 5%; }
+            .hero h1 { font-size: 4.5rem; }
+            .gallery-layout { grid-template-columns: repeat(2, 1fr); height: auto; }
+            .gallery-item { height: 400px; }
+            .location-teaser { flex-direction: column; }
+            .teaser-text { padding: 60px 40px; text-align: center; }
+            .teaser-img { height: 400px; width: 100%; }
+        }
+
         @media (max-width: 768px) {
-            .navbar { padding: 1rem 20px; }
+            header { padding: 1.2rem 0; }
+            header.scrolled { background: var(--white); }
+            
+            /* Mobile Glassmorphism Menu */
             .nav-links {
-                display: none; position: absolute; top: 100%; left: 0; width: 100%;
-                background: white; flex-direction: column; padding: 30px; text-align: center;
-                box-shadow: 0 10px 10px rgba(0,0,0,0.1);
+                position: fixed; top: 0; right: -100%; width: 85%; height: 100vh;
+                background: rgba(26, 18, 11, 0.98); backdrop-filter: blur(20px);
+                flex-direction: column; justify-content: center; padding: 60px;
+                transition: 0.6s cubic-bezier(0.165, 0.84, 0.44, 1); z-index: 9998;
             }
-            .nav-links.show { display: flex; }
-            .menu-toggle { display: block; }
+            .nav-links.show { right: 0; box-shadow: -20px 0 60px rgba(0,0,0,0.5); }
+            .nav-links a { color: var(--white) !important; font-size: 1.5rem; font-weight: 700; }
+            
+            .menu-btn { display: block; }
+            
+            .hero h1 { font-size: 3.2rem; }
+            .hero p { font-size: 1.1rem; }
+            .cta-button { padding: 20px 45px; font-size: 1rem; width: 100%; justify-content: center; }
 
+            .content-section { padding: 80px 6%; }
+            .phil-card { padding: 50px 30px; border-radius: 40px; }
+            .head-title h2 { font-size: 2.8rem; }
+            .gallery-layout { grid-template-columns: 1fr; }
+            .gallery-item { height: 350px; }
+            .teaser-text h2 { font-size: 2.5rem; }
+            .f-logo { font-size: 2.5rem; }
+            .f-socials a { width: 60px; height: 60px; font-size: 1.5rem; }
+        }
+
+        @media (max-width: 480px) {
             .hero h1 { font-size: 2.8rem; }
-            .grid-spec { grid-template-columns: 1fr; }
-            .gallery-grid { grid-template-columns: repeat(2, 1fr); height: auto; }
-            .gallery-item { height: 200px; }
-            .loc-preview { flex-direction: column; gap: 0; }
-            .loc-text { padding: 30px; text-align: center; }
-            .loc-img { height: 250px; width: 100%; }
+            .hero-tag { letter-spacing: 4px; font-size: 0.9rem; }
+            .navbar { padding: 0 20px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- NAVBAR -->
-    <nav class="navbar">
-        <a href="index.html" class="logo">SESA <span>Coffee</span></a>
-        <div class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
-        <ul class="nav-links" id="navLinks">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="menu.html">Menu</a></li>
-            <li><a href="order.html">Order</a></li>
-            <li><a href="location.html">Location</a></li>
-            <li><a href="contact.html">Contact</a></li>
-        </ul>
-    </nav>
+    <!-- LUXURY NAVIGATION -->
+    <header id="sesa-nav">
+        <nav class="navbar">
+            <a href="index.html" class="logo">SESA <span>COFFEE</span></a>
+            
+            <!-- Mobile Toggle Icon -->
+            <div class="menu-btn" id="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </div>
 
-    <!-- HERO SECTION -->
-    <header class="hero">
-        <p>WELCOME TO PIK 2'S FINEST</p>
-        <h1>SESA Coffee</h1>
-        <p>Premium Beans & Unmatched Ambiance</p>
-        <a href="menu.html" class="btn-main">EXPLORE OUR MENU</a>
+            <ul class="nav-links" id="nav-list">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="menu.html">Menu</a></li>
+                <li><a href="order.html">Order</a></li>
+                <li><a href="location.html">Location</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
     </header>
 
-    <!-- SPECIFICATIONS SECTION -->
-    <section class="section">
-        <div class="grid-spec">
-            <div class="spec-item">
-                <i class="fas fa-seedling"></i>
-                <h3>Specialty Beans</h3>
-                <p>Kami menggunakan 100% biji kopi Arabika pilihan yang dipanggang secara presisi untuk rasa maksimal.</p>
+    <!-- HERO PARALLAX -->
+    <section class="hero">
+        <span class="hero-tag">Thamrin PIK 2 Official</span>
+        <h1>SESA Coffee</h1>
+        <p>Step into a world where premium Arabica beans are hand-selected and crafted into perfection. Unmatched ambiance, exceptional taste.</p>
+        <a href="menu.html" class="cta-button">Explore SESA Menu <i class="fas fa-arrow-right"></i></a>
+    </section>
+
+    <!-- PHILOSOPHY / VALUES -->
+    <section class="content-section">
+        <div class="philosophy-grid">
+            <div class="phil-card">
+                <i class="fas fa-crown"></i>
+                <h3>Noble Beans</h3>
+                <p>We believe every bean tells a story. Sourced from the highest altitudes, our 100% Arabica selection offers a complex flavor profile for the true connoisseur.</p>
             </div>
-            <div class="spec-item">
-                <i class="fas fa-wifi"></i>
-                <h3>WFH Friendly</h3>
-                <p>Dilengkapi dengan WiFi super cepat dan banyak stop kontak di setiap sudut meja Anda.</p>
+            <div class="phil-card">
+                <i class="fas fa-bolt"></i>
+                <h3>Modern Hub</h3>
+                <p>Designed for the digital era. With blazing-fast connectivity and a sophisticated interior, SESA is the heart of creativity for creators in PIK 2.</p>
             </div>
-            <div class="spec-item">
-                <i class="fas fa-leaf"></i>
-                <h3>Outdoor Space</h3>
-                <p>Nikmati udara PIK 2 di area outdoor kami yang asri dan sangat instagramable.</p>
+            <div class="phil-card">
+                <i class="fas fa-wind"></i>
+                <h3>Bespoke Vibe</h3>
+                <p>Experience our signature outdoor sanctuary. The perfect spot to enjoy the coastal breeze of PIK 2 while sipping our seasonal blends.</p>
             </div>
         </div>
     </section>
 
-    <!-- AMBIANCE VIEW (Attracting customers) -->
-    <section class="ambiance-section">
-        <div class="ambiance-title">
-            <p style="color: var(--accent); font-weight: 600;">FIND YOUR COZY SPOT</p>
-            <h2>Suasana SESA Coffee</h2>
+    <!-- AMBIANCE SHOWCASE -->
+    <section class="ambiance-box">
+        <div class="head-title">
+            <p>Our Sanctuary</p>
+            <h2>The Vibe of SESA</h2>
         </div>
-        <div class="gallery-grid">
+        
+        <div class="gallery-layout">
             <div class="gallery-item">
-                <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=500" alt="Interior">
-                <div class="gallery-overlay"><h4>Modern Interior</h4></div>
-            </div>
-            <div class="gallery-item">
-                <img src="https://images.unsplash.com/photo-1525610553991-2bede1a236e2?q=80&w=500" alt="Sofa">
-                <div class="gallery-overlay"><h4>Cozy Sofa</h4></div>
-            </div>
-            <div class="gallery-item">
-                <img src="https://images.unsplash.com/photo-1507133750040-4a8f57021571?q=80&w=500" alt="Coffee Bar">
-                <div class="gallery-overlay"><h4>Coffee Bar</h4></div>
+                <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=800" alt="Minimalism">
+                <div class="gallery-desc">
+                    <p>INTERIOR</p>
+                    <h4>Quiet Luxury</h4>
+                </div>
             </div>
             <div class="gallery-item">
-                <img src="https://images.unsplash.com/photo-1453614512568-c4024d13c247?q=80&w=500" alt="Outdoor">
-                <div class="gallery-overlay"><h4>Outdoor Vibe</h4></div>
+                <img src="https://images.unsplash.com/photo-1525610553991-2bede1a236e2?q=80&w=800" alt="Comfort">
+                <div class="gallery-desc">
+                    <p>AMBITION</p>
+                    <h4>Comfort & Focus</h4>
+                </div>
             </div>
-        </div>
-    </section>
-
-    <!-- LOCATION PREVIEW -->
-    <section class="section">
-        <div class="loc-preview">
-            <div class="loc-text">
-                <p style="color: var(--accent);">VISIT OUR STORE</p>
-                <h2>Lokasi Strategis di PIK 2</h2>
-                <p style="margin-bottom: 20px; line-height: 1.8;">Berada di jantung kawasan PIK 2, SESA Coffee menawarkan pelarian dari hiruk pikuk kota. Tempat yang sempurna untuk meeting, nugas, atau sekadar menikmati sunset.</p>
-                <p><strong><i class="fas fa-map-marker-alt"></i> SESA Coffee - Thamrin PIK 2</strong></p>
-                <p>Buka Setiap Hari: 08:00 - 22:00</p>
-                <br>
-                <a href="location.html" class="btn-main" style="padding: 10px 25px;">LIHAT MAPS</a>
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1507133750040-4a8f57021571?q=80&w=800" alt="Barista">
+                <div class="gallery-desc">
+                    <p>MASTERY</p>
+                    <h4>Hand-Crafted</h4>
+                </div>
             </div>
-            <div class="loc-img">
-                <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?q=80&w=500" alt="Cafe Location">
+            <div class="gallery-item">
+                <img src="https://images.unsplash.com/photo-1453614512568-c4024d13c247?q=80&w=800" alt="Outdoor">
+                <div class="gallery-desc">
+                    <p>NATURE</p>
+                    <h4>Outdoor Breeze</h4>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- FOOTER -->
+    <!-- LOCATION HIGHLIGHT -->
+    <section class="content-section">
+        <div class="location-teaser">
+            <div class="teaser-text">
+                <p style="color: var(--accent); letter-spacing: 4px; font-weight: 800; margin-bottom: 15px; text-transform: uppercase;">Visit SESA</p>
+                <h2>Premium Spot in Heart of PIK 2</h2>
+                <p>Nestled in the prestigious Thamrin District of PIK 2, we offer more than just coffee. We offer a destination. Whether it's your first meeting of the day or a late-night study session, our doors are open.</p>
+                <div style="margin-bottom: 45px; text-align: left;">
+                    <p style="font-weight: 700; color: var(--primary); margin-bottom: 10px;"><i class="fas fa-map-marker-alt" style="color:var(--accent); margin-right:10px;"></i> Thamrin PIK 2, North Jakarta</p>
+                    <p style="font-weight: 700; color: var(--primary);"><i class="fas fa-clock" style="color:var(--accent); margin-right:10px;"></i> 08:00 AM - 10:00 PM Daily</p>
+                </div>
+                <a href="location.html" class="cta-button" style="padding: 18px 45px;">Get Directions</a>
+            </div>
+            <div class="teaser-img">
+                <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?q=80&w=1000" alt="Cafe Facade">
+            </div>
+        </div>
+    </section>
+
+    <!-- LUXURY FOOTER -->
     <footer>
-        <div class="social-icons">
+        <div class="f-logo">SESA <span>COFFEE</span></div>
+        <p style="max-width: 700px; margin: 0 auto 50px; line-height: 2;">Providing the most sophisticated coffee journey in PIK 2. We are dedicated to the art of brewing and the science of satisfaction.</p>
+        
+        <div class="f-socials">
             <a href="#"><i class="fab fa-instagram"></i></a>
             <a href="#"><i class="fab fa-whatsapp"></i></a>
             <a href="#"><i class="fab fa-tiktok"></i></a>
+            <a href="#"><i class="fas fa-envelope"></i></a>
         </div>
-        <p>&copy; 2025 SESA Coffee PIK 2. Crafted for Coffee Enthusiasts.</p>
+        
+        <div class="f-copy">
+            &copy; 2025 SESA Coffee Indonesia. All Rights Reserved. <br>
+            Hand-Crafted with Passion for Coffee Enthusiasts.
+        </div>
     </footer>
 
     <script>
-        // Toggle Mobile Menu
-        function toggleMenu() {
-            document.getElementById('navLinks').classList.toggle('show');
-        }
+        // DOM ELEMENTS
+        const header = document.getElementById('sesa-nav');
+        const navToggle = document.getElementById('nav-toggle');
+        const navList = document.getElementById('nav-list');
 
-        // Change Navbar Color on Scroll
-        window.onscroll = function() {
-            const nav = document.querySelector('.navbar');
-            if (window.scrollY > 50) {
-                nav.style.background = "#fff";
-                nav.style.boxShadow = "0 2px 15px rgba(0,0,0,0.1)";
+        // MOBILE MENU TOGGLE LOGIC
+        navToggle.addEventListener('click', () => {
+            navList.classList.toggle('show');
+            const icon = navToggle.querySelector('i');
+            icon.className = navList.classList.contains('show') ? 'fas fa-times' : 'fas fa-bars';
+        });
+
+        // NAVBAR SCROLL EFFECT
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
             } else {
-                nav.style.background = "rgba(255, 255, 255, 0.95)";
-                nav.style.boxShadow = "none";
+                header.classList.remove('scrolled');
             }
-        };
+        });
+
+        // AUTO CLOSE MOBILE MENU ON LINK CLICK
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navList.classList.remove('show');
+                navToggle.querySelector('i').className = 'fas fa-bars';
+            });
+        });
     </script>
 </body>
 </html>
