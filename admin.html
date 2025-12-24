@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SESA ADMIN | Command Center v8.0 Professional</title>
+    <title>SESA ADMIN | Command Center v21.0 Ultimate</title>
     <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- PDF Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
     
     <style>
         :root {
@@ -19,109 +22,80 @@
             --danger: #e74c3c;
             --info: #3498db;
             --warning: #f39c12;
-            --shadow: 0 10px 30px rgba(0,0,0,0.08);
+            --shadow: 0 15px 50px rgba(0,0,0,0.1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background-color: var(--bg); display: flex; min-height: 100vh; color: var(--primary); overflow-x: hidden; }
 
-        /* --- SIDEBAR SYSTEM --- */
+        /* --- SIDEBAR --- */
         .sidebar {
             width: 280px; background: var(--sidebar); color: white;
             display: flex; flex-direction: column; padding: 40px 20px;
             position: fixed; height: 100vh; z-index: 5000; 
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            left: 0;
+            transition: all 0.4s ease; left: 0; border-right: 2px solid var(--accent);
         }
         .sidebar h2 { font-family: 'Playfair Display', serif; margin-bottom: 50px; text-align: center; font-size: 1.8rem; color: var(--accent); letter-spacing: 2px; }
         .nav-item {
-            padding: 16px 20px; border-radius: 15px; margin-bottom: 10px;
+            padding: 16px 20px; border-radius: 15px; margin-bottom: 12px;
             cursor: pointer; display: flex; align-items: center; gap: 15px;
             color: #bdc3c7; transition: 0.3s; border: none; background: none; width: 100%; text-align: left;
-            font-size: 0.95rem; text-decoration: none; font-weight: 500;
+            font-size: 0.95rem; font-weight: 500; text-decoration: none;
         }
         .nav-item.active { background: var(--accent); color: white; box-shadow: 0 8px 20px rgba(197, 160, 89, 0.3); }
-        .nav-item:hover:not(.active) { background: rgba(255,255,255,0.05); color: white; }
+        .nav-item:hover:not(.active) { background: rgba(255,255,255,0.05); color: white; transform: translateX(5px); }
 
-        /* --- MAIN CONTENT AREA --- */
-        .main-content { 
-            flex: 1; 
-            margin-left: 280px; 
-            padding: 30px 50px; 
-            transition: all 0.4s ease; 
-            width: calc(100% - 280px); 
-        }
+        /* --- MAIN CONTENT --- */
+        .main-content { flex: 1; margin-left: 280px; padding: 30px 50px; width: calc(100% - 280px); transition: 0.4s; }
 
-        /* --- MOBILE HEADER --- */
         .mobile-header {
             display: none; background: var(--sidebar); color: white;
             padding: 15px 25px; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 4500; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: sticky; top: 0; z-index: 4500;
         }
 
-        /* --- TOP BAR (CLOCK & DATE) --- */
-        .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; flex-wrap: wrap; gap: 20px; }
+        .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
         .clock-widget { background: white; padding: 18px 30px; border-radius: 25px; box-shadow: var(--shadow); border-right: 6px solid var(--accent); text-align: right; }
-        #live-time { font-size: 1.8rem; font-weight: 700; color: var(--primary); display: block; line-height: 1; font-variant-numeric: tabular-nums; }
-        #live-date { font-size: 0.85rem; color: #888; font-weight: 600; text-transform: uppercase; margin-top: 8px; display: block; letter-spacing: 1px; }
+        #live-time { font-size: 1.8rem; font-weight: 700; color: var(--primary); display: block; line-height: 1; }
+        #live-date { font-size: 0.85rem; color: #888; font-weight: 600; text-transform: uppercase; margin-top: 8px; display: block; }
 
-        /* --- ANALYTICS CARDS --- */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; margin-bottom: 45px; }
-        .stat-card { background: white; padding: 30px; border-radius: 30px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 25px; position: relative; overflow: hidden; }
-        .stat-card i { font-size: 2.5rem; color: var(--accent); z-index: 2; }
-        .stat-card::after { content: ''; position: absolute; width: 80px; height: 80px; background: var(--accent); opacity: 0.05; border-radius: 50%; right: -20px; top: -20px; }
-        .stat-info h3 { font-size: 1.6rem; font-weight: 700; margin-bottom: 5px; }
-        .stat-info p { font-size: 0.8rem; color: #aaa; text-transform: uppercase; font-weight: 600; letter-spacing: 1px; }
+        /* --- GREETING & DASHBOARD --- */
+        .greet-card { background: var(--sidebar); color: white; padding: 40px; border-radius: 35px; margin-bottom: 30px; position: relative; overflow: hidden; border-bottom: 8px solid var(--accent); }
+        .greet-card h2 { font-family: 'Playfair Display'; font-size: 2.2rem; margin-bottom: 10px; position: relative; z-index: 2; }
+        .greet-card p { opacity: 0.8; font-size: 1rem; position: relative; z-index: 2; }
+        .greet-card i { position: absolute; right: -20px; bottom: -20px; font-size: 10rem; opacity: 0.1; }
 
-        /* --- TAB LOGIC --- */
-        .tab-content { display: none; animation: fadeInUp 0.5s ease; }
-        .tab-content.active { display: block; }
+        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; margin-bottom: 45px; }
+        .stat-card { background: white; padding: 30px; border-radius: 30px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 25px; }
+        .stat-card i { font-size: 2.8rem; color: var(--accent); }
 
-        /* --- ORDER SYSTEM CARDS --- */
-        .order-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 30px; }
-        .order-card { background: white; padding: 30px; border-radius: 30px; box-shadow: var(--shadow); border-top: 8px solid var(--accent); position: relative; transition: 0.3s; }
-        .order-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
-        .meja-tag { position: absolute; top: 25px; right: 25px; background: var(--primary); color: white; padding: 8px 15px; border-radius: 12px; font-weight: 800; font-size: 0.9rem; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
-        
-        .status-pill { font-size: 0.7rem; padding: 5px 15px; border-radius: 50px; font-weight: 700; text-transform: uppercase; margin-bottom: 15px; display: inline-block; }
-        .wait-tag { display: block; color: var(--info); font-size: 0.9rem; font-weight: 700; margin-bottom: 15px; background: #eef7fe; padding: 10px; border-radius: 10px; border-left: 4px solid var(--info); }
-
-        .item-list { list-style: none; margin: 20px 0; padding-top: 15px; border-top: 2px dashed #f0f0f0; }
-        .item-list li { font-size: 0.9rem; margin-bottom: 8px; color: #444; display: flex; justify-content: space-between; }
-        
-        .btn-act { width: 100%; padding: 16px; border-radius: 18px; border: none; font-weight: 700; cursor: pointer; margin-top: 10px; transition: 0.3s; color: white; font-size: 0.95rem; }
-        .btn-acc { background: var(--info); box-shadow: 0 6px 15px rgba(52, 152, 219, 0.3); }
-        .btn-ready { background: var(--warning); box-shadow: 0 6px 15px rgba(243, 156, 18, 0.3); }
-        .btn-done { background: var(--success); box-shadow: 0 6px 15px rgba(39, 174, 96, 0.3); }
-        .btn-act:active { transform: scale(0.95); }
-
-        /* --- MANAGEMENT FORMS --- */
         .admin-card { background: white; padding: 35px; border-radius: 35px; box-shadow: var(--shadow); margin-bottom: 40px; border: 1px solid rgba(0,0,0,0.02); }
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 25px; }
-        .form-group label { display: block; font-size: 0.85rem; font-weight: 700; color: #555; margin-bottom: 10px; text-transform: uppercase; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 15px; border: 2px solid #f1f1f1; border-radius: 15px; font-size: 0.95rem; transition: 0.3s; outline: none; background: #fafafa; }
-        .form-group input:focus, .form-group textarea:focus { border-color: var(--accent); background: white; }
-        .btn-upload { background: var(--sidebar); color: white; border: none; padding: 18px; border-radius: 15px; font-weight: 700; cursor: pointer; width: 100%; font-size: 1.1rem; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        .btn-upload:hover { background: var(--accent); transform: translateY(-3px); }
+        
+        /* --- FORM --- */
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px; margin-bottom: 25px; }
+        .form-group label { display: block; font-size: 0.8rem; font-weight: 700; color: #555; margin-bottom: 10px; text-transform: uppercase; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 15px; border: 2px solid #f1f1f1; border-radius: 15px; outline: none; transition: 0.3s; background: #fafafa; }
+        .form-group input:focus { border-color: var(--accent); background: white; }
+        
+        .btn-act { background: var(--sidebar); color: white; border: none; padding: 18px; border-radius: 15px; font-weight: 700; cursor: pointer; width: 100%; transition: 0.3s; font-size: 1rem; }
+        .btn-act:hover { background: var(--accent); transform: translateY(-3px); }
 
         /* --- TABLES --- */
-        .table-container { width: 100%; overflow-x: auto; border-radius: 20px; }
-        .data-table { width: 100%; border-collapse: collapse; min-width: 800px; }
-        .data-table th { background: #fafafa; padding: 20px; text-align: left; font-size: 0.8rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
-        .data-table td { padding: 20px; border-top: 1px solid #f8f8f8; font-weight: 500; }
-        
-        .stock-badge { padding: 6px 15px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; border: none; cursor: pointer; }
-        .stok-in { background: #e8f5e9; color: var(--success); }
-        .stok-out { background: #ffebee; color: var(--danger); }
-        .btn-del-item { color: var(--danger); background: none; border: none; cursor: pointer; font-size: 1.2rem; transition: 0.2s; }
-        .btn-del-item:hover { transform: scale(1.2); }
+        .table-container { overflow-x: auto; border-radius: 25px; box-shadow: var(--shadow); }
+        .data-table { width: 100%; border-collapse: collapse; min-width: 900px; background: white; }
+        .data-table th { background: #fafafa; padding: 20px; text-align: left; font-size: 0.75rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
+        .data-table td { padding: 20px; border-top: 1px solid #f8f8f8; font-size: 0.9rem; vertical-align: middle; }
 
-        /* --- MOBILE MENU OVERLAY --- */
+        .stock-btn { padding: 8px 20px; border-radius: 10px; border: none; font-weight: 800; cursor: pointer; transition: 0.3s; }
+        .st-ready { background: #e8f5e9; color: var(--success); }
+        .st-habis { background: #ffebee; color: var(--danger); }
+
+        .alert-time { background: #ffebee; color: var(--danger); padding: 15px; border-radius: 15px; margin-bottom: 25px; display: none; align-items: center; gap: 15px; font-weight: 700; border-left: 5px solid var(--danger); }
+
         #sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 4900; backdrop-filter: blur(4px); }
 
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- RESPONSIVE DESIGN --- */
         @media (max-width: 1024px) {
             .sidebar { left: -280px; }
             .sidebar.open { left: 0; }
@@ -129,148 +103,199 @@
             .mobile-header { display: flex; }
             #sidebar-overlay.active { display: block; }
         }
-
-        @media (max-width: 600px) {
-            .header-flex { flex-direction: column; align-items: stretch; text-align: center; }
-            .clock-widget { text-align: center; border-right: none; border-bottom: 6px solid var(--accent); }
-            .stats-grid { grid-template-columns: 1fr; }
-            .order-grid { grid-template-columns: 1fr; }
-            .admin-card { padding: 20px; }
-        }
     </style>
 </head>
 <body>
 
     <div id="sidebar-overlay" onclick="toggleSidebar()"></div>
 
-    <!-- MOBILE TOP BAR -->
     <div class="mobile-header">
-        <div onclick="toggleSidebar()" style="cursor: pointer; padding: 5px;"><i class="fas fa-bars fa-lg"></i></div>
-        <h3 style="font-family: 'Playfair Display'; color: var(--accent); letter-spacing: 1px;">SESA Admin</h3>
-        <div id="connection-dot"><i class="fas fa-circle" style="color: var(--success); font-size: 0.6rem;"></i></div>
+        <div onclick="toggleSidebar()" style="cursor:pointer;"><i class="fas fa-bars fa-lg"></i></div>
+        <h3 style="font-family: 'Playfair Display'; color: var(--accent);">SESA ADMIN</h3>
+        <i class="fas fa-user-shield"></i>
     </div>
 
-    <!-- SIDEBAR NAV -->
+    <!-- SIDEBAR -->
     <div class="sidebar" id="sidebar">
         <h2>SESA <span>Admin</span></h2>
-        <button class="nav-item active" onclick="switchTab('tab-dash', this)"><i class="fas fa-chart-pie"></i> <span>Dashboard</span></button>
-        <button class="nav-item" onclick="switchTab('tab-orders', this)"><i class="fas fa-bell"></i> <span>Pesanan Masuk</span></button>
-        <button class="nav-item" onclick="switchTab('tab-manage', this)"><i class="fas fa-mug-hot"></i> <span>Kelola Menu</span></button>
-        <button class="nav-item" onclick="switchTab('tab-history', this)"><i class="fas fa-receipt"></i> <span>Riwayat & Omset</span></button>
-        <a href="index.html" class="nav-item" style="margin-top: auto; text-decoration: none;"><i class="fas fa-external-link-alt"></i> <span>Buka Website</span></a>
+        <button class="nav-item active" onclick="switchTab('tab-dash', this)"><i class="fas fa-chart-line"></i> Dashboard</button>
+        <button class="nav-item" onclick="switchTab('tab-orders', this)"><i class="fas fa-concierge-bell"></i> Antrean Pesanan</button>
+        <button class="nav-item" onclick="switchTab('tab-manage', this)"><i class="fas fa-hamburger"></i> Kelola Menu</button>
+        <button class="nav-item" onclick="switchTab('tab-hrd', this)"><i class="fas fa-file-invoice-dollar"></i> Laporan HRD</button>
+        <a href="index.html" class="nav-item" style="margin-top: auto;"><i class="fas fa-external-link-alt"></i> Buka Website</a>
     </div>
 
-    <!-- MAIN AREA -->
     <div class="main-content">
         
-        <!-- HEADER WITH CLOCK -->
         <div class="header-flex">
-            <h1 id="page-title" style="font-family: 'Playfair Display'; font-size: 2.2rem; font-weight: 700;">Command Center</h1>
+            <div>
+                <h1 id="page-title" style="font-family:'Playfair Display'; font-size:2.2rem; font-weight:700;">Dashboard</h1>
+                <div id="live-day-text" style="font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:1px;">...</div>
+            </div>
             <div class="clock-widget">
                 <span id="live-time">00:00:00</span>
-                <span id="live-date">Memuat Kalender...</span>
+                <span id="live-date">Memuat kalender...</span>
             </div>
         </div>
 
-        <!-- 1. TAB DASHBOARD -->
-        <div id="tab-dash" class="tab-content active">
-            <div class="stats-grid">
+        <!-- REMINDER JAM TUTUP -->
+        <div id="closing-alert" class="alert-time">
+            <i class="fas fa-clock fa-lg"></i>
+            <span id="alert-msg">Waktunya tutup toko! Jangan lupa bereskan semua laporan hari ini.</span>
+        </div>
+
+        <!-- TAB 1: DASHBOARD -->
+        <div id="tab-dash" class="tab-content">
+            <div class="greet-card">
+                <i class="fas fa-mug-hot"></i>
+                <h2 id="greeting-banner">Selamat Pagi, Admin SESA!</h2>
+                <p>Ayo semangat kerja hari ini! Pastikan semua stok menu terupdate dengan benar.</p>
+            </div>
+
+            <div class="admin-card" style="background:#fffcf5; border:2px dashed var(--accent);">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <h4 style="font-weight:800; color:var(--primary);">STATUS TOKO GLOBAL (OPEN/CLOSED)</h4>
+                        <p style="font-size:0.8rem; color:#888;">Tutup toko secara global jika jam operasional sudah habis.</p>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:15px;">
+                        <span id="global-status-pill" style="font-weight:900; font-size:1.2rem; color:var(--success);">OPEN</span>
+                        <button onclick="toggleGlobalStore()" class="btn-act" style="width:auto; padding:10px 25px; background:var(--sidebar); font-size:0.8rem;">GANTI STATUS</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-grid">
                 <div class="stat-card">
                     <i class="fas fa-wallet"></i>
-                    <div class="stat-info"><h3 id="stat-income">Rp 0</h3><p>Omset Bulan Ini</p></div>
+                    <div><h2 id="stat-income">Rp 0</h2><p style="font-size:0.7rem; color:#aaa; font-weight:700;">OMSET BULAN INI</p></div>
                 </div>
                 <div class="stat-card">
-                    <i class="fas fa-shopping-bag"></i>
-                    <div class="stat-info"><h3 id="stat-orders">0</h3><p>Total Transaksi</p></div>
+                    <i class="fas fa-receipt"></i>
+                    <div><h2 id="stat-count">0</h2><p style="font-size:0.7rem; color:#aaa; font-weight:700;">TOTAL TRANSAKSI</p></div>
                 </div>
-                <div class="stat-card">
-                    <i class="fas fa-clock"></i>
-                    <div class="stat-info"><h3 id="stat-pending">0</h3><p>Antrean Aktif</p></div>
-                </div>
-            </div>
-            
-            <div class="admin-card" style="text-align: center; border-bottom: 8px solid var(--accent);">
-                <i class="fas fa-shield-alt fa-4x" style="color: #f1f1f1; margin-bottom: 20px;"></i>
-                <h2 style="font-family: 'Playfair Display'; font-size: 2rem;">Selamat Datang Kembali!</h2>
-                <p style="color: #999; margin-top: 10px; max-width: 600px; margin-left: auto; margin-right: auto;">Seluruh data pesanan dan stok menu tersinkronisasi secara otomatis ke seluruh perangkat pelanggan.</p>
             </div>
         </div>
 
-        <!-- 2. TAB PESANAN MASUK -->
-        <div id="tab-orders" class="tab-content">
-            <div class="order-grid" id="order-list-display">
-                <!-- Real-time orders via Firebase -->
+        <!-- TAB 2: ANTRIAN PESANAN -->
+        <div id="tab-orders" class="tab-content" style="display:none;">
+            <div class="order-grid" id="order-display-box">
+                <!-- Data Realtime Orders -->
             </div>
         </div>
 
-        <!-- 3. TAB MANAJEMEN MENU -->
-        <div id="tab-manage" class="tab-content">
-            <!-- Form Add Menu -->
+        <!-- TAB 3: KELOLA MENU -->
+        <div id="tab-manage" class="tab-content" style="display:none;">
             <div class="admin-card">
-                <h3 style="margin-bottom: 25px; font-family: 'Playfair Display';"><i class="fas fa-plus-circle"></i> Tambah / Update Menu</h3>
+                <h3 id="form-title" style="margin-bottom:25px; font-family:'Playfair Display'"><i class="fas fa-plus-circle"></i> Input Menu Produk</h3>
+                <input type="hidden" id="m-id">
                 <div class="form-grid">
-                    <div class="form-group"><label>Nama Menu</label><input type="text" id="m-name" placeholder="Nasi Goreng Seafood"></div>
-                    <div class="form-group"><label>Harga (IDR)</label><input type="number" id="m-price" placeholder="25000"></div>
+                    <div class="form-group"><label>Nama Menu</label><input type="text" id="m-name" placeholder="Misal: Nasi Goreng Sesa"></div>
                     <div class="form-group">
-                        <label>Kategori</label>
-                        <select id="m-cat">
+                        <label>Kategori Produk</label>
+                        <select id="m-cat" onchange="toggleFormPrice()">
+                            <option value="menu_paket">Menu Paket (Main Food)</option>
                             <option value="makanan_berat">Makanan Berat</option>
-                            <option value="cemilan">Cemilan</option>
+                            <option value="cemilan">Cemilan / Snack</option>
                             <option value="coffee">Coffee Based</option>
-                            <option value="non_coffee">Non-Coffee</option>
+                            <option value="non_coffee">Non-Coffee Based</option>
                             <option value="cocktail">Cocktail</option>
                             <option value="mocktail">Mocktail</option>
                         </select>
                     </div>
                 </div>
-                <div class="form-group"><label>Link Foto (URL Direct)</label><input type="text" id="m-img" placeholder="https://images.unsplash.com/..."></div>
-                <div class="form-group"><label>Deskripsi Detail (Spesifikasi Produk)</label><textarea id="m-desc" rows="3" placeholder="Jelaskan detail rasa, aroma, dan keunikan menu ini..."></textarea></div>
+
+                <!-- HARGA & PROMO -->
+                <div style="background:#fffcf0; padding:25px; border-radius:25px; border:2px dashed var(--accent); margin-bottom:25px;">
+                    <div class="form-group">
+                        <label style="display:flex; align-items:center; gap:12px; cursor:pointer; color:var(--danger); font-weight:800;">
+                            <input type="checkbox" id="m-promo-check" onchange="toggleFormPrice()" style="width:22px; height:22px;"> AKTIFKAN PROMO (CEKLIS JIKA DISKON)
+                        </label>
+                    </div>
+                    <div class="form-grid" style="margin-top:20px;">
+                        <div class="form-group" id="grp-normal-price"><label>Harga Normal (Fixed)</label><input type="number" id="m-price-normal"></div>
+                        <div class="form-group" id="grp-promo-price" style="display:none;"><label>Harga Promo SESA</label><input type="number" id="m-price-promo"></div>
+                        
+                        <!-- Coffee Fields -->
+                        <div class="form-group grp-coffee-field" style="display:none;"><label>Harga Panas</label><input type="number" id="m-price-hot"></div>
+                        <div class="form-group grp-coffee-field" style="display:none;"><label>Harga Dingin</label><input type="number" id="m-price-cold"></div>
+                        <div class="form-group grp-coffee-promo" style="display:none;"><label>Promo Panas</label><input type="number" id="m-price-hot-promo"></div>
+                        <div class="form-group grp-coffee-promo" style="display:none;"><label>Promo Dingin</label><input type="number" id="m-price-cold-promo"></div>
+                    </div>
+                    
+                    <div class="form-grid" id="promo-time-config" style="display:none; border-top:1px solid #ddd; padding-top:20px; margin-top:15px;">
+                        <div class="form-group">
+                            <label>Hari Berlaku</label>
+                            <select id="m-promo-day">
+                                <option value="Setiap Hari">Setiap Hari</option>
+                                <option value="Senin">Senin</option><option value="Selasa">Selasa</option>
+                                <option value="Rabu">Rabu</option><option value="Kamis">Kamis</option>
+                                <option value="Jumat">Jumat</option><option value="Sabtu">Sabtu</option>
+                                <option value="Minggu">Minggu</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label>Mulai Jam</label><input type="number" id="m-promo-start" value="8"></div>
+                        <div class="form-group"><label>Sampai Jam</label><input type="number" id="m-promo-end" value="22"></div>
+                    </div>
+                </div>
+
                 <div class="form-grid">
-                    <div class="form-group"><label>Bahan Utama</label><input type="text" id="m-ing" placeholder="Biji Arabica, Susu Segar, dsb"></div>
-                    <div class="form-group"><label>Saran Penyajian</label><input type="text" id="m-serve" placeholder="Disajikan dingin dengan es batu kristal"></div>
+                    <div class="form-group"><label>Link URL Foto</label><input type="text" id="m-img" placeholder="https://..."></div>
+                    <div class="form-group"><label>Label Status</label>
+                        <div style="margin-top:10px;"><input type="checkbox" id="m-is-best"> <i class="fas fa-thumbs-up" style="color:var(--accent); margin-left:8px;"></i> Tampilkan Logo Best Seller</div>
+                    </div>
                 </div>
-                <button class="btn-upload" onclick="uploadNewItem()"><i class="fas fa-cloud-upload-alt"></i> PUBLIKASIKAN MENU SEKARANG</button>
+                <div class="form-group"><label>Deskripsi & Spesifikasi Produk (Lengkap)</label><textarea id="m-desc" rows="5"></textarea></div>
+                
+                <button class="btn-act" onclick="pushMenuToDB()"><i class="fas fa-save"></i> SIMPAN PRODUK SEKARANG</button>
+                <button id="btn-cancel-edit" onclick="resetFormState()" style="display:none; background:#999; margin-top:10px;" class="btn-act">BATALKAN EDIT</button>
             </div>
 
-            <!-- List Stok Menu -->
             <div class="admin-card">
-                <h3 style="margin-bottom: 20px;"><i class="fas fa-boxes"></i> Kontrol Stok Menu</h3>
+                <h3>Daftar Produk & Stok</h3>
                 <div class="table-container">
                     <table class="data-table">
-                        <thead><tr><th>Menu</th><th>Kategori</th><th>Status</th><th>Ubah Stok</th><th>Hapus</th></tr></thead>
-                        <tbody id="stock-table-body"></tbody>
+                        <thead><tr><th>Produk</th><th>Kategori</th><th>Stok</th><th>Aksi</th></tr></thead>
+                        <tbody id="product-list-body"></tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- 4. TAB RIWAYAT & OMSET -->
-        <div id="tab-history" class="tab-content">
+        <!-- TAB 4: LAPORAN HRD -->
+        <div id="tab-hrd" class="tab-content" style="display:none;">
             <div class="admin-card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-                    <h3 style="font-family: 'Playfair Display'"><i class="fas fa-history"></i> Riwayat Penjualan</h3>
-                    <button onclick="clearAllHistory()" class="btn-act" style="width: auto; background: var(--danger); padding: 8px 20px; font-size: 0.8rem;"><i class="fas fa-trash-alt"></i> RESET RIWAYAT BULAN INI</button>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+                    <h3>Laporan Omset & HRD Detail</h3>
+                    <div>
+                        <button class="btn-act" style="width:auto; background:var(--success); padding:10px 25px; margin-right:10px;" onclick="exportToPDF()"><i class="fas fa-file-pdf"></i> CETAK PDF</button>
+                        <button class="btn-act" style="width:auto; background:var(--danger); padding:10px 25px;" onclick="deleteAllHistory()"><i class="fas fa-trash"></i> HAPUS SEMUA RIWAYAT</button>
+                    </div>
                 </div>
                 <div class="table-container">
-                    <table class="data-table">
-                        <thead><tr><th>Waktu</th><th>Pelanggan</th><th>Meja</th><th>Pesanan</th><th>Total Bayar</th><th>Status</th></tr></thead>
-                        <tbody id="history-table-body"></tbody>
+                    <table class="data-table" id="hrd-full-table">
+                        <thead>
+                            <tr>
+                                <th>Bulan</th>
+                                <th>Waktu</th>
+                                <th>Nama Pelanggan</th>
+                                <th>Meja</th>
+                                <th>Metode Bayar</th>
+                                <th>Total Omset</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-display-body"></tbody>
                     </table>
                 </div>
             </div>
         </div>
-
     </div>
-
-    <!-- SOUND NOTIF -->
-    <audio id="notif-ping" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
 
     <!-- FIREBASE SYSTEM -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, onValue, set, push, remove, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // GUNAKAN CONFIG FIREBASE MILIK ANDA
         const firebaseConfig = {
             apiKey: "AIzaSyBAB3uy7JyIA38KMKGOFJb9_r5lJ3hTaNE",
             authDomain: "sesa-coffee.firebaseapp.com",
@@ -280,174 +305,185 @@
             messagingSenderId: "767835800976",
             appId: "1:767835800976:web:21ab01c3ff9bb29aae5f15"
         };
-
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-        const pingAudio = document.getElementById('notif-ping');
-        let initialLoad = true;
 
-        // --- 1. MONITOR PESANAN MASUK REAL-TIME ---
-        onValue(ref(db, 'orders'), (snap) => {
-            const data = snap.val();
-            const container = document.getElementById('order-list-display');
-            container.innerHTML = "";
-            let pCount = 0;
-            
-            if(!data) {
-                container.innerHTML = "<div style='grid-column:1/-1; text-align:center; padding:60px; background:white; border-radius:30px; color:#ccc;'><i class='fas fa-receipt fa-3x' style='margin-bottom:15px;'></i><br>Belum ada pesanan masuk.</div>";
-                document.getElementById('stat-pending').innerText = "0";
-                return;
-            }
-
-            if(!initialLoad) pingAudio.play().catch(e => {});
-            initialLoad = false;
-
-            Object.keys(data).reverse().forEach(id => {
-                const o = data[id];
-                pCount++;
-                const isAcc = o.status === "ACC";
-                const isReady = o.status === "READY";
-                
-                let btnHtml = "";
-                if(o.status === "MENUNGGU") {
-                    btnHtml = `<button class="btn-act btn-acc" onclick="handleAccOrder('${id}')"><i class="fas fa-check-double"></i> ACC & BERI ESTIMASI WAKTU</button>`;
-                } else if(isAcc) {
-                    btnHtml = `<button class="btn-act btn-ready" onclick="updateOrderStatus('${id}', 'READY')"><i class="fas fa-bullhorn"></i> NOTIF: PESANAN SIAP</button>`;
-                } else {
-                    btnHtml = `<button class="btn-act btn-done" onclick="archiveToHistory('${id}')"><i class="fas fa-archive"></i> SELESAIKAN & ARSIP</button>`;
-                }
-
-                container.innerHTML += `
-                    <div class="order-card">
-                        <span class="meja-badge">MEJA ${o.table}</span>
-                        <span class="status-pill" style="background:${isReady?'#e8f5e9':(isAcc?'#e3f2fd':'#fff3e0')}; color:${isReady?'#2e7d32':(isAcc?'#1976d2':'#e65100')}">
-                            ${isReady ? 'Siap Antar' : (isAcc ? 'Sedang Dibuat' : 'Mengecek Bayar')}
-                        </span>
-                        <h4 style="font-family:'Playfair Display';">${o.customer}</h4>
-                        <small style="color:#aaa;">${o.time} • ${o.payment}</small>
-                        ${o.waitTime && isAcc ? `<span class="wait-tag"><i class="fas fa-hourglass-half"></i> Estimasi Tunggu: ${o.waitTime} Menit</span>` : ''}
-                        <ul class="item-list">
-                            ${o.items.map(i => `<li><span>${i.name}</span><strong>x1</strong></li>`).join('')}
-                        </ul>
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px; font-weight:700; border-top:1px solid #f8f8f8; padding-top:15px;">
-                            <span>Total Tagihan</span><span style="color:var(--accent); font-size:1.3rem;">Rp ${o.total.toLocaleString()}</span>
-                        </div>
-                        ${btnHtml}
-                    </div>`;
-            });
-            document.getElementById('stat-pending').innerText = pCount;
+        // --- GLOBAL STORE CONTROL ---
+        onValue(ref(db, 'store_config/is_open'), (snap) => {
+            const isOpen = snap.val();
+            const pill = document.getElementById('global-status-pill');
+            if(isOpen) { pill.innerText = "OPEN"; pill.style.color = "var(--success)"; }
+            else { pill.innerText = "CLOSED"; pill.style.color = "var(--danger)"; }
         });
 
-        window.handleAccOrder = (id) => {
-            const time = prompt("Berapa menit estimasi pesanan selesai?", "25");
-            if(time !== null) update(ref(db, 'orders/' + id), { status: "ACC", waitTime: time });
+        window.toggleGlobalStore = () => {
+            onValue(ref(db, 'store_config/is_open'), (snap) => {
+                set(ref(db, 'store_config/is_open'), !snap.val());
+            }, {onlyOnce:true});
         };
 
-        window.updateOrderStatus = (id, s) => update(ref(db, 'orders/' + id), { status: s });
-
-        window.archiveToHistory = (id) => {
-            if(!confirm("Yakin pesanan sudah lunas & selesai diantar?")) return;
-            onValue(ref(db, 'orders/' + id), (s) => {
-                const val = s.val();
-                if(val) push(ref(db, 'history'), val).then(() => remove(ref(db, 'orders/' + id)));
-            }, {onlyOnce: true});
-        };
-
-        // --- 2. MANAJEMEN MENU & STOK ---
-        window.uploadNewItem = () => {
-            const n = document.getElementById('m-name').value;
-            const p = document.getElementById('m-price').value;
-            const c = document.getElementById('m-cat').value;
-            const i = document.getElementById('m-img').value;
-            const d = document.getElementById('m-desc').value;
-            if(!n || !p || !i || !d) return alert("Mohon lengkapi semua field termasuk Deskripsi!");
-
-            const menuId = "item_" + Date.now();
-            set(ref(db, 'store_menu/' + menuId), {
-                id: menuId, name: n, price: parseInt(p), category: c, image: i,
-                description: d, ingredients: document.getElementById('m-ing').value,
-                serving: document.getElementById('m-serve').value, status: 'ready'
-            }).then(() => { 
-                alert("Berhasil! Menu sudah terbit di website pelanggan."); 
-                document.querySelectorAll('input, textarea').forEach(el => el.value = ""); 
+        // --- MANAGE ORDERS ---
+        onValue(ref(db, 'orders'), (snap) => {
+            const data = snap.val();
+            const box = document.getElementById('order-display-box');
+            box.innerHTML = "";
+            if(!data) return;
+            Object.keys(data).reverse().forEach(id => {
+                const o = data[id];
+                let stCol = o.status === 'SIAP' ? 'var(--success)' : (o.status === 'PROSES' ? 'var(--info)' : 'var(--warning)');
+                box.innerHTML += `
+                    <div class="admin-card" style="padding:25px; border-top:5px solid var(--accent); margin-bottom:20px;">
+                        <span class="status-pill" style="background:${stCol}; color:white;">${o.status}</span>
+                        <div style="display:flex; justify-content:space-between;"><b>${o.customer}</b><small>MEJA ${o.table}</small></div>
+                        <div style="font-size:0.8rem; color:#888; margin:10px 0;">${o.fullTime}</div>
+                        <div style="background:#fff9e6; padding:12px; border-radius:12px; margin-bottom:15px; font-size:0.85rem; border-left:4px solid var(--warning);">Note: ${o.note || '-'}</div>
+                        <ul style="list-style:none; font-size:0.9rem; margin-bottom:15px; border-bottom:1px dashed #ddd; padding-bottom:10px;">
+                            ${o.items.map(i => `<li>${i.name} (x${i.qty}) <span style="float:right;">Rp ${(i.price*i.qty).toLocaleString()}</span></li>`).join('')}
+                        </ul>
+                        <div style="font-weight:800; display:flex; justify-content:space-between;"><span>Total (${o.payment})</span><span>Rp ${o.total.toLocaleString()}</span></div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:20px;">
+                            ${o.status==='MENUNGGU'? `<button onclick="acc('${id}')" class="btn-act" style="background:var(--info); font-size:0.8rem; padding:10px;">ACC</button>` : ''}
+                            ${o.status==='PROSES'? `<button onclick="ready('${id}')" class="btn-act" style="background:var(--success); font-size:0.8rem; padding:10px;">SIAP</button>` : ''}
+                            <button onclick="finish('${id}')" class="btn-act" style="background:var(--sidebar); font-size:0.8rem; padding:10px;">SELESAI</button>
+                        </div>
+                    </div>`;
             });
+        });
+
+        window.acc = (id) => { const m = prompt("Estimasi menit?"); if(m) update(ref(db, 'orders/'+id), {status:'PROSES', estTime:m}); };
+        window.ready = (id) => update(ref(db, 'orders/'+id), {status:'SIAP'});
+        window.finish = (id) => { onValue(ref(db, 'orders/'+id), (s) => { const d = s.val(); if(d) push(ref(db, 'history'), d).then(() => remove(ref(db, 'orders/'+id))); }, {onlyOnce:true}); };
+
+        // --- MENU SYSTEM ---
+        window.toggleFormPrice = () => {
+            const cat = document.getElementById('m-cat').value;
+            const promo = document.getElementById('m-promo-check').checked;
+            const isD = (cat === 'coffee' || cat === 'non_coffee');
+
+            document.getElementById('promo-time-config').style.display = promo ? 'grid' : 'none';
+            document.querySelectorAll('.grp-coffee-field, .grp-coffee-promo, #grp-promo-price').forEach(e => e.style.display = 'none');
+            document.getElementById('grp-normal-price').style.display = isD ? 'none' : 'block';
+
+            if(isD) {
+                document.querySelectorAll('.grp-coffee-field').forEach(e => e.style.display = 'block');
+                if(promo) document.querySelectorAll('.grp-coffee-promo').forEach(e => e.style.display = 'block');
+            } else {
+                if(promo) document.getElementById('grp-promo-price').style.display = 'block';
+            }
+        };
+
+        window.pushMenuToDB = () => {
+            const id = document.getElementById('m-id').value || "p_" + Date.now();
+            const data = {
+                id, name: document.getElementById('m-name').value, cat: document.getElementById('m-cat').value,
+                isPromo: document.getElementById('m-promo-check').checked,
+                promoDay: document.getElementById('m-promo-day').value,
+                promoStart: parseInt(document.getElementById('m-promo-start').value) || 0,
+                promoEnd: parseInt(document.getElementById('m-promo-end').value) || 24,
+                priceNormal: parseInt(document.getElementById('m-price-normal').value) || 0,
+                pricePromo: parseInt(document.getElementById('m-price-promo').value) || 0,
+                priceHot: parseInt(document.getElementById('m-price-hot').value) || 0,
+                priceCold: parseInt(document.getElementById('m-price-cold').value) || 0,
+                priceHotPromo: parseInt(document.getElementById('m-price-hot-promo').value) || 0,
+                priceColdPromo: parseInt(document.getElementById('m-price-cold-promo').value) || 0,
+                img: document.getElementById('m-img').value, isBest: document.getElementById('m-is-best').checked,
+                desc: document.getElementById('m-desc').value, status: 'ready'
+            };
+            set(ref(db, 'store_menu/'+id), data).then(() => { alert("Tersimpan!"); resetFormState(); });
+        };
+
+        window.resetFormState = () => {
+            document.querySelectorAll('#tab-manage input, #tab-manage textarea').forEach(i => i.value = "");
+            document.getElementById('m-id').value = "";
+            document.getElementById('m-promo-check').checked = false;
+            document.getElementById('btn-cancel-edit').style.display = "none";
+            toggleFormPrice();
         };
 
         onValue(ref(db, 'store_menu'), (snap) => {
-            const data = snap.val();
-            const container = document.getElementById('stock-table-body');
-            container.innerHTML = "";
-            if(data) Object.keys(data).forEach(id => {
-                const m = data[id];
-                const isHabis = m.status === 'habis';
-                container.innerHTML += `
-                    <tr>
-                        <td><strong>${m.name}</strong></td>
-                        <td><small style="background:#eee; padding:3px 8px; border-radius:5px;">${m.category.replace('_',' ')}</small></td>
-                        <td><span style="color:${isHabis?'red':'green'}; font-weight:700;">${isHabis?'HABIS':'READY'}</span></td>
-                        <td>
-                            <button class="stock-badge ${isHabis?'stok-ready':'stok-out'}" onclick="toggleMenuStock('${id}', '${m.status}')">
-                                ${isHabis ? 'AKTIFKAN' : 'SET HABIS'}
-                            </button>
-                        </td>
-                        <td><button class="btn-del-item" onclick="deletePermMenu('${id}')"><i class="fas fa-trash-alt"></i></button></td>
-                    </tr>`;
+            const body = document.getElementById('product-list-body'); body.innerHTML = "";
+            const data = snap.val(); if(!data) return;
+            Object.values(data).forEach(m => {
+                body.innerHTML += `<tr><td><b>${m.name}</b></td><td>${m.cat.toUpperCase()}</td><td><button onclick="toggleStock('${m.id}','${m.status}')" class="stock-btn ${m.status==='ready'?'st-ready':'st-habis'}">${m.status==='ready'?'READY':'HABIS'}</button></td><td><button onclick="editP('${m.id}')" style="color:var(--info); border:none; background:none; cursor:pointer;"><i class="fas fa-edit"></i></button><button onclick="delP('${m.id}')" style="color:var(--danger); border:none; background:none; margin-left:15px; cursor:pointer;"><i class="fas fa-trash"></i></button></td></tr>`;
             });
         });
 
-        window.toggleMenuStock = (id, cur) => set(ref(db, 'store_menu/'+id+'/status'), cur==='ready'?'habis':'ready');
-        window.deletePermMenu = (id) => confirm("Hapus menu ini secara permanen?") && remove(ref(db, 'store_menu/'+id));
+        window.toggleStock = (id, cur) => update(ref(db, 'store_menu/'+id), { status: cur==='ready'?'habis':'ready' });
+        window.delP = (id) => confirm("Hapus?") && remove(ref(db, 'store_menu/'+id));
+        window.editP = (id) => {
+            onValue(ref(db, 'store_menu/'+id), (s) => {
+                const m = s.val(); document.getElementById('m-id').value = m.id;
+                document.getElementById('m-name').value = m.name; document.getElementById('m-cat').value = m.cat;
+                document.getElementById('m-promo-check').checked = m.isPromo; document.getElementById('m-price-normal').value = m.priceNormal;
+                document.getElementById('m-price-promo').value = m.pricePromo; document.getElementById('m-price-hot').value = m.priceHot;
+                document.getElementById('m-price-cold').value = m.priceCold; document.getElementById('m-price-hot-promo').value = m.priceHotPromo;
+                document.getElementById('m-price-cold-promo').value = m.priceColdPromo; document.getElementById('m-img').value = m.img;
+                document.getElementById('m-desc').value = m.desc; document.getElementById('m-is-best').checked = m.isBest;
+                document.getElementById('btn-cancel-edit').style.display = "block"; toggleFormPrice(); window.scrollTo(0,0);
+            }, {onlyOnce:true});
+        };
 
-        // --- 3. MONITOR RIWAYAT & ANALISA OMSET ---
+        // --- HISTORY & DELETE ---
         onValue(ref(db, 'history'), (snap) => {
-            const data = snap.val();
-            const container = document.getElementById('history-table-body');
-            container.innerHTML = "";
-            let totalIncome = 0, totalOrders = 0;
-            
-            if(data) Object.keys(data).reverse().forEach(id => {
-                const h = data[id];
-                totalIncome += h.total; totalOrders++;
-                container.innerHTML += `
-                    <tr>
-                        <td><small>${h.time}</small></td>
-                        <td><b>${h.customer}</b></td>
-                        <td>${h.table}</td>
-                        <td>${h.items.length} Item</td>
-                        <td>Rp ${h.total.toLocaleString()}</td>
-                        <td><span style="color:var(--success); font-weight:700;">LUNAS</span></td>
-                    </tr>`;
+            const body = document.getElementById('history-display-body'); body.innerHTML = "";
+            let income = 0; let count = 0; const data = snap.val(); if(!data) return;
+            const now = new Date(); const currMonth = now.toLocaleString('id-ID', {month:'long'}).toUpperCase();
+            Object.values(data).reverse().forEach(h => {
+                if(h.month === currMonth) { income += h.total; count++; }
+                body.innerHTML += `<tr><td><b>${h.month}</b></td><td>${h.fullTime}</td><td>${h.customer}</td><td>${h.table}</td><td>${h.payment}</td><td><b>Rp ${h.total.toLocaleString()}</b></td></tr>`;
             });
-            document.getElementById('stat-income').innerText = "Rp " + totalIncome.toLocaleString();
-            document.getElementById('stat-orders').innerText = totalOrders;
+            document.getElementById('stat-income').innerText = "Rp " + income.toLocaleString();
+            document.getElementById('stat-count').innerText = count;
         });
 
-        window.clearAllHistory = () => confirm("YAKIN? Ini akan menghapus semua catatan omset bulan ini.") && remove(ref(db, 'history'));
+        window.deleteAllHistory = () => confirm("Hapus SEMUA riwayat omset HRD?") && remove(ref(db, 'history'));
+
+        window.exportToPDF = () => {
+            const { jsPDF } = window.jspdf; const doc = new jsPDF('l', 'mm', 'a4');
+            doc.text("LAPORAN BULANAN HRD - SESA COFFEE", 14, 15);
+            const rows = [];
+            onValue(ref(db, 'history'), (snap) => {
+                Object.values(snap.val()).forEach(h => rows.push([h.month, h.fullTime, h.customer, h.table, h.payment, h.total.toLocaleString()]));
+                doc.autoTable({ head: [['Bulan','Waktu','Nama','Meja','Metode','Total']], body: rows, startY: 25 });
+                doc.save("Laporan_SESA_HRD.pdf");
+            }, {onlyOnce:true});
+        };
 
     </script>
 
     <script>
-        // --- REAL-TIME CLOCK LOGIC ---
-        function runLiveClock() {
+        function updateAdminClock() {
             const now = new Date();
             const days = ["MINGGU", "SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU"];
-            const months = ["JANUARI", "FEBRUARI", "MARET", "APRIL", "MEI", "JUNI", "JULI", "AGUSTUS", "SEPTEMBER", "OKTOBER", "NOVEMBER", "DESEMBER"];
-            
-            document.getElementById('live-time').innerText = now.toLocaleTimeString('id-ID', { hour12: false });
-            document.getElementById('live-date').innerText = `${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
-        }
-        setInterval(runLiveClock, 1000);
-        runLiveClock();
+            const hr = now.getHours();
+            const min = now.getMinutes();
+            const dayName = days[now.getDay()];
 
-        // --- UI INTERACTION (TABS & SIDEBAR) ---
+            document.getElementById('live-time').innerText = now.toLocaleTimeString('id-ID');
+            document.getElementById('live-date').innerText = now.toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
+            document.getElementById('live-day-text').innerText = dayName;
+
+            // Greeting
+            let greet = hr < 11 ? "Selamat Pagi" : (hr < 15 ? "Selamat Siang" : (hr < 19 ? "Selamat Sore" : "Selamat Malam"));
+            document.getElementById('greeting-banner').innerText = `${greet}, Admin SESA!`;
+
+            // Closing Warning
+            const alertBox = document.getElementById('closing-alert');
+            const alertMsg = document.getElementById('alert-msg');
+            if(dayName === "SABTU" || dayName === "MINGGU") {
+                if(hr === 23 && min >= 45) { alertBox.style.display = 'flex'; alertMsg.innerText = "Hampir Jam 12 Malam (Minggu)! Waktunya tutup toko."; }
+                else alertBox.style.display = 'none';
+            } else {
+                if(hr === 21 && min >= 45) { alertBox.style.display = 'flex'; alertMsg.innerText = "Hampir Jam 10 Malam! Waktunya beres-beres operasional."; }
+                else alertBox.style.display = 'none';
+            }
+        }
+        setInterval(updateAdminClock, 1000);
         function switchTab(id, el) {
-            document.querySelectorAll('.tab-content, .nav-item').forEach(x => x.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            el.classList.add('active');
-            document.getElementById('page-title').innerText = el.innerText;
+            document.querySelectorAll('.tab-content, .nav-item').forEach(x => { x.classList.remove('active'); if(x.className==='tab-content') x.style.display='none'; });
+            document.getElementById(id).style.display = 'block'; el.classList.add('active');
             if(window.innerWidth <= 1024) toggleSidebar();
         }
-
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('open');
             document.getElementById('sidebar-overlay').classList.toggle('active');
