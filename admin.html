@@ -3,134 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SESA ADMIN | Command Center v21.0 Ultimate</title>
-    <!-- Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- PDF Library -->
+    <title>SESA ADMIN | Pusat Komando Utama v17.0</title>
+    
+    <!-- Premium Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <!-- Library Ekspor PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
     
     <style>
         :root {
-            --primary: #1a120b;
-            --sidebar: #2c1b0e;
-            --accent: #c5a059;
-            --bg: #f4f7f6;
-            --white: #ffffff;
-            --success: #27ae60;
-            --danger: #e74c3c;
-            --info: #3498db;
-            --warning: #f39c12;
-            --shadow: 0 15px 50px rgba(0,0,0,0.1);
+            --primary: #1a120b; --secondary: #2c1b0e; --accent: #c5a059;
+            --bg: #f8f6f2; --white: #ffffff; --success: #27ae60;
+            --danger: #e74c3c; --shadow: 0 20px 60px rgba(0,0,0,0.15);
         }
 
+        /* --- DASAR & SCROLLBAR --- */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
         body { background-color: var(--bg); display: flex; min-height: 100vh; color: var(--primary); overflow-x: hidden; }
 
-        /* --- SIDEBAR --- */
+        /* --- SIDEBAR IMPERIAL --- */
         .sidebar {
-            width: 280px; background: var(--sidebar); color: white;
-            display: flex; flex-direction: column; padding: 40px 20px;
-            position: fixed; height: 100vh; z-index: 5000; 
-            transition: all 0.4s ease; left: 0; border-right: 2px solid var(--accent);
+            width: 320px; background: var(--secondary); color: white;
+            display: flex; flex-direction: column; padding: 40px 25px;
+            position: fixed; height: 100vh; z-index: 5000; border-right: 5px solid var(--accent);
+            box-shadow: 10px 0 30px rgba(0,0,0,0.2);
         }
-        .sidebar h2 { font-family: 'Playfair Display', serif; margin-bottom: 50px; text-align: center; font-size: 1.8rem; color: var(--accent); letter-spacing: 2px; }
+        .sidebar h2 { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-bottom: 50px; text-align: center; color: var(--accent); letter-spacing: 3px; font-weight: 900; border-bottom: 1px solid rgba(197, 160, 89, 0.2); padding-bottom: 15px; }
+        
         .nav-item {
-            padding: 16px 20px; border-radius: 15px; margin-bottom: 12px;
+            padding: 16px 20px; border-radius: 18px; margin-bottom: 8px;
             cursor: pointer; display: flex; align-items: center; gap: 15px;
-            color: #bdc3c7; transition: 0.3s; border: none; background: none; width: 100%; text-align: left;
-            font-size: 0.95rem; font-weight: 500; text-decoration: none;
+            color: #bdc3c7; transition: 0.4s; border: none; background: none; width: 100%; text-align: left;
+            font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
         }
-        .nav-item.active { background: var(--accent); color: white; box-shadow: 0 8px 20px rgba(197, 160, 89, 0.3); }
-        .nav-item:hover:not(.active) { background: rgba(255,255,255,0.05); color: white; transform: translateX(5px); }
+        .nav-item i { font-size: 1.1rem; width: 25px; text-align: center; }
+        .nav-item.active { background: var(--accent); color: var(--primary); box-shadow: 0 10px 25px rgba(197, 160, 89, 0.4); transform: scale(1.05); }
+        .nav-item:hover:not(.active) { background: rgba(255,255,255,0.05); color: white; padding-left: 30px; }
 
-        /* --- MAIN CONTENT --- */
-        .main-content { flex: 1; margin-left: 280px; padding: 30px 50px; width: calc(100% - 280px); transition: 0.4s; }
-
-        .mobile-header {
-            display: none; background: var(--sidebar); color: white;
-            padding: 15px 25px; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 4500;
+        /* --- AREA KONTEN UTAMA --- */
+        .main-content { flex: 1; margin-left: 320px; padding: 50px 70px; width: calc(100% - 320px); transition: 0.5s; }
+        .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 50px; }
+        .header-flex h1 { font-family: 'Playfair Display', serif; font-size: 2.8rem; font-weight: 900; }
+        
+        .clock-widget { 
+            background: white; padding: 25px 45px; border-radius: 35px; 
+            box-shadow: var(--shadow); border-right: 10px solid var(--accent); text-align: right; 
         }
+        #live-time { font-size: 2.4rem; font-weight: 900; color: var(--primary); display: block; line-height: 1; }
+        #live-date { font-size: 0.85rem; color: var(--accent); font-weight: 700; text-transform: uppercase; margin-top: 8px; display: block; }
 
-        .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-        .clock-widget { background: white; padding: 18px 30px; border-radius: 25px; box-shadow: var(--shadow); border-right: 6px solid var(--accent); text-align: right; }
-        #live-time { font-size: 1.8rem; font-weight: 700; color: var(--primary); display: block; line-height: 1; }
-        #live-date { font-size: 0.85rem; color: #888; font-weight: 600; text-transform: uppercase; margin-top: 8px; display: block; }
+        /* --- KARTU & DESAIN WIDGET --- */
+        .admin-card { background: white; padding: 45px; border-radius: 45px; box-shadow: var(--shadow); margin-bottom: 45px; border: 1px solid rgba(197, 160, 89, 0.1); position: relative; }
+        .greet-card { background: linear-gradient(135deg, var(--secondary), var(--primary)); color: white; padding: 60px; border-radius: 50px; margin-bottom: 50px; border-bottom: 10px solid var(--accent); }
 
-        /* --- GREETING & DASHBOARD --- */
-        .greet-card { background: var(--sidebar); color: white; padding: 40px; border-radius: 35px; margin-bottom: 30px; position: relative; overflow: hidden; border-bottom: 8px solid var(--accent); }
-        .greet-card h2 { font-family: 'Playfair Display'; font-size: 2.2rem; margin-bottom: 10px; position: relative; z-index: 2; }
-        .greet-card p { opacity: 0.8; font-size: 1rem; position: relative; z-index: 2; }
-        .greet-card i { position: absolute; right: -20px; bottom: -20px; font-size: 10rem; opacity: 0.1; }
+        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-bottom: 45px; }
+        .stat-card { background: white; padding: 35px; border-radius: 40px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 25px; border-bottom: 6px solid var(--accent); transition: 0.3s; }
+        .stat-card:hover { transform: translateY(-10px); }
+        .stat-card i { font-size: 3rem; color: var(--accent); }
+        .stat-card h2 { font-size: 2.2rem; font-weight: 900; }
 
-        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; margin-bottom: 45px; }
-        .stat-card { background: white; padding: 30px; border-radius: 30px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 25px; }
-        .stat-card i { font-size: 2.8rem; color: var(--accent); }
+        /* --- TABEL & DATA --- */
+        .table-container { overflow-x: auto; border-radius: 40px; box-shadow: var(--shadow); background: white; }
+        .data-table { width: 100%; border-collapse: collapse; min-width: 1100px; }
+        .data-table th { background: #fafafa; padding: 30px 25px; text-align: left; font-size: 0.75rem; color: #bbb; border-bottom: 2px solid #f8f8f8; text-transform: uppercase; letter-spacing: 2px; }
+        .data-table td { padding: 30px 25px; border-bottom: 1px solid #f8f8f8; font-size: 1rem; vertical-align: top; }
 
-        .admin-card { background: white; padding: 35px; border-radius: 35px; box-shadow: var(--shadow); margin-bottom: 40px; border: 1px solid rgba(0,0,0,0.02); }
-        
-        /* --- FORM --- */
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 25px; margin-bottom: 25px; }
-        .form-group label { display: block; font-size: 0.8rem; font-weight: 700; color: #555; margin-bottom: 10px; text-transform: uppercase; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 15px; border: 2px solid #f1f1f1; border-radius: 15px; outline: none; transition: 0.3s; background: #fafafa; }
-        .form-group input:focus { border-color: var(--accent); background: white; }
-        
-        .btn-act { background: var(--sidebar); color: white; border: none; padding: 18px; border-radius: 15px; font-weight: 700; cursor: pointer; width: 100%; transition: 0.3s; font-size: 1rem; }
-        .btn-act:hover { background: var(--accent); transform: translateY(-3px); }
+        /* --- BADGES --- */
+        .badge { padding: 6px 16px; border-radius: 100px; font-weight: 800; font-size: 0.65rem; text-transform: uppercase; }
+        .bg-success { background: #e8f5e9; color: #2e7d32; }
+        .bg-danger { background: #ffebee; color: #c62828; }
+        .bg-warning { background: #fff3e0; color: #ef6c00; }
+        .pw-badge { background: #fdf6e3; color: #b8860b; border: 1px solid #eee8d5; font-family: monospace; padding: 5px 12px; border-radius: 10px; font-weight: 900; }
 
-        /* --- TABLES --- */
-        .table-container { overflow-x: auto; border-radius: 25px; box-shadow: var(--shadow); }
-        .data-table { width: 100%; border-collapse: collapse; min-width: 900px; background: white; }
-        .data-table th { background: #fafafa; padding: 20px; text-align: left; font-size: 0.75rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; }
-        .data-table td { padding: 20px; border-top: 1px solid #f8f8f8; font-size: 0.9rem; vertical-align: middle; }
+        /* --- FORMS & INPUT PREVIEW --- */
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 30px; margin-bottom: 30px; }
+        label { display: block; font-size: 0.8rem; font-weight: 800; color: #555; margin-bottom: 12px; text-transform: uppercase; }
+        input, select, textarea { width: 100%; padding: 18px; border-radius: 20px; border: 2px solid #f2f2f2; outline: none; background: #fafafa; transition: 0.3s; font-size: 1rem; }
+        input:focus { border-color: var(--accent); background: white; }
 
-        .stock-btn { padding: 8px 20px; border-radius: 10px; border: none; font-weight: 800; cursor: pointer; transition: 0.3s; }
-        .st-ready { background: #e8f5e9; color: var(--success); }
-        .st-habis { background: #ffebee; color: var(--danger); }
+        .img-preview { 
+            width: 100%; height: 350px; background: #f0f0f0; border-radius: 40px; 
+            border: 3px dashed var(--accent); overflow: hidden; display: flex; 
+            align-items: center; justify-content: center; margin-bottom: 30px; 
+        }
+        .img-preview img { width: 100%; height: 100%; object-fit: cover; display: none; }
 
-        .alert-time { background: #ffebee; color: var(--danger); padding: 15px; border-radius: 15px; margin-bottom: 25px; display: none; align-items: center; gap: 15px; font-weight: 700; border-left: 5px solid var(--danger); }
+        .btn-act { 
+            background: var(--secondary); color: white; border: none; padding: 20px 35px; 
+            border-radius: 20px; cursor: pointer; font-weight: 800; text-transform: uppercase; 
+            transition: 0.4s; letter-spacing: 2px; width: 100%; 
+        }
+        .btn-act:hover { background: var(--accent); color: var(--primary); transform: translateY(-5px); box-shadow: 0 15px 30px rgba(197,160,89,0.3); }
 
-        #sidebar-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 4900; backdrop-filter: blur(4px); }
+        /* TAB CEK TOKO WEB */
+        .web-viewer { width: 100%; height: 850px; border: 10px solid white; border-radius: 50px; box-shadow: var(--shadow); }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        /* FEEDBACK REPLY */
+        .feedback-card { background: white; padding: 40px; border-radius: 45px; box-shadow: var(--shadow); border-left: 12px solid var(--accent); margin-bottom: 30px; position: relative; }
+        .reply-box { background: #fdfaf5; padding: 25px; border-radius: 30px; margin-top: 20px; border: 1px solid #eee; }
 
-        @media (max-width: 1024px) {
-            .sidebar { left: -280px; }
-            .sidebar.open { left: 0; }
-            .main-content { margin-left: 0; width: 100%; padding: 25px; }
-            .mobile-header { display: flex; }
-            #sidebar-overlay.active { display: block; }
+        @media (max-width: 1200px) {
+            .sidebar { width: 90px; padding: 30px 10px; }
+            .sidebar h2, .nav-item span { display: none; }
+            .main-content { margin-left: 90px; padding: 30px; width: calc(100% - 90px); }
         }
     </style>
 </head>
 <body>
 
-    <div id="sidebar-overlay" onclick="toggleSidebar()"></div>
-
-    <div class="mobile-header">
-        <div onclick="toggleSidebar()" style="cursor:pointer;"><i class="fas fa-bars fa-lg"></i></div>
-        <h3 style="font-family: 'Playfair Display'; color: var(--accent);">SESA ADMIN</h3>
-        <i class="fas fa-user-shield"></i>
-    </div>
-
-    <!-- SIDEBAR -->
-    <div class="sidebar" id="sidebar">
-        <h2>SESA <span>Admin</span></h2>
-        <button class="nav-item active" onclick="switchTab('tab-dash', this)"><i class="fas fa-chart-line"></i> Dashboard</button>
-        <button class="nav-item" onclick="switchTab('tab-orders', this)"><i class="fas fa-concierge-bell"></i> Antrean Pesanan</button>
-        <button class="nav-item" onclick="switchTab('tab-manage', this)"><i class="fas fa-hamburger"></i> Kelola Menu</button>
-        <button class="nav-item" onclick="switchTab('tab-hrd', this)"><i class="fas fa-file-invoice-dollar"></i> Laporan HRD</button>
-        <a href="index.html" class="nav-item" style="margin-top: auto;"><i class="fas fa-external-link-alt"></i> Buka Website</a>
+    <!-- SIDEBAR UTAMA -->
+    <div class="sidebar">
+        <h2>SESA <span>ADMIN</span></h2>
+        <button class="nav-item active" onclick="switchTab('tab-dash', this)"><i class="fas fa-chart-line"></i> <span>Beranda</span></button>
+        <button class="nav-item" onclick="switchTab('tab-payroll', this)"><i class="fas fa-hand-holding-usd"></i> <span>Gaji & Payroll</span></button>
+        <button class="nav-item" onclick="switchTab('tab-absensi', this)"><i class="fas fa-calendar-check"></i> <span>Absensi & Ijin</span></button>
+        <button class="nav-item" onclick="switchTab('tab-staff', this)"><i class="fas fa-user-shield"></i> <span>Akun Kasir</span></button>
+        <button class="nav-item" onclick="switchTab('tab-feedback', this)"><i class="fas fa-comments"></i> <span>Ulasan Tamu</span></button>
+        <button class="nav-item" onclick="switchTab('tab-manage', this)"><i class="fas fa-utensils"></i> <span>Kelola Menu</span></button>
+        <button class="nav-item" onclick="switchTab('tab-hrd', this)"><i class="fas fa-file-invoice-dollar"></i> <span>Laporan Keuangan</span></button>
+        <button class="nav-item" onclick="switchTab('tab-web', this)"><i class="fas fa-eye"></i> <span>Cek Toko Web</span></button>
+        <a href="index.html" target="_blank" class="nav-item" style="margin-top: auto; color: var(--accent);"><i class="fas fa-external-link-alt"></i> <span>Buka Website</span></a>
     </div>
 
     <div class="main-content">
-        
         <div class="header-flex">
             <div>
-                <h1 id="page-title" style="font-family:'Playfair Display'; font-size:2.2rem; font-weight:700;">Dashboard</h1>
-                <div id="live-day-text" style="font-weight:700; color:var(--accent); text-transform:uppercase; letter-spacing:1px;">...</div>
+                <h1 id="page-title" style="font-family:'Playfair Display'">Dashboard</h1>
+                <p id="live-day-text" style="color:var(--accent); font-weight:800; letter-spacing:2px;"></p>
             </div>
             <div class="clock-widget">
                 <span id="live-time">00:00:00</span>
@@ -138,356 +142,278 @@
             </div>
         </div>
 
-        <!-- REMINDER JAM TUTUP -->
-        <div id="closing-alert" class="alert-time">
-            <i class="fas fa-clock fa-lg"></i>
-            <span id="alert-msg">Waktunya tutup toko! Jangan lupa bereskan semua laporan hari ini.</span>
-        </div>
-
-        <!-- TAB 1: DASHBOARD -->
+        <!-- 1. DASHBOARD -->
         <div id="tab-dash" class="tab-content">
             <div class="greet-card">
-                <i class="fas fa-mug-hot"></i>
-                <h2 id="greeting-banner">Selamat Pagi, Admin SESA!</h2>
-                <p>Ayo semangat kerja hari ini! Pastikan semua stok menu terupdate dengan benar.</p>
+                <h2>Selamat Pagi, Owner.</h2>
+                <p>Status performa bisnis SESA Coffee PIK 2 secara real-time.</p>
             </div>
-
-            <div class="admin-card" style="background:#fffcf5; border:2px dashed var(--accent);">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <div>
-                        <h4 style="font-weight:800; color:var(--primary);">STATUS TOKO GLOBAL (OPEN/CLOSED)</h4>
-                        <p style="font-size:0.8rem; color:#888;">Tutup toko secara global jika jam operasional sudah habis.</p>
-                    </div>
-                    <div style="display:flex; align-items:center; gap:15px;">
-                        <span id="global-status-pill" style="font-weight:900; font-size:1.2rem; color:var(--success);">OPEN</span>
-                        <button onclick="toggleGlobalStore()" class="btn-act" style="width:auto; padding:10px 25px; background:var(--sidebar); font-size:0.8rem;">GANTI STATUS</button>
-                    </div>
-                </div>
-            </div>
-
             <div class="stat-grid">
                 <div class="stat-card">
                     <i class="fas fa-wallet"></i>
-                    <div><h2 id="stat-income">Rp 0</h2><p style="font-size:0.7rem; color:#aaa; font-weight:700;">OMSET BULAN INI</p></div>
+                    <div><p>Omset Bulan <span id="month-label">...</span></p><h2 id="omset-month">Rp 0</h2></div>
                 </div>
                 <div class="stat-card">
-                    <i class="fas fa-receipt"></i>
-                    <div><h2 id="stat-count">0</h2><p style="font-size:0.7rem; color:#aaa; font-weight:700;">TOTAL TRANSAKSI</p></div>
+                    <i class="fas fa-users-viewfinder"></i>
+                    <div><p>Staff Masuk Hari Ini</p><h2 id="staff-on-count">0 Orang</h2></div>
+                </div>
+            </div>
+            <div class="admin-card" style="border:3px dashed var(--accent);">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div><h3>STATUS TOKO GLOBAL</h3><p>Kontrol akses pesanan website pelanggan.</p></div>
+                    <div style="display:flex; align-items:center; gap:25px;">
+                        <span id="status-pill" class="badge bg-success" style="font-size:1.2rem; padding:10px 25px;">OPEN</span>
+                        <button onclick="toggleStore()" class="btn-act" style="width:auto; padding:15px 40px; font-size:0.8rem;">GANTI STATUS</button>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- TAB 2: ANTRIAN PESANAN -->
-        <div id="tab-orders" class="tab-content" style="display:none;">
-            <div class="order-grid" id="order-display-box">
-                <!-- Data Realtime Orders -->
+        <!-- 2. GAJI & PAYROLL -->
+        <div id="tab-payroll" class="tab-content" style="display:none;">
+            <div id="payroll-container" class="stat-grid">
+                <!-- Payroll Cards -->
             </div>
         </div>
 
-        <!-- TAB 3: KELOLA MENU -->
+        <!-- 3. ABSENSI & IJIN -->
+        <div id="tab-absensi" class="tab-content" style="display:none;">
+            <div class="admin-card">
+                <h3>Formulir Ijin Staff</h3>
+                <div class="form-grid" style="margin-top:25px;">
+                    <div><label>Pilih Staff</label><select id="ijin-staff-name"></select></div>
+                    <div><label>Jenis Ijin</label><select id="ijin-type"><option value="IJIN">Ijin (Potong Gaji)</option><option value="SAKIT">Sakit</option><option value="CUTI">Cuti</option></select></div>
+                    <div><label>Alasan Detail</label><input type="text" id="ijin-reason" placeholder="Keterangan..."></div>
+                    <div style="display:flex; align-items:flex-end;"><button class="btn-act" onclick="submitPermit()">SIMPAN IJIN</button></div>
+                </div>
+            </div>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead><tr><th>Nama Staff</th><th>Tanggal/Jam</th><th>Status</th><th>Keterangan</th></tr></thead>
+                    <tbody id="absensi-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 4. KELOLA AKUN STAFF (FULL DETAIL) -->
+        <div id="tab-staff" class="tab-content" style="display:none;">
+            <div class="admin-card">
+                <h3>Registrasi Akun Staff Profesional</h3>
+                <div class="form-grid">
+                    <div><label>Nama Lengkap (KTP)</label><input type="text" id="s-fullname"></div>
+                    <div><label>WhatsApp</label><input type="number" id="s-phone"></div>
+                    <div><label>Gaji Pokok (Rp)</label><input type="number" id="s-salary" value="5000000"></div>
+                    <div><label>Email & Tgl Lahir</label><input type="text" id="s-email" placeholder="Email"><br><input type="date" id="s-dob" style="margin-top:10px;"></div>
+                    <div><label>Akses Login (User & PW)</label><input type="text" id="s-user" placeholder="Username"><br><input type="text" id="s-pass" placeholder="Password" style="margin-top:10px;"></div>
+                </div>
+                <button class="btn-act" onclick="regStaff()">DAFTARKAN KASIR SEKARANG</button>
+            </div>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead><tr><th>User</th><th>Password (Sync)</th><th>Nama Lengkap</th><th>Gaji Pokok</th><th>Aksi</th></tr></thead>
+                    <tbody id="staff-list-body"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 5. GUEST FEEDBACK -->
+        <div id="tab-feedback" class="tab-content" style="display:none;">
+            <div id="feedback-container" class="feedback-grid"></div>
+        </div>
+
+        <!-- 6. KELOLA MENU (LENGKAP: MOCKTAIL INCLUDED) -->
         <div id="tab-manage" class="tab-content" style="display:none;">
             <div class="admin-card">
-                <h3 id="form-title" style="margin-bottom:25px; font-family:'Playfair Display'"><i class="fas fa-plus-circle"></i> Input Menu Produk</h3>
-                <input type="hidden" id="m-id">
+                <h3 id="m-mode-title">Editor Menu Imperial</h3>
+                <input type="hidden" id="edit-id">
+                <div class="img-preview" id="p-box"><span id="p-text">Preview Foto HD Menu</span><img id="p-img"></div>
                 <div class="form-grid">
-                    <div class="form-group"><label>Nama Menu</label><input type="text" id="m-name" placeholder="Misal: Nasi Goreng Sesa"></div>
-                    <div class="form-group">
-                        <label>Kategori Produk</label>
-                        <select id="m-cat" onchange="toggleFormPrice()">
-                            <option value="menu_paket">Menu Paket (Main Food)</option>
+                    <div><label>Link Foto HD Google</label><input type="text" id="m-img" oninput="prev(this.value)" placeholder="URL Gambar"></div>
+                    <div><label>Nama Menu</label><input type="text" id="m-name" placeholder="Nama Produk"></div>
+                    <div><label>Kategori Produk</label>
+                        <select id="m-cat" onchange="togglePriceFields()">
+                            <option value="menu_paket">Menu Paket</option>
                             <option value="makanan_berat">Makanan Berat</option>
                             <option value="cemilan">Cemilan / Snack</option>
                             <option value="coffee">Coffee Based</option>
-                            <option value="non_coffee">Non-Coffee Based</option>
-                            <option value="cocktail">Cocktail</option>
-                            <option value="mocktail">Mocktail</option>
+                            <option value="non_coffee">Non-Coffee</option>
+                            <option value="cocktail">Signature Cocktail</option>
+                            <option value="mocktail">Fresh Mocktail</option>
                         </select>
                     </div>
                 </div>
-
-                <!-- HARGA & PROMO -->
-                <div style="background:#fffcf0; padding:25px; border-radius:25px; border:2px dashed var(--accent); margin-bottom:25px;">
-                    <div class="form-group">
-                        <label style="display:flex; align-items:center; gap:12px; cursor:pointer; color:var(--danger); font-weight:800;">
-                            <input type="checkbox" id="m-promo-check" onchange="toggleFormPrice()" style="width:22px; height:22px;"> AKTIFKAN PROMO (CEKLIS JIKA DISKON)
-                        </label>
-                    </div>
-                    <div class="form-grid" style="margin-top:20px;">
-                        <div class="form-group" id="grp-normal-price"><label>Harga Normal (Fixed)</label><input type="number" id="m-price-normal"></div>
-                        <div class="form-group" id="grp-promo-price" style="display:none;"><label>Harga Promo SESA</label><input type="number" id="m-price-promo"></div>
-                        
-                        <!-- Coffee Fields -->
-                        <div class="form-group grp-coffee-field" style="display:none;"><label>Harga Panas</label><input type="number" id="m-price-hot"></div>
-                        <div class="form-group grp-coffee-field" style="display:none;"><label>Harga Dingin</label><input type="number" id="m-price-cold"></div>
-                        <div class="form-group grp-coffee-promo" style="display:none;"><label>Promo Panas</label><input type="number" id="m-price-hot-promo"></div>
-                        <div class="form-group grp-coffee-promo" style="display:none;"><label>Promo Dingin</label><input type="number" id="m-price-cold-promo"></div>
-                    </div>
-                    
-                    <div class="form-grid" id="promo-time-config" style="display:none; border-top:1px solid #ddd; padding-top:20px; margin-top:15px;">
-                        <div class="form-group">
-                            <label>Hari Berlaku</label>
-                            <select id="m-promo-day">
-                                <option value="Setiap Hari">Setiap Hari</option>
-                                <option value="Senin">Senin</option><option value="Selasa">Selasa</option>
-                                <option value="Rabu">Rabu</option><option value="Kamis">Kamis</option>
-                                <option value="Jumat">Jumat</option><option value="Sabtu">Sabtu</option>
-                                <option value="Minggu">Minggu</option>
-                            </select>
-                        </div>
-                        <div class="form-group"><label>Mulai Jam</label><input type="number" id="m-promo-start" value="8"></div>
-                        <div class="form-group"><label>Sampai Jam</label><input type="number" id="m-promo-end" value="22"></div>
-                    </div>
+                <div id="drink-prices" class="form-grid" style="display:none;">
+                    <div><label>Harga Panas (Hot)</label><input type="number" id="m-price-hot"></div>
+                    <div><label>Harga Dingin (Ice)</label><input type="number" id="m-price-cold"></div>
                 </div>
-
+                <div id="food-prices" class="form-grid">
+                    <div><label>Harga Normal</label><input type="number" id="m-price-normal"></div>
+                </div>
                 <div class="form-grid">
-                    <div class="form-group"><label>Link URL Foto</label><input type="text" id="m-img" placeholder="https://..."></div>
-                    <div class="form-group"><label>Label Status</label>
-                        <div style="margin-top:10px;"><input type="checkbox" id="m-is-best"> <i class="fas fa-thumbs-up" style="color:var(--accent); margin-left:8px;"></i> Tampilkan Logo Best Seller</div>
+                    <div><label style="display:flex; align-items:center; gap:12px;"><input type="checkbox" id="m-is-promo" onchange="togglePromoFields()" style="width:22px; height:22px;"> AKTIFKAN PROMO?</label></div>
+                    <div><label style="display:flex; align-items:center; gap:12px;"><input type="checkbox" id="m-is-best" style="width:22px; height:22px;"> BEST SELLER ⭐</label></div>
+                </div>
+                <div id="promo-box" style="display:none; background:#fff8e1; padding:30px; border-radius:30px; border:2px dashed var(--accent); margin-bottom:30px;">
+                    <div class="form-grid">
+                        <div id="pf" style="display:none;"><label>Promo Normal</label><input type="number" id="m-price-promo"></div>
+                        <div id="pdh" style="display:none;"><label>Promo Panas</label><input type="number" id="m-price-hot-promo"></div>
+                        <div id="pdc" style="display:none;"><label>Promo Ice</label><input type="number" id="m-price-cold-promo"></div>
                     </div>
                 </div>
-                <div class="form-group"><label>Deskripsi & Spesifikasi Produk (Lengkap)</label><textarea id="m-desc" rows="5"></textarea></div>
-                
-                <button class="btn-act" onclick="pushMenuToDB()"><i class="fas fa-save"></i> SIMPAN PRODUK SEKARANG</button>
-                <button id="btn-cancel-edit" onclick="resetFormState()" style="display:none; background:#999; margin-top:10px;" class="btn-act">BATALKAN EDIT</button>
+                <div><label>Deskripsi & Spesifikasi Produk</label><textarea id="m-desc" rows="3"></textarea></div>
+                <button class="btn-act" id="btn-save" onclick="saveMenu()">SIMPAN DATA KE DATABASE</button>
+                <button class="btn-act" id="btn-cancel" onclick="resetForm()" style="display:none; margin-top:10px; background:#999;">BATALKAN EDIT</button>
             </div>
-
-            <div class="admin-card">
-                <h3>Daftar Produk & Stok</h3>
-                <div class="table-container">
-                    <table class="data-table">
-                        <thead><tr><th>Produk</th><th>Kategori</th><th>Stok</th><th>Aksi</th></tr></thead>
-                        <tbody id="product-list-body"></tbody>
-                    </table>
-                </div>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead><tr><th>Produk</th><th>Kat</th><th>Stok</th><th>Opsi</th></tr></thead>
+                    <tbody id="product-list-body"></tbody>
+                </table>
             </div>
         </div>
 
-        <!-- TAB 4: LAPORAN HRD -->
+        <!-- 7. LAPORAN KEUANGAN & SINKRONISASI PROMO -->
         <div id="tab-hrd" class="tab-content" style="display:none;">
             <div class="admin-card">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
-                    <h3>Laporan Omset & HRD Detail</h3>
-                    <div>
-                        <button class="btn-act" style="width:auto; background:var(--success); padding:10px 25px; margin-right:10px;" onclick="exportToPDF()"><i class="fas fa-file-pdf"></i> CETAK PDF</button>
-                        <button class="btn-act" style="width:auto; background:var(--danger); padding:10px 25px;" onclick="deleteAllHistory()"><i class="fas fa-trash"></i> HAPUS SEMUA RIWAYAT</button>
-                    </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px;">
+                    <h3>Laporan Detil Transaksi & Status Harga</h3>
+                    <button class="btn-act" onclick="genPDF()" style="width:auto; background:var(--success); padding:15px 40px;"><i class="fas fa-file-export"></i> EKSPOR PDF</button>
                 </div>
                 <div class="table-container">
-                    <table class="data-table" id="hrd-full-table">
-                        <thead>
-                            <tr>
-                                <th>Bulan</th>
-                                <th>Waktu</th>
-                                <th>Nama Pelanggan</th>
-                                <th>Meja</th>
-                                <th>Metode Bayar</th>
-                                <th>Total Omset</th>
-                            </tr>
-                        </thead>
+                    <table class="data-table" id="pdf-table">
+                        <thead><tr><th>Bulan</th><th>Waktu</th><th>Pelanggan</th><th>Items (Status Harga)</th><th>Kasir</th><th>Total</th></tr></thead>
                         <tbody id="history-display-body"></tbody>
                     </table>
                 </div>
             </div>
         </div>
+
+        <!-- 8. CEK TOKO WEB -->
+        <div id="tab-web" class="tab-content" style="display:none;">
+            <div class="admin-card" style="padding:10px;">
+                <iframe src="index.html" class="web-viewer"></iframe>
+            </div>
+        </div>
     </div>
 
-    <!-- FIREBASE SYSTEM -->
+    <!-- FIREBASE LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, onValue, set, push, remove, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, onValue, set, remove, update, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBAB3uy7JyIA38KMKGOFJb9_r5lJ3hTaNE",
-            authDomain: "sesa-coffee.firebaseapp.com",
-            databaseURL: "https://sesa-coffee-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "sesa-coffee",
-            storageBucket: "sesa-coffee.firebasestorage.app",
-            messagingSenderId: "767835800976",
-            appId: "1:767835800976:web:21ab01c3ff9bb29aae5f15"
-        };
+        const firebaseConfig = { databaseURL: "https://sesa-coffee-default-rtdb.asia-southeast1.firebasedatabase.app" };
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // --- GLOBAL STORE CONTROL ---
-        onValue(ref(db, 'store_config/is_open'), (snap) => {
-            const isOpen = snap.val();
-            const pill = document.getElementById('global-status-pill');
-            if(isOpen) { pill.innerText = "OPEN"; pill.style.color = "var(--success)"; }
-            else { pill.innerText = "CLOSED"; pill.style.color = "var(--danger)"; }
+        const currMonth = new Date().toLocaleString('id-ID', {month: 'long'}).toUpperCase();
+        document.getElementById('month-label').innerText = currMonth;
+
+        let staffData = {}; let shiftData = []; let permitData = [];
+
+        // --- GLOBAL OMSET & PROMO SYNC ---
+        onValue(ref(db, 'history'), (snapshot) => {
+            const data = snapshot.val(); let income = 0;
+            const hBody = document.getElementById('history-display-body'); hBody.innerHTML = "";
+            if(data) {
+                Object.values(data).reverse().forEach(h => {
+                    if(h.month === currMonth) income += h.total;
+                    let itemsHtml = "<ul>";
+                    if(h.items) h.items.forEach(item => {
+                        const statusBadge = item.isPromo ? '<span class="badge bg-danger">PROMO</span>' : '<span class="badge bg-success">NORMAL</span>';
+                        itemsHtml += `<li style="margin-bottom:8px;">• ${item.name} (x${item.qty}) ${statusBadge}<br><small>@ Rp ${item.price.toLocaleString()}</small></li>`;
+                    });
+                    itemsHtml += "</ul>";
+                    hBody.innerHTML += `<tr><td>${h.month}</td><td>${h.fullTime}</td><td><b>${h.customer}</b><br><small>Meja:${h.table}</small></td><td>${itemsHtml}</td><td>${h.cashier}</td><td style="color:var(--accent); font-weight:900;">Rp ${h.total.toLocaleString()}</td></tr>`;
+                });
+            }
+            document.getElementById('omset-month').innerText = "Rp " + income.toLocaleString();
         });
 
-        window.toggleGlobalStore = () => {
-            onValue(ref(db, 'store_config/is_open'), (snap) => {
-                set(ref(db, 'store_config/is_open'), !snap.val());
-            }, {onlyOnce:true});
-        };
+        // --- staff & PAYROLL ---
+        onValue(ref(db, 'staff'), (s) => { 
+            staffData = s.val() || {}; renderStaffList(); renderPayroll(); updateIjinDropdown();
+        });
+        onValue(ref(db, 'shifts'), (s) => { 
+            shiftData = s.val() ? Object.values(s.val()) : []; renderAttendance(); renderPayroll(); renderShiftMonitor();
+        });
+        onValue(ref(db, 'permits'), (s) => { 
+            permitData = s.val() ? Object.values(s.val()) : []; renderAttendance(); renderPayroll();
+        });
 
-        // --- MANAGE ORDERS ---
-        onValue(ref(db, 'orders'), (snap) => {
-            const data = snap.val();
-            const box = document.getElementById('order-display-box');
-            box.innerHTML = "";
-            if(!data) return;
-            Object.keys(data).reverse().forEach(id => {
-                const o = data[id];
-                let stCol = o.status === 'SIAP' ? 'var(--success)' : (o.status === 'PROSES' ? 'var(--info)' : 'var(--warning)');
-                box.innerHTML += `
-                    <div class="admin-card" style="padding:25px; border-top:5px solid var(--accent); margin-bottom:20px;">
-                        <span class="status-pill" style="background:${stCol}; color:white;">${o.status}</span>
-                        <div style="display:flex; justify-content:space-between;"><b>${o.customer}</b><small>MEJA ${o.table}</small></div>
-                        <div style="font-size:0.8rem; color:#888; margin:10px 0;">${o.fullTime}</div>
-                        <div style="background:#fff9e6; padding:12px; border-radius:12px; margin-bottom:15px; font-size:0.85rem; border-left:4px solid var(--warning);">Note: ${o.note || '-'}</div>
-                        <ul style="list-style:none; font-size:0.9rem; margin-bottom:15px; border-bottom:1px dashed #ddd; padding-bottom:10px;">
-                            ${o.items.map(i => `<li>${i.name} (x${i.qty}) <span style="float:right;">Rp ${(i.price*i.qty).toLocaleString()}</span></li>`).join('')}
-                        </ul>
-                        <div style="font-weight:800; display:flex; justify-content:space-between;"><span>Total (${o.payment})</span><span>Rp ${o.total.toLocaleString()}</span></div>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:20px;">
-                            ${o.status==='MENUNGGU'? `<button onclick="acc('${id}')" class="btn-act" style="background:var(--info); font-size:0.8rem; padding:10px;">ACC</button>` : ''}
-                            ${o.status==='PROSES'? `<button onclick="ready('${id}')" class="btn-act" style="background:var(--success); font-size:0.8rem; padding:10px;">SIAP</button>` : ''}
-                            <button onclick="finish('${id}')" class="btn-act" style="background:var(--sidebar); font-size:0.8rem; padding:10px;">SELESAI</button>
+        function renderPayroll() {
+            const container = document.getElementById('payroll-container'); container.innerHTML = "";
+            Object.values(staffData).forEach(staff => {
+                const base = parseInt(staff.baseSalary) || 0;
+                const harian = base / 30;
+                const hadir = shiftData.filter(s => s.cashierName === staff.fullName && s.startTime.includes(currMonth)).length;
+                const ijin = permitData.filter(p => p.name === staff.fullName && p.date.includes(currMonth) && p.type === 'IJIN').length;
+                const potong = ijin * harian;
+                const total = base - potong;
+
+                container.innerHTML += `
+                    <div class="stat-card" style="flex-direction:column; align-items:start; padding:40px;">
+                        <h4 style="font-family:'Playfair Display'; font-size:1.6rem;">${staff.fullName}</h4>
+                        <p style="font-size:0.7rem; font-weight:800; color:var(--accent); margin-bottom:15px;">@${staff.username}</p>
+                        <div style="width:100%; font-size:0.85rem; line-height:2.2;">
+                            <div style="display:flex; justify-content:space-between;"><span>Gaji Pokok:</span><b>Rp ${base.toLocaleString()}</b></div>
+                            <div style="display:flex; justify-content:space-between;"><span>Hadir Bulan Ini:</span><b>${hadir} Hari</b></div>
+                            <div style="display:flex; justify-content:space-between; color:red;"><span>Potongan (Ijin ${ijin}x):</span><b>-Rp ${potong.toLocaleString()}</b></div>
+                            <hr style="margin:10px 0; border:0.5px solid #eee;">
+                            <div style="display:flex; justify-content:space-between; font-size:1.1rem; color:var(--primary); font-weight:900;"><span>Gaji Bersih:</span><span>Rp ${total.toLocaleString()}</span></div>
                         </div>
                     </div>`;
             });
+        }
+
+        function renderAttendance() {
+            const body = document.getElementById('absensi-body'); body.innerHTML = "";
+            const today = new Date().toLocaleDateString('id-ID');
+            let count = 0;
+            shiftData.forEach(s => { if(s.startTime.includes(today)) { count++; body.innerHTML += `<tr><td><b>${s.cashierName}</b></td><td>${s.startTime}</td><td><span class="badge bg-success">HADIR (SHIFT)</span></td><td>Pos Kasir Aktif</td></tr>`; } });
+            permitData.forEach(p => { if(p.date === today) { body.innerHTML += `<tr><td><b>${p.name}</b></td><td>${p.date}</td><td><span class="badge bg-warning">${p.type}</span></td><td>Alasan: ${p.reason}</td></tr>`; } });
+            document.getElementById('staff-on-count').innerText = count + " Orang";
+        }
+
+        // --- MENU LOGIC ---
+        window.saveMenu = () => {
+            const editId = document.getElementById('edit-id').value; const id = editId ? editId : "p_" + Date.now();
+            set(ref(db, 'store_menu/'+id), {
+                id, name: document.getElementById('m-name').value, cat: document.getElementById('m-cat').value, img: document.getElementById('m-img').value, status: 'ready', isBest: document.getElementById('m-is-best').checked, isPromo: document.getElementById('m-is-promo').checked,
+                priceNormal: parseInt(document.getElementById('m-price-normal').value) || 0, priceHot: parseInt(document.getElementById('m-price-hot').value) || 0, priceCold: parseInt(document.getElementById('m-price-cold').value) || 0,
+                pricePromo: parseInt(document.getElementById('m-price-promo').value) || 0, priceHotPromo: parseInt(document.getElementById('m-price-hot-promo').value) || 0, priceColdPromo: parseInt(document.getElementById('m-price-cold-promo').value) || 0, desc: document.getElementById('m-desc').value
+            }).then(() => { alert("Database Sinkron!"); resetForm(); });
+        };
+        onValue(ref(db, 'store_menu'), (s) => {
+            const b = document.getElementById('product-list-body'); b.innerHTML = ""; const d = s.val(); if(!d) return;
+            Object.values(d).forEach(m => { b.innerHTML += `<tr><td><b>${m.name}</b></td><td>${m.cat.toUpperCase()}</td><td><button onclick="togStock('${m.id}','${m.status}')" style="background:${m.status==='ready'?'#e8f5e9':'#ffebee'}; color:${m.status==='ready'?'green':'red'}" class="badge">${m.status}</button></td><td><button onclick="editMenu('${m.id}')" style="color:var(--info); border:none; background:none; margin-right:10px;"><i class="fas fa-edit"></i></button><button onclick="delP('${m.id}')" style="color:red; background:none; border:none;"><i class="fas fa-trash"></i></button></td></tr>`; });
         });
-
-        window.acc = (id) => { const m = prompt("Estimasi menit?"); if(m) update(ref(db, 'orders/'+id), {status:'PROSES', estTime:m}); };
-        window.ready = (id) => update(ref(db, 'orders/'+id), {status:'SIAP'});
-        window.finish = (id) => { onValue(ref(db, 'orders/'+id), (s) => { const d = s.val(); if(d) push(ref(db, 'history'), d).then(() => remove(ref(db, 'orders/'+id))); }, {onlyOnce:true}); };
-
-        // --- MENU SYSTEM ---
-        window.toggleFormPrice = () => {
-            const cat = document.getElementById('m-cat').value;
-            const promo = document.getElementById('m-promo-check').checked;
-            const isD = (cat === 'coffee' || cat === 'non_coffee');
-
-            document.getElementById('promo-time-config').style.display = promo ? 'grid' : 'none';
-            document.querySelectorAll('.grp-coffee-field, .grp-coffee-promo, #grp-promo-price').forEach(e => e.style.display = 'none');
-            document.getElementById('grp-normal-price').style.display = isD ? 'none' : 'block';
-
-            if(isD) {
-                document.querySelectorAll('.grp-coffee-field').forEach(e => e.style.display = 'block');
-                if(promo) document.querySelectorAll('.grp-coffee-promo').forEach(e => e.style.display = 'block');
-            } else {
-                if(promo) document.getElementById('grp-promo-price').style.display = 'block';
-            }
-        };
-
-        window.pushMenuToDB = () => {
-            const id = document.getElementById('m-id').value || "p_" + Date.now();
-            const data = {
-                id, name: document.getElementById('m-name').value, cat: document.getElementById('m-cat').value,
-                isPromo: document.getElementById('m-promo-check').checked,
-                promoDay: document.getElementById('m-promo-day').value,
-                promoStart: parseInt(document.getElementById('m-promo-start').value) || 0,
-                promoEnd: parseInt(document.getElementById('m-promo-end').value) || 24,
-                priceNormal: parseInt(document.getElementById('m-price-normal').value) || 0,
-                pricePromo: parseInt(document.getElementById('m-price-promo').value) || 0,
-                priceHot: parseInt(document.getElementById('m-price-hot').value) || 0,
-                priceCold: parseInt(document.getElementById('m-price-cold').value) || 0,
-                priceHotPromo: parseInt(document.getElementById('m-price-hot-promo').value) || 0,
-                priceColdPromo: parseInt(document.getElementById('m-price-cold-promo').value) || 0,
-                img: document.getElementById('m-img').value, isBest: document.getElementById('m-is-best').checked,
-                desc: document.getElementById('m-desc').value, status: 'ready'
-            };
-            set(ref(db, 'store_menu/'+id), data).then(() => { alert("Tersimpan!"); resetFormState(); });
-        };
-
-        window.resetFormState = () => {
-            document.querySelectorAll('#tab-manage input, #tab-manage textarea').forEach(i => i.value = "");
-            document.getElementById('m-id').value = "";
-            document.getElementById('m-promo-check').checked = false;
-            document.getElementById('btn-cancel-edit').style.display = "none";
-            toggleFormPrice();
-        };
-
-        onValue(ref(db, 'store_menu'), (snap) => {
-            const body = document.getElementById('product-list-body'); body.innerHTML = "";
-            const data = snap.val(); if(!data) return;
-            Object.values(data).forEach(m => {
-                body.innerHTML += `<tr><td><b>${m.name}</b></td><td>${m.cat.toUpperCase()}</td><td><button onclick="toggleStock('${m.id}','${m.status}')" class="stock-btn ${m.status==='ready'?'st-ready':'st-habis'}">${m.status==='ready'?'READY':'HABIS'}</button></td><td><button onclick="editP('${m.id}')" style="color:var(--info); border:none; background:none; cursor:pointer;"><i class="fas fa-edit"></i></button><button onclick="delP('${m.id}')" style="color:var(--danger); border:none; background:none; margin-left:15px; cursor:pointer;"><i class="fas fa-trash"></i></button></td></tr>`;
-            });
-        });
-
-        window.toggleStock = (id, cur) => update(ref(db, 'store_menu/'+id), { status: cur==='ready'?'habis':'ready' });
+        
+        // --- HELPER FUNCTIONS ---
+        window.switchTab = (id, el) => { document.querySelectorAll('.tab-content, .nav-item').forEach(x => { x.classList.remove('active'); if(x.className==='tab-content') x.style.display='none'; }); document.getElementById(id).style.display = 'block'; el.classList.add('active'); document.getElementById('page-title').innerText = el.innerText.trim(); };
+        window.prev = (u) => { const i = document.getElementById('p-img'); const t = document.getElementById('p-text'); if(u){ i.src=u; i.style.display='block'; t.style.display='none'; } else { i.style.display='none'; t.style.display='block'; } };
+        window.resetForm = () => { document.querySelectorAll('#tab-manage input, #tab-manage textarea').forEach(i => { i.value = ""; i.checked = false; }); document.getElementById('edit-id').value = ""; document.getElementById('btn-save').innerText = "SIMPAN"; document.getElementById('btn-cancel').style.display="none"; prev(""); togglePriceFields(); togglePromoFields(); };
+        window.toggleStore = () => onValue(ref(db, 'store_config/is_open'), (s) => set(ref(db, 'store_config/is_open'), !s.val()), {onlyOnce:true});
+        onValue(ref(db, 'store_config/is_open'), (s) => { const open = s.val(); const p = document.getElementById('status-pill'); p.innerText = open ? "OPEN" : "CLOSED"; p.className = open ? "badge bg-success" : "badge bg-danger"; });
+        window.regStaff = () => { const u = document.getElementById('s-user').value.toLowerCase().trim(); set(ref(db, 'staff/'+u), { username: u, password: document.getElementById('s-pass').value, fullName: document.getElementById('s-fullname').value, phone: document.getElementById('s-phone').value, baseSalary: document.getElementById('s-salary').value, email: document.getElementById('s-email').value, dob: document.getElementById('s-dob').value }).then(() => alert("Staff Terdaftar!")); };
+        function renderStaffList() { const b = document.getElementById('staff-list-body'); b.innerHTML = ""; Object.values(staffData).forEach(x => { b.innerHTML += `<tr><td><b>${x.username}</b></td><td><span class="pw-badge">${x.password}</span></td><td>${x.fullName}</td><td>Rp ${parseInt(x.baseSalary).toLocaleString()}</td><td><button onclick="delStaff('${x.username}')" style="color:red; background:none; border:none;"><i class="fas fa-trash"></i></button></td></tr>`; }); }
+        function updateIjinDropdown() { const sel = document.getElementById('ijin-staff-name'); sel.innerHTML = "<option>Pilih Staff...</option>"; Object.values(staffData).forEach(s => sel.innerHTML += `<option value="${s.fullName}">${s.fullName}</option>`); }
+        window.submitPermit = () => { push(ref(db, 'permits'), { name: document.getElementById('ijin-staff-name').value, type: document.getElementById('ijin-type').value, reason: document.getElementById('ijin-reason').value, date: new Date().toLocaleDateString('id-ID') }).then(() => alert("Berhasil!")); };
+        function renderShiftMonitor() { const b = document.getElementById('shift-report-body'); b.innerHTML = ""; shiftData.reverse().forEach(s => { b.innerHTML += `<tr><td><b>${s.cashierName}</b></td><td>${s.startTime}</td><td><b>${s.status}</b></td><td>Rp ${s.totalIncome.toLocaleString()}</td></tr>`; }); }
+        window.delStaff = (id) => confirm("Hapus?") && remove(ref(db, 'staff/'+id));
         window.delP = (id) => confirm("Hapus?") && remove(ref(db, 'store_menu/'+id));
-        window.editP = (id) => {
-            onValue(ref(db, 'store_menu/'+id), (s) => {
-                const m = s.val(); document.getElementById('m-id').value = m.id;
-                document.getElementById('m-name').value = m.name; document.getElementById('m-cat').value = m.cat;
-                document.getElementById('m-promo-check').checked = m.isPromo; document.getElementById('m-price-normal').value = m.priceNormal;
-                document.getElementById('m-price-promo').value = m.pricePromo; document.getElementById('m-price-hot').value = m.priceHot;
-                document.getElementById('m-price-cold').value = m.priceCold; document.getElementById('m-price-hot-promo').value = m.priceHotPromo;
-                document.getElementById('m-price-cold-promo').value = m.priceColdPromo; document.getElementById('m-img').value = m.img;
-                document.getElementById('m-desc').value = m.desc; document.getElementById('m-is-best').checked = m.isBest;
-                document.getElementById('btn-cancel-edit').style.display = "block"; toggleFormPrice(); window.scrollTo(0,0);
-            }, {onlyOnce:true});
-        };
-
-        // --- HISTORY & DELETE ---
-        onValue(ref(db, 'history'), (snap) => {
-            const body = document.getElementById('history-display-body'); body.innerHTML = "";
-            let income = 0; let count = 0; const data = snap.val(); if(!data) return;
-            const now = new Date(); const currMonth = now.toLocaleString('id-ID', {month:'long'}).toUpperCase();
-            Object.values(data).reverse().forEach(h => {
-                if(h.month === currMonth) { income += h.total; count++; }
-                body.innerHTML += `<tr><td><b>${h.month}</b></td><td>${h.fullTime}</td><td>${h.customer}</td><td>${h.table}</td><td>${h.payment}</td><td><b>Rp ${h.total.toLocaleString()}</b></td></tr>`;
-            });
-            document.getElementById('stat-income').innerText = "Rp " + income.toLocaleString();
-            document.getElementById('stat-count').innerText = count;
-        });
-
-        window.deleteAllHistory = () => confirm("Hapus SEMUA riwayat omset HRD?") && remove(ref(db, 'history'));
-
-        window.exportToPDF = () => {
-            const { jsPDF } = window.jspdf; const doc = new jsPDF('l', 'mm', 'a4');
-            doc.text("LAPORAN BULANAN HRD - SESA COFFEE", 14, 15);
-            const rows = [];
-            onValue(ref(db, 'history'), (snap) => {
-                Object.values(snap.val()).forEach(h => rows.push([h.month, h.fullTime, h.customer, h.table, h.payment, h.total.toLocaleString()]));
-                doc.autoTable({ head: [['Bulan','Waktu','Nama','Meja','Metode','Total']], body: rows, startY: 25 });
-                doc.save("Laporan_SESA_HRD.pdf");
-            }, {onlyOnce:true});
-        };
-
+        window.togStock = (id, cur) => update(ref(db, 'store_menu/'+id), { status: cur==='ready'?'habis':'ready' });
+        window.genPDF = () => { const { jsPDF } = window.jspdf; const doc = new jsPDF('l','mm','a4'); doc.text("LAPORAN KEUANGAN SESA COFFEE", 14, 15); doc.autoTable({ html: '#pdf-table', startY: 25 }); doc.save("Laporan_Keuangan_SESA.pdf"); };
+        window.editMenu = (id) => { onValue(ref(db, 'store_menu/'+id), (s) => { const m = s.val(); document.getElementById('edit-id').value = m.id; document.getElementById('m-name').value = m.name; document.getElementById('m-cat').value = m.cat; document.getElementById('m-img').value = m.img; document.getElementById('m-is-best').checked = m.isBest; document.getElementById('m-is-promo').checked = m.isPromo; document.getElementById('m-price-normal').value = m.priceNormal; document.getElementById('m-price-hot').value = m.priceHot; document.getElementById('m-price-cold').value = m.priceCold; document.getElementById('m-price-promo').value = m.pricePromo; document.getElementById('m-price-hot-promo').value = m.priceHotPromo; document.getElementById('m-price-cold-promo').value = m.priceColdPromo; document.getElementById('m-desc').value = m.desc; prev(m.img); togglePriceFields(); togglePromoFields(); document.getElementById('m-mode-title').innerText = "Edit: " + m.name; document.getElementById('btn-save').innerText = "UPDATE DATA"; document.getElementById('btn-cancel').style.display = "block"; window.scrollTo(0,0); }, {onlyOnce:true}); };
+        onValue(ref(db, 'guest_feedback'), (snap) => { const c = document.getElementById('feedback-container'); c.innerHTML = ""; if(!snap.val()) return; Object.keys(snap.val()).reverse().forEach(id => { const f = snap.val()[id]; c.innerHTML += `<div class="feedback-card"><h4>${f.name}</h4><p>"${f.message}"</p><div class="reply-box"><textarea id="rep-${id}" rows="2" style="width:100%; border:1px solid #ddd; padding:5px;">${f.ownerReply || ""}</textarea><button class="btn-act" style="font-size:0.6rem; padding:8px; margin-top:5px; width:auto;" onclick="postReply('${id}')">BALAS</button></div><button onclick="delF('${id}')" style="background:none; border:none; color:red; position:absolute; top:35px; right:35px;"><i class="fas fa-trash"></i></button></div>`; }); });
+        window.postReply = (id) => { const r = document.getElementById('rep-'+id).value; update(ref(db, `guest_feedback/${id}`), {ownerReply: r}).then(()=>alert("Terbalas!")); };
+        window.delF = (id) => confirm("Hapus?") && remove(ref(db, `guest_feedback/${id}`));
     </script>
 
     <script>
-        function updateAdminClock() {
-            const now = new Date();
-            const days = ["MINGGU", "SENIN", "SELASA", "RABU", "KAMIS", "JUMAT", "SABTU"];
-            const hr = now.getHours();
-            const min = now.getMinutes();
-            const dayName = days[now.getDay()];
-
-            document.getElementById('live-time').innerText = now.toLocaleTimeString('id-ID');
-            document.getElementById('live-date').innerText = now.toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'});
-            document.getElementById('live-day-text').innerText = dayName;
-
-            // Greeting
-            let greet = hr < 11 ? "Selamat Pagi" : (hr < 15 ? "Selamat Siang" : (hr < 19 ? "Selamat Sore" : "Selamat Malam"));
-            document.getElementById('greeting-banner').innerText = `${greet}, Admin SESA!`;
-
-            // Closing Warning
-            const alertBox = document.getElementById('closing-alert');
-            const alertMsg = document.getElementById('alert-msg');
-            if(dayName === "SABTU" || dayName === "MINGGU") {
-                if(hr === 23 && min >= 45) { alertBox.style.display = 'flex'; alertMsg.innerText = "Hampir Jam 12 Malam (Minggu)! Waktunya tutup toko."; }
-                else alertBox.style.display = 'none';
-            } else {
-                if(hr === 21 && min >= 45) { alertBox.style.display = 'flex'; alertMsg.innerText = "Hampir Jam 10 Malam! Waktunya beres-beres operasional."; }
-                else alertBox.style.display = 'none';
-            }
-        }
-        setInterval(updateAdminClock, 1000);
-        function switchTab(id, el) {
-            document.querySelectorAll('.tab-content, .nav-item').forEach(x => { x.classList.remove('active'); if(x.className==='tab-content') x.style.display='none'; });
-            document.getElementById(id).style.display = 'block'; el.classList.add('active');
-            if(window.innerWidth <= 1024) toggleSidebar();
-        }
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
-            document.getElementById('sidebar-overlay').classList.toggle('active');
-        }
+        // --- UI SCRIPT ---
+        function togglePriceFields() { const c = document.getElementById('m-cat').value; const isD = ['coffee','cocktail','mocktail','non_coffee'].includes(c); document.getElementById('drink-prices').style.display = isD ? 'grid' : 'none'; document.getElementById('food-prices').style.display = isD ? 'none' : 'grid'; }
+        function togglePromoFields() { const isP = document.getElementById('m-is-promo').checked; document.getElementById('promo-box').style.display = isP ? 'block' : 'none'; document.getElementById('pf').style.display = isP ? 'block' : 'none'; document.getElementById('pdh').style.display = isP ? 'block' : 'none'; document.getElementById('pdc').style.display = isP ? 'block' : 'none'; }
+        setInterval(() => { const n = new Date(); document.getElementById('live-time').innerText = n.toLocaleTimeString('id-ID'); document.getElementById('live-date').innerText = n.toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'}); document.getElementById('live-day-text').innerText = ["MINGGU","SENIN","SELASA","RABU","KAMIS","JUMAT","SABTU"][n.getDay()]; }, 1000);
     </script>
 </body>
 </html>

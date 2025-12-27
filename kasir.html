@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SESA POS | Grand Luxury Terminal v9.0 (Tax Included)</title>
+    
+    <!-- Premium Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #1a120b; --secondary: #2c1b0e; --accent: #c5a059;
+            --bg: #f4f1ea; --white: #ffffff; --success: #27ae60;
+            --warning: #f39c12; --danger: #e74c3c; --info: #3498db;
+            --shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); display: flex; height: 100vh; overflow: hidden; color: var(--primary); }
+
+        /* --- 1. SIDEBAR KATEGORI (MINIMALIST ICON) --- */
+        .sidebar-cat {
+            width: 100px; background: var(--secondary); color: white;
+            display: flex; flex-direction: column; align-items: center; padding: 30px 0;
+            border-right: 4px solid var(--accent); z-index: 100;
+        }
+        .cat-item {
+            width: 70px; height: 70px; border-radius: 15px; margin-bottom: 20px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.3s; color: #8d7b6d; font-size: 0.7rem; text-align: center;
+        }
+        .cat-item i { font-size: 1.5rem; margin-bottom: 5px; }
+        .cat-item.active { background: var(--accent); color: white; box-shadow: 0 5px 15px rgba(197,160,89,0.4); }
+        .cat-item:hover:not(.active) { background: rgba(255,255,255,0.1); color: white; }
+
+        /* --- 2. MAIN LAYOUT (CENTER) --- */
+        .main-workspace { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+        /* --- TOP AREA: GRAND ONLINE MONITOR --- */
+        .online-monitor {
+            height: 220px; background: var(--secondary); padding: 20px;
+            display: flex; flex-direction: column; border-bottom: 5px solid var(--accent);
+        }
+        .monitor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; color: white; }
+        .monitor-header h2 { font-family: 'Playfair Display'; font-size: 1.2rem; letter-spacing: 2px; color: var(--accent); }
+        
+        .online-grid { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 10px; height: 100%; }
+        .online-grid::-webkit-scrollbar { height: 6px; }
+        .online-grid::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+        .online-card {
+            min-width: 320px; background: var(--white); border-radius: 20px; padding: 15px;
+            display: flex; flex-direction: column; justify-content: space-between;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2); position: relative; animation: slideIn 0.4s;
+        }
+        .online-card.waiting { border-top: 6px solid var(--warning); }
+        .online-card.processing { border-top: 6px solid var(--success); }
+        
+        .online-card .cust-name { font-weight: 800; font-size: 1rem; color: var(--secondary); }
+        .online-card .items-list { font-size: 0.75rem; color: #666; height: 40px; overflow: hidden; }
+
+        /* --- MENU GRID AREA --- */
+        .menu-grid-section { flex: 1; padding: 25px; overflow-y: auto; }
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; }
+        .pos-card { 
+            background: white; border-radius: 25px; padding: 15px; text-align: center; 
+            cursor: pointer; transition: 0.3s; box-shadow: var(--shadow); border: 2px solid transparent;
+            position: relative;
+        }
+        .pos-card:hover { transform: translateY(-8px); border-color: var(--accent); }
+        .pos-card img { width: 100%; height: 100px; object-fit: cover; border-radius: 20px; margin-bottom: 10px; }
+        .pos-card h4 { font-family: 'Playfair Display'; font-size: 0.9rem; font-weight: 700; height: 2.4em; overflow: hidden; }
+        .pos-card .price { color: var(--accent); font-weight: 800; font-size: 0.9rem; margin-top: 5px; }
+        .promo-tag { position: absolute; top: 12px; left: 12px; background: var(--danger); color: white; font-size: 0.6rem; padding: 3px 8px; border-radius: 8px; font-weight: 800; }
+
+        /* --- 3. RIGHT SIDEBAR (CART & TAX) --- */
+        .cart-sidebar { width: 380px; background: white; border-left: 2px solid #eee; display: flex; flex-direction: column; box-shadow: -10px 0 30px rgba(0,0,0,0.05); }
+        .cart-header { padding: 25px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        
+        .cart-content { flex: 1; overflow-y: auto; padding: 20px; }
+        .cart-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px dashed #eee; }
+        .qty-ctrl { display: flex; align-items: center; gap: 10px; }
+        .qty-btn { width: 26px; height: 26px; border-radius: 50%; border: 1px solid #ddd; background: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; }
+        
+        .cart-footer { padding: 25px; background: var(--primary); color: white; border-radius: 35px 35px 0 0; }
+        .tax-info { font-size: 0.8rem; display: flex; justify-content: space-between; margin-bottom: 5px; opacity: 0.7; }
+        
+        .btn-checkout { background: var(--accent); border: none; padding: 18px; width: 100%; border-radius: 15px; color: white; font-weight: 800; font-size: 1.1rem; cursor: pointer; margin-top: 15px; transition: 0.3s; }
+        .btn-checkout:hover { background: var(--success); transform: translateY(-3px); }
+
+        @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        /* STRUK */
+        #receipt { display: none; }
+        @media print {
+            body * { visibility: hidden; }
+            #receipt, #receipt * { visibility: visible; }
+            #receipt { display: block; position: absolute; left: 0; top: 0; width: 58mm; padding: 5mm; font-family: monospace; font-size: 11px; }
+            hr { border: none; border-top: 1px dashed #000; margin: 5px 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="notifSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3"></audio>
+
+    <!-- 1. SIDEBAR KATEGORI -->
+    <div class="sidebar-cat">
+        <div class="cat-item active" onclick="filterPOS('all', this)"><i class="fas fa-th-large"></i>All</div>
+        <div class="cat-item" onclick="filterPOS('menu_paket', this)"><i class="fas fa-box"></i>Paket</div>
+        <div class="cat-item" onclick="filterPOS('coffee', this)"><i class="fas fa-coffee"></i>Coffee</div>
+        <div class="cat-item" onclick="filterPOS('cocktail', this)"><i class="fas fa-glass-martini"></i>Cocktail</div>
+        <div class="cat-item" onclick="filterPOS('makanan_berat', this)"><i class="fas fa-utensils"></i>Food</div>
+        <div class="cat-item" onclick="filterPOS('cemilan', this)"><i class="fas fa-cookie"></i>Snack</div>
+        <div class="cat-item" style="margin-top: auto; color: var(--danger);" onclick="logoutShift()"><i class="fas fa-power-off"></i>Exit</div>
+    </div>
+
+    <!-- 2. MAIN WORKSPACE -->
+    <div class="main-workspace">
+        
+        <!-- GRAND ONLINE MONITOR -->
+        <div class="online-monitor">
+            <div class="monitor-header">
+                <h2><i class="fas fa-broadcast-tower"></i> LIVE ONLINE QUEUE</h2>
+                <span id="online-count" style="background:var(--accent); color:var(--primary); padding:4px 12px; border-radius:50px; font-weight:800; font-size:0.8rem;">0 ORDERS</span>
+            </div>
+            <div class="online-grid" id="online-grid">
+                <!-- Pesanan online besar muncul di sini -->
+            </div>
+        </div>
+
+        <!-- MENU GRID -->
+        <div class="menu-grid-section">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 id="cashier-tag" style="font-family:'Playfair Display'; font-size:1.5rem;">Terminal: ...</h3>
+                <input type="text" id="search-pos" placeholder="Cari menu..." onkeyup="searchMenu(this.value)" style="padding:10px 20px; border-radius:50px; border:2px solid #ddd; width:250px; outline:none;">
+            </div>
+            <div class="menu-grid" id="pos-grid">
+                <!-- Menu Injected Here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. CART SIDEBAR -->
+    <div class="cart-sidebar">
+        <div class="cart-header">
+            <h3>Active Bill</h3>
+            <i class="fas fa-shopping-cart" style="color:var(--accent)"></i>
+        </div>
+        
+        <div style="padding:20px 20px 0 20px; display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <input type="text" id="c-name" placeholder="Nama Pelanggan" style="padding:10px; border-radius:10px; border:1px solid #ddd; font-size:0.8rem;">
+            <input type="number" id="c-table" placeholder="Meja" style="padding:10px; border-radius:10px; border:1px solid #ddd; font-size:0.8rem;">
+        </div>
+
+        <div class="cart-content" id="cart-list">
+            <!-- List belanja kasir -->
+        </div>
+
+        <!-- FOOTER DENGAN TAX 10% -->
+        <div class="cart-footer">
+            <div class="tax-info">
+                <span>Subtotal</span><span id="txt-sub">Rp 0</span>
+            </div>
+            <div class="tax-info">
+                <span>Tax (10%)</span><span id="txt-tax">Rp 0</span>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:1.6rem; font-weight:800; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; margin-top: 5px;">
+                <span>TOTAL</span><span id="txt-total">Rp 0</span>
+            </div>
+            
+            <select id="pay-method" style="width:100%; margin-top:15px; padding:12px; border-radius:12px; background:rgba(255,255,255,0.1); color:white; border:none; outline:none;">
+                <option value="CASH">CASH (TUNAI)</option>
+                <option value="QRIS">QRIS / TRANSFER</option>
+                <option value="DEBIT">KARTU DEBIT</option>
+            </select>
+            
+            <button class="btn-checkout" onclick="checkoutOffline()">COMPLETE ORDER & PRINT</button>
+        </div>
+    </div>
+
+    <!-- STRUK RECEIPT -->
+    <div id="receipt">
+        <center>
+            <h2 style="font-family:'Playfair Display'; margin-bottom:5px;">SESA COFFEE</h2>
+            <p>Premium Coffee & Eatery - Jakarta</p>
+            <hr>
+            <p id="r-time"></p>
+            <p id="r-info"></p>
+            <hr>
+        </center>
+        <div id="r-items"></div>
+        <hr>
+        <div style="display:flex; justify-content:space-between;"><span>SUBTOTAL</span><span id="r-sub"></span></div>
+        <div style="display:flex; justify-content:space-between;"><span>PAJAK (10%)</span><span id="r-tax"></span></div>
+        <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:13px; margin-top:5px;"><span>GRAND TOTAL</span><span id="r-total"></span></div>
+        <center><p style="margin-top:15px;">Luxury Taste, Minimalist Place.<br>Terima Kasih</p></center>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, onValue, push, set, update, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = { databaseURL: "https://sesa-coffee-default-rtdb.asia-southeast1.firebasedatabase.app" };
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const cashier = localStorage.getItem('sesa_cashier_name');
+        const shiftId = localStorage.getItem('sesa_shift_id');
+        let cartArr = [];
+        let menuCache = [];
+        let lastOnCount = 0;
+
+        if(!cashier) window.location.href = 'kasir_login.html';
+        document.getElementById('cashier-tag').innerText = "Kasir: " + cashier;
+
+        // --- 1. LOAD MENU ---
+        onValue(ref(db, 'store_menu'), (snap) => {
+            menuCache = Object.values(snap.val() || {});
+            renderGrid('all');
+        });
+
+        function renderGrid(cat) {
+            const grid = document.getElementById('pos-grid');
+            grid.innerHTML = "";
+            menuCache.forEach(m => {
+                if((cat === 'all' || m.cat === cat) && m.status === 'ready') {
+                    const isDrink = ['coffee','non_coffee','cocktail','mocktail'].includes(m.cat);
+                    const price = m.isPromo ? (isDrink ? m.priceHotPromo : m.pricePromo) : (isDrink ? m.priceHot : m.priceNormal);
+                    grid.innerHTML += `
+                        <div class="pos-card" onclick="addToCart('${m.name}', ${price}, ${m.isPromo ? 'true' : 'false'})">
+                            ${m.isPromo ? '<div class="promo-tag">PROMO</div>' : ''}
+                            <img src="${m.img}" onerror="this.src='https://via.placeholder.com/150'">
+                            <h4>${m.name}</h4>
+                            <p class="price">Rp ${price.toLocaleString()}</p>
+                        </div>`;
+                }
+            });
+        }
+
+        window.filterPOS = (cat, el) => {
+            document.querySelectorAll('.cat-item').forEach(b => b.classList.remove('active'));
+            el.classList.add('active');
+            renderGrid(cat);
+        };
+
+        window.searchMenu = (val) => {
+            const filtered = menuCache.filter(m => m.name.toLowerCase().includes(val.toLowerCase()));
+            const grid = document.getElementById('pos-grid'); grid.innerHTML = "";
+            filtered.forEach(m => {
+                if(m.status === 'ready') {
+                    const isDrink = ['coffee','non_coffee','cocktail','mocktail'].includes(m.cat);
+                    const price = m.isPromo ? (isDrink ? m.priceHotPromo : m.pricePromo) : (isDrink ? m.priceHot : m.priceNormal);
+                    grid.innerHTML += `<div class="pos-card" onclick="addToCart('${m.name}', ${price}, ${m.isPromo ? 'true' : 'false'})">${m.isPromo ? '<div class="promo-tag">PROMO</div>' : ''}<img src="${m.img}"><h4>${m.name}</h4><p class="price">Rp ${price.toLocaleString()}</p></div>`;
+                }
+            });
+        };
+
+        // --- 2. CART LOGIC (WITH TAX 10%) ---
+        window.addToCart = (name, price, isPromo) => {
+            const idx = cartArr.findIndex(i => i.name === name);
+            if(idx > -1) cartArr[idx].qty += 1;
+            else cartArr.push({ name, price, qty: 1, isPromo: (isPromo === 'true' || isPromo === true) });
+            updateCartUI();
+        };
+
+        window.changeQty = (idx, delta) => {
+            cartArr[idx].qty += delta;
+            if(cartArr[idx].qty <= 0) cartArr.splice(idx, 1);
+            updateCartUI();
+        };
+
+        window.removeCartItem = (idx) => {
+            cartArr.splice(idx, 1);
+            updateCartUI();
+        };
+
+        function updateCartUI() {
+            const list = document.getElementById('cart-list');
+            let subtotal = 0; list.innerHTML = "";
+            
+            cartArr.forEach((item, i) => {
+                subtotal += (item.price * item.qty);
+                list.innerHTML += `
+                    <div class="cart-row">
+                        <div style="flex:1"><b>${item.name}</b> ${item.isPromo ? '<small style="color:red">(P)</small>' : ''}<br><small>Rp ${item.price.toLocaleString()}</small></div>
+                        <div class="qty-ctrl">
+                            <button class="qty-btn" onclick="changeQty(${i}, -1)">-</button>
+                            <span>${item.qty}</span>
+                            <button class="qty-btn" onclick="changeQty(${i}, 1)">+</button>
+                        </div>
+                        <i class="fas fa-trash-alt" style="color:var(--danger); cursor:pointer; margin-left:15px;" onclick="removeCartItem(${i})"></i>
+                    </div>`;
+            });
+
+            const tax = subtotal * 0.10;
+            const grandTotal = subtotal + tax;
+
+            document.getElementById('txt-sub').innerText = "Rp " + subtotal.toLocaleString();
+            document.getElementById('txt-tax').innerText = "Rp " + tax.toLocaleString();
+            document.getElementById('txt-total').innerText = "Rp " + grandTotal.toLocaleString();
+        }
+
+        // --- 3. ONLINE QUEUE LISTENER ---
+        onValue(ref(db, 'orders'), (snap) => {
+            const grid = document.getElementById('online-grid');
+            const data = snap.val();
+            grid.innerHTML = "";
+            if(!data) {
+                document.getElementById('online-count').innerText = "0 ORDERS";
+                lastOnCount = 0; return;
+            }
+            const keys = Object.keys(data);
+            document.getElementById('online-count').innerText = keys.length + " ORDERS";
+            if(keys.length > lastOnCount) document.getElementById('notifSound').play().catch(e=>{});
+            lastOnCount = keys.length;
+
+            keys.forEach(id => {
+                const o = data[id];
+                const isWaiting = o.status === 'MENUNGGU';
+                grid.innerHTML += `
+                    <div class="online-card ${isWaiting ? 'waiting' : 'processing'}">
+                        <div class="top-info"><span class="cust-name">${o.customer}</span><span style="font-size:0.7rem; font-weight:800; color:var(--accent);">#MEJA ${o.table}</span></div>
+                        <div class="items-list">${o.items.map(i => i.name).join(', ')}</div>
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <b style="font-size:0.85rem;">Rp ${o.total.toLocaleString()}</b>
+                            <button onclick="${isWaiting ? 'accWeb' : 'finishWeb'}('${id}')" style="background:${isWaiting?'var(--primary)':'var(--success)'}; color:white; border:none; padding:8px 15px; border-radius:10px; cursor:pointer; font-weight:700; font-size:0.7rem;">${isWaiting ? 'ACC ORDER' : 'READY'}</button>
+                        </div>
+                    </div>`;
+            });
+        });
+
+        window.accWeb = (id) => {
+            const m = prompt("Menit persiapan?", "15");
+            if(m) update(ref(db, 'orders/'+id), { status: 'PROSES', estTime: m });
+        };
+
+        window.finishWeb = (id) => {
+            onValue(ref(db, 'orders/'+id), (s) => {
+                const d = s.val();
+                if(d) {
+                    d.cashier = cashier;
+                    push(ref(db, 'history'), d).then(() => {
+                        remove(ref(db, 'orders/'+id));
+                        updateIncome(d.total);
+                    });
+                }
+            }, {onlyOnce: true});
+        };
+
+        // --- 4. CHECKOUT OFFLINE ---
+        window.checkoutOffline = () => {
+            const name = document.getElementById('c-name').value;
+            const table = document.getElementById('c-table').value;
+            if(!name || cartArr.length === 0) return alert("Lengkapi Nama Pelanggan & Pesanan!");
+
+            const subtotal = cartArr.reduce((a,b) => a + (b.price * b.qty), 0);
+            const tax = subtotal * 0.10;
+            const grandTotal = subtotal + tax;
+
+            const orderData = {
+                customer: name, table: table || "0", items: cartArr, 
+                subtotal: subtotal, tax: tax, total: grandTotal,
+                payment: document.getElementById('pay-method').value,
+                fullTime: new Date().toLocaleString('id-ID'),
+                month: new Date().toLocaleString('id-ID', {month:'long'}).toUpperCase(),
+                cashier: cashier, type: "OFFLINE"
+            };
+
+            push(ref(db, 'history'), orderData).then(() => {
+                updateIncome(grandTotal);
+                // Struk Receipt
+                document.getElementById('r-time').innerText = orderData.fullTime;
+                document.getElementById('r-info').innerText = `Meja: ${table || '0'} | Kasir: ${cashier}\nPelanggan: ${name}`;
+                document.getElementById('r-sub').innerText = "Rp " + subtotal.toLocaleString();
+                document.getElementById('r-tax').innerText = "Rp " + tax.toLocaleString();
+                document.getElementById('r-total').innerText = "Rp " + grandTotal.toLocaleString();
+                document.getElementById('r-items').innerHTML = cartArr.map(i => `<div style="display:flex; justify-content:space-between"><span>${i.name} (x${i.qty})</span><span>${(i.price*i.qty).toLocaleString()}</span></div>`).join('');
+                
+                window.print();
+                cartArr = []; document.getElementById('c-name').value = ""; document.getElementById('c-table').value = "";
+                updateCartUI();
+            });
+        };
+
+        function updateIncome(amount) {
+            onValue(ref(db, 'shifts/'+shiftId), (s) => {
+                const current = s.val().totalIncome || 0;
+                update(ref(db, 'shifts/'+shiftId), { totalIncome: current + amount });
+            }, {onlyOnce: true});
+        }
+
+        window.logoutShift = () => confirm("Tutup Shift Kasir?") && update(ref(db, 'shifts/'+shiftId), {status:'CLOSED'}).then(() => { localStorage.clear(); window.location.href='kasir_login.html'; });
+
+    </script>
+</body>
+</html>

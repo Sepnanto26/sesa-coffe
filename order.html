@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout & Live Tracking | SESA Coffee Official v31.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SESA POS | Luxury Checkout & Tracking v32.0</title>
     <!-- Premium Luxury Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Font Awesome Pro Icons -->
@@ -26,22 +26,22 @@
         /* --- GLOBAL BASE --- */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         html { scroll-behavior: smooth; }
-        body { background-color: var(--cream); color: var(--primary); overflow-x: hidden; }
+        body { background-color: var(--cream); color: var(--primary); overflow-x: hidden; width: 100%; }
 
-        /* --- PREMIUM NAVIGATION (TRANSPARENT LIKE HOME) --- */
+        /* --- PREMIUM NAVIGATION --- */
         header {
             position: fixed;
             top: 0;
             width: 100%;
-            z-index: 9000;
+            z-index: 10000;
             transition: var(--transition);
             padding: 2rem 0;
         }
         header.scrolled {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.98);
             padding: 1rem 0;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
-            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(15px);
         }
 
         .navbar {
@@ -81,10 +81,10 @@
         .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
         .nav-links a.active { color: var(--accent) !important; }
 
-        .menu-toggle { display: none; cursor: pointer; font-size: 1.8rem; color: var(--white); transition: var(--transition); }
+        .menu-toggle { display: none; cursor: pointer; font-size: 1.8rem; color: var(--white); }
         header.scrolled .menu-toggle { color: var(--primary); }
 
-        /* --- PAGE HEADER --- */
+        /* --- PAGE BANNER --- */
         .page-banner {
             padding: 180px 5% 100px;
             text-align: center;
@@ -136,6 +136,7 @@
         }
         .section-title { font-family: 'Playfair Display', serif; font-size: 2.8rem; margin-bottom: 40px; border-bottom: 6px solid var(--accent); display: inline-block; padding-bottom: 8px; }
 
+        /* Keranjang Items */
         .cart-item-row { display: flex; justify-content: space-between; align-items: center; padding: 25px 0; border-bottom: 1px solid #f2f2f2; }
         .cart-item-row:last-child { border-bottom: none; }
         .item-details b { font-size: 1.3rem; color: var(--primary); display: block; }
@@ -145,9 +146,11 @@
         .qty-btn { width: 45px; height: 45px; border: none; background: #f5f5f5; border-radius: 15px; cursor: pointer; font-weight: 900; font-size: 1.4rem; transition: 0.2s; color: var(--primary); }
         .qty-btn:hover { background: var(--accent); color: white; transform: scale(1.1); }
 
-        .grand-total-section { margin-top: 40px; padding-top: 35px; border-top: 3px dashed #eee; display: flex; justify-content: space-between; align-items: center; }
-        .grand-total-section span { font-size: 1.4rem; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: 2px; }
-        .grand-total-section h2 { font-size: 3rem; font-weight: 900; color: var(--primary); }
+        /* TAX & TOTAL SECTION */
+        .summary-calculation { margin-top: 40px; padding-top: 35px; border-top: 3px dashed #eee; }
+        .calc-row { display: flex; justify-content: space-between; margin-bottom: 15px; font-weight: 600; color: #888; font-size: 1.1rem; }
+        .calc-row.grand-total { margin-top: 20px; color: var(--primary); font-size: 1.5rem; border-top: 1px solid #f0f0f0; padding-top: 20px; }
+        .calc-row.grand-total h2 { font-size: 3rem; font-weight: 900; color: var(--primary); }
 
         /* --- FORM DETAILS --- */
         .form-grid-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 30px; }
@@ -165,89 +168,68 @@
         .btn-order-execute { background: var(--primary); color: white; border: none; padding: 28px; border-radius: 35px; width: 100%; font-weight: 900; font-size: 1.5rem; cursor: pointer; transition: 0.4s; box-shadow: 0 20px 40px rgba(0,0,0,0.15); margin-top: 30px; letter-spacing: 2px; }
         .btn-order-execute:hover { background: var(--accent); transform: translateY(-8px); box-shadow: 0 25px 50px rgba(197, 160, 89, 0.4); }
 
-        /* --- TRACKING SYSTEM (SLIDER FOR HP) --- */
-        .tracking-title-section { margin-top: 100px; text-align: center; }
-        .tracking-title-section h2 { font-family: 'Playfair Display'; font-size: 3.5rem; margin-bottom: 15px; }
-
-        /* SLIDER CONTAINER */
+        /* --- TRACKING SLIDER --- */
+        .tracking-header { margin-top: 80px; text-align: center; margin-bottom: 40px; }
+        .tracking-header h2 { font-family: 'Playfair Display'; font-size: 3.5rem; margin-bottom: 10px; }
+        
         .track-slider-container {
             display: flex;
             overflow-x: auto;
             gap: 30px;
             padding: 40px 10px;
-            scrollbar-width: none; /* Hide scrollbar for Firefox */
-            -ms-overflow-style: none; /* Hide scrollbar for IE */
+            scrollbar-width: none;
             scroll-snap-type: x mandatory;
         }
-        .track-slider-container::-webkit-scrollbar { display: none; } /* Hide scrollbar for Chrome/Safari */
+        .track-slider-container::-webkit-scrollbar { display: none; }
 
         .track-lux-card { 
-            min-width: 450px; 
+            min-width: 500px; 
             background: var(--white); 
             padding: 60px 45px; 
             border-radius: 60px; 
             box-shadow: var(--shadow-lux); 
             text-align: center; 
-            position: relative; 
-            border: 2px solid transparent; 
-            transition: 0.4s; 
             scroll-snap-align: center;
+            border: 2px solid transparent; 
+            transition: 0.4s;
         }
         .track-lux-card.ready-state { border-color: var(--success); background: #fafffa; }
 
-        /* LUXURY CLOCK ANIMATION */
-        .luxury-clock-icon { width: 130px; height: 130px; border: 8px solid var(--primary); border-radius: 50%; position: relative; margin: 0 auto 40px; background: white; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-        .luxury-clock-icon::after { content: ''; position: absolute; width: 10px; height: 10px; background: var(--accent); border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10; }
+        /* LUXURY CLOCK ICON */
+        .luxury-clock-icon { width: 130px; height: 130px; border: 8px solid var(--primary); border-radius: 50%; position: relative; margin: 0 auto 40px; background: white; }
         .clock-hand-lux { position: absolute; bottom: 50%; left: 50%; transform-origin: bottom center; background: var(--primary); border-radius: 10px; }
         .h-hour-lux { width: 6px; height: 35px; animation: rotateLuxClock 12s linear infinite; }
         .h-min-lux { width: 4px; height: 55px; animation: rotateLuxClock 2s linear infinite; }
-
         @keyframes rotateLuxClock { from { transform: translateX(-50%) rotate(0deg); } to { transform: translateX(-50%) rotate(360deg); } }
 
-        .status-label-top { font-size: 0.9rem; font-weight: 800; text-transform: uppercase; color: #bbb; letter-spacing: 3px; margin-bottom: 12px; display: block; }
-        .status-main-val { font-size: 2.8rem; font-weight: 900; color: var(--accent); font-family: 'Playfair Display'; letter-spacing: 1px; }
+        .status-label { font-size: 0.9rem; font-weight: 800; text-transform: uppercase; color: #bbb; letter-spacing: 3px; display: block; margin-bottom: 10px; }
+        .status-val { font-size: 3rem; font-weight: 900; color: var(--accent); font-family: 'Playfair Display'; }
 
-        .ready-notif-box { background: var(--success); color: white; padding: 22px; border-radius: 20px; font-weight: 800; font-size: 1rem; margin-top: 35px; animation: pulseLux 1.2s infinite; }
+        .ready-box { background: var(--success); color: white; padding: 22px; border-radius: 20px; font-weight: 800; margin-top: 35px; animation: pulseLux 1.5s infinite; }
         @keyframes pulseLux { 0%, 100% { opacity: 0.8; transform: scale(1); } 50% { opacity: 1; transform: scale(1.03); } }
 
-        /* --- RESPONSIVE OPTIMIZATION --- */
-        @media (max-width: 1024px) {
-            .navbar { padding: 0 5%; }
-            .track-lux-card { min-width: 400px; }
-        }
-
+        /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
-            header { padding: 1.2rem 0; }
-            header.scrolled { background: var(--white); }
-            .logo, .nav-links a { color: var(--primary) !important; }
-            
+            .navbar { padding: 1.2rem 6%; }
             .nav-links {
                 position: fixed; top: 0; right: -100%; width: 85%; height: 100vh;
                 background: rgba(26, 18, 11, 0.98); backdrop-filter: blur(20px);
                 flex-direction: column; justify-content: center; padding: 60px;
-                transition: 0.6s cubic-bezier(0.165, 0.84, 0.44, 1); z-index: 9998; gap: 30px;
+                transition: 0.6s ease; z-index: 9998; gap: 30px;
             }
             .nav-links.show { right: 0; }
-            .nav-links a { color: var(--white) !important; font-size: 1.6rem; font-weight: 700; }
-            
+            .nav-links a { color: var(--white) !important; font-size: 1.6rem; }
             .menu-toggle { display: block; color: var(--primary) !important; z-index: 9999; }
-
-            .page-banner h1 { font-size: 2.8rem; }
-            .container { padding: 30px 6%; }
-            .order-card-luxury { padding: 35px 25px; border-radius: 40px; }
-            .section-title { font-size: 2rem; }
-            .form-grid-layout { grid-template-columns: 1fr; }
-            .grand-total-section h2 { font-size: 2rem; }
             
-            /* HP TRACK SLIDER */
-            .track-lux-card { min-width: 90%; padding: 40px 25px; border-radius: 45px; }
-            .status-main-val { font-size: 2.2rem; }
-            .elegant-back-btn { width: 100%; justify-content: center; }
+            .page-banner h1 { font-size: 2.8rem; }
+            .order-card-luxury { padding: 35px 25px; border-radius: 40px; }
+            .form-grid-layout { grid-template-columns: 1fr; }
+            .calc-row.grand-total h2 { font-size: 2rem; }
+            .track-lux-card { min-width: 90%; }
         }
 
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeInLeft { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: translateX(0); } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
@@ -256,11 +238,7 @@
     <header id="main-header">
         <nav class="navbar">
             <a href="index.html" class="logo">SESA <span>COFFEE</span></a>
-            
-            <div class="menu-toggle" onclick="toggleLuxuryNav()">
-                <i class="fas fa-bars"></i>
-            </div>
-
+            <div class="menu-toggle" onclick="toggleLuxuryNav()"><i class="fas fa-bars"></i></div>
             <ul class="nav-links" id="nav-list-lux">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="menu.html">Menu</a></li>
@@ -271,80 +249,74 @@
         </nav>
     </header>
 
-    <!-- PAGE HEADER -->
+    <!-- BANNER -->
     <div class="page-banner">
-        <p>Crafting Perfection</p>
-        <h1>Your SESA Order</h1>
+        <p>Premium Experience</p>
+        <h1>Order Summary</h1>
     </div>
 
     <div class="container">
         
-        <!-- SECTION 1: CHECKOUT VIEW -->
+        <!-- CHECKOUT AREA -->
         <div id="checkout-view-lux">
             <div class="back-nav-wrapper">
-                <a href="menu.html" class="elegant-back-btn">
-                    <i class="fas fa-arrow-left"></i>
-                    <span>Return to Menu</span>
-                </a>
+                <a href="menu.html" class="elegant-back-btn"><i class="fas fa-arrow-left"></i> <span>Add More Items</span></a>
             </div>
 
             <div class="order-card-luxury">
-                <h2 class="section-title">Order Summary</h2>
+                <h2 class="section-title">Your Bag</h2>
                 <div id="luxury-cart-list">
-                    <!-- Dynamic Cart Items -->
+                    <!-- Cart items -->
                 </div>
                 
-                <div class="grand-total-section">
-                    <span>Final Amount</span>
-                    <h2 id="grand-total-lux">Rp 0</h2>
+                <div class="summary-calculation">
+                    <div class="calc-row">
+                        <span>Subtotal (Items)</span>
+                        <span id="txt-subtotal">Rp 0</span>
+                    </div>
+                    <div class="calc-row">
+                        <span>Government Tax (10%)</span>
+                        <span id="txt-tax">Rp 0</span>
+                    </div>
+                    <div class="calc-row grand-total">
+                        <span>Grand Total</span>
+                        <h2 id="txt-grand-total">Rp 0</h2>
+                    </div>
                 </div>
             </div>
 
             <div class="order-card-luxury">
-                <h2 class="section-title">Delivery & Payment</h2>
+                <h2 class="section-title">Personal Details</h2>
                 
                 <div class="form-grid-layout">
                     <div class="input-lux-group">
-                        <label>Customer Full Name</label>
-                        <input type="text" id="cust-name-lux" placeholder="Enter your name">
+                        <label>Guest Name</label>
+                        <input type="text" id="cust-name-lux" placeholder="John Doe">
                     </div>
                     <div class="input-lux-group">
-                        <label>Dining Table No.</label>
-                        <input type="number" id="cust-table-lux" placeholder="e.g. 05">
+                        <label>Table Number</label>
+                        <input type="number" id="cust-table-lux" placeholder="05">
                     </div>
                 </div>
                 
                 <div class="input-lux-group">
-                    <label>Special Note for Barista (Optional)</label>
-                    <textarea id="cust-note-lux" rows="3" placeholder="e.g. No sugar, extra ice cubes, milk substitution..."></textarea>
+                    <label>Barista Notes (Optional)</label>
+                    <textarea id="cust-note-lux" rows="3" placeholder="Less ice, no sugar, etc..."></textarea>
                 </div>
 
                 <div class="input-lux-group">
-                    <label>Preferred Payment Method</label>
+                    <label>Payment Method</label>
                     <select id="pay-method-lux" onchange="toggleLuxuryPayBox()">
-                        <option value="">-- SELECT PAYMENT METHOD --</option>
-                        <option value="qris">SCAN QRIS (IN-APP DISPLAY)</option>
-                        <option value="bank">TRANSFER BCA (8830192332)</option>
-                        <option value="cash">PAY AT CASHIER COUNTER</option>
+                        <option value="">-- SELECT METHOD --</option>
+                        <option value="qris">SCAN QRIS (INSTANT)</option>
+                        <option value="bank">BANK TRANSFER BCA</option>
+                        <option value="cash">PAY AT COUNTER</option>
                     </select>
                 </div>
 
-                <!-- PAYMENT INFO BOXES -->
-                <div id="p-box-qris" class="pay-info-card">
-                    <i class="fas fa-qrcode fa-6x"></i>
-                    <strong>SESA QRIS INSTANT</strong>
-                    <p>Please scan the code above using your mobile banking or e-wallet app. Our system will detect your transaction and alert the kitchen immediately.</p>
-                </div>
-                <div id="p-box-bank" class="pay-info-card">
-                    <i class="fas fa-university fa-4x"></i>
-                    <strong>BANK CENTRAL ASIA (BCA)</strong>
-                    <p>Account No: <b>8830 192 332</b><br>A/N: <b>PT SESA COFFEE INDONESIA</b><br>Please keep your proof of transfer for our staff to verify upon delivery.</p>
-                </div>
-                <div id="p-box-cash" class="pay-info-card">
-                    <i class="fas fa-cash-register fa-4x"></i>
-                    <strong>CASHIER PAYMENT</strong>
-                    <p>Please proceed to our main counter, mention your name and table number, and finalize your payment before our team starts brewing.</p>
-                </div>
+                <div id="p-box-qris" class="pay-info-card"><i class="fas fa-qrcode fa-6x"></i><strong>SESA QRIS PAY</strong><p>Please scan the QRIS code displayed at the counter or provided by staff.</p></div>
+                <div id="p-box-bank" class="pay-info-card"><i class="fas fa-university fa-4x"></i><strong>BANK TRANSFER BCA</strong><p>Account: <b>8830 192 332</b><br>Name: <b>PT SESA COFFEE INDONESIA</b></p></div>
+                <div id="p-box-cash" class="pay-info-card"><i class="fas fa-cash-register fa-4x"></i><strong>COUNTER PAYMENT</strong><p>Please proceed to the cashier to finalize your payment.</p></div>
 
                 <button class="btn-order-execute" onclick="submitLuxuryOrder()">
                     SEND ORDER TO KITCHEN <i class="fas fa-paper-plane"></i>
@@ -352,44 +324,28 @@
             </div>
         </div>
 
-        <!-- SECTION 2: LIVE MULTI TRACKING (SLIDER) -->
+        <!-- TRACKING AREA -->
         <div id="tracking-view-lux">
             <div class="tracking-header">
-                <h2>Real-time Order Status</h2>
-                <p style="opacity:0.6;">Swipe horizontally to view all your active orders.</p>
+                <h2>Live Tracking</h2>
+                <p>Track your crafted moments in real-time.</p>
             </div>
             
-            <!-- HORIZONTAL SLIDER FOR MOBILE -->
             <div class="track-slider-container" id="tracking-slider-target">
-                <!-- Multiple Session Cards Injected Here -->
-            </div>
-            
-            <div style="text-align:center; margin-top:80px;">
-                <p style="font-weight:600; margin-bottom:25px; opacity:0.6;">Would you like to explore more flavors?</p>
-                <a href="menu.html" class="elegant-back-btn" style="background:var(--accent); border-color:var(--accent);">
-                    <i class="fas fa-plus-circle"></i>
-                    <span>Order Something New</span>
-                </a>
+                <!-- Live cards -->
             </div>
         </div>
 
     </div>
 
-    <!-- FIREBASE LOGIC ENGINE -->
+    <!-- FIREBASE & CORE ENGINE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyBAB3uy7JyIA38KMKGOFJb9_r5lJ3hTaNE",
-            authDomain: "sesa-coffee.firebaseapp.com",
-            databaseURL: "https://sesa-coffee-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "sesa-coffee",
-            storageBucket: "sesa-coffee.firebasestorage.app",
-            messagingSenderId: "767835800976",
-            appId: "1:767835800976:web:21ab01c3ff9bb29aae5f15"
+            databaseURL: "https://sesa-coffee-default-rtdb.asia-southeast1.firebasedatabase.app"
         };
-        
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
@@ -397,129 +353,125 @@
         
         window.renderLuxuryCart = () => {
             const list = document.getElementById('luxury-cart-list'); list.innerHTML = "";
-            let total = 0;
+            let subtotal = 0;
+
             if(cartData.length === 0) {
-                list.innerHTML = "<div style='text-align:center; padding:50px; opacity:0.4;'><i class='fas fa-shopping-cart fa-4x'></i><p style='margin-top:20px; font-weight:700;'>Your cart is currently empty.</p></div>";
                 document.getElementById('checkout-view-lux').style.display = 'none';
             } else {
                 document.getElementById('checkout-view-lux').style.display = 'block';
             }
 
             cartData.forEach((item, index) => {
-                total += (item.price * item.qty);
+                subtotal += (item.price * item.qty);
                 list.innerHTML += `
                     <div class="cart-item-row">
-                        <div class="item-details">
-                            <b>${item.name}</b>
-                            <small>Rp ${item.price.toLocaleString()}</small>
-                        </div>
+                        <div class="item-details"><b>${item.name}</b><small>Rp ${item.price.toLocaleString()}</small></div>
                         <div class="qty-box">
-                            <button class="qty-btn" onclick="modifyLuxuryQty(${index}, -1)">-</button>
-                            <span style="font-weight:900; font-size:1.2rem;">${item.qty}</span>
-                            <button class="qty-btn" onclick="modifyLuxuryQty(${index}, 1)">+</button>
+                            <button class="qty-btn" onclick="modifyQty(${index}, -1)">-</button>
+                            <span style="font-weight:800; font-size:1.2rem;">${item.qty}</span>
+                            <button class="qty-btn" onclick="modifyQty(${index}, 1)">+</button>
                         </div>
                     </div>`;
             });
-            document.getElementById('grand-total-lux').innerText = "Rp " + total.toLocaleString();
+
+            // LOGIKA PAJAK 10%
+            const tax = subtotal * 0.10;
+            const grandTotal = subtotal + tax;
+
+            document.getElementById('txt-subtotal').innerText = "Rp " + subtotal.toLocaleString();
+            document.getElementById('txt-tax').innerText = "Rp " + tax.toLocaleString();
+            document.getElementById('txt-grand-total').innerText = "Rp " + grandTotal.toLocaleString();
+            
             localStorage.setItem('sesa_cart', JSON.stringify(cartData));
         };
 
-        window.modifyLuxuryQty = (idx, delta) => {
+        window.modifyQty = (idx, delta) => {
             cartData[idx].qty += delta;
             if(cartData[idx].qty < 1) cartData.splice(idx, 1);
             renderLuxuryCart();
         };
 
         window.toggleLuxuryPayBox = () => {
-            document.querySelectorAll('.pay-info-card').forEach(box => box.style.display = 'none');
-            const selected = document.getElementById('pay-method-lux').value;
-            if(selected) document.getElementById('p-box-'+selected).style.display = 'block';
+            document.querySelectorAll('.pay-info-card').forEach(b => b.style.display = 'none');
+            const sel = document.getElementById('pay-method-lux').value;
+            if(sel) document.getElementById('p-box-'+sel).style.display = 'block';
         };
 
         window.submitLuxuryOrder = () => {
-            const nameVal = document.getElementById('cust-name-lux').value;
-            const tableVal = document.getElementById('cust-table-lux').value;
-            const payVal = document.getElementById('pay-method-lux').value;
+            const name = document.getElementById('cust-name-lux').value;
+            const table = document.getElementById('cust-table-lux').value;
+            const pay = document.getElementById('pay-method-lux').value;
 
-            if(!nameVal || !tableVal || !payVal || cartData.length === 0) return alert("Please fill in all details before sending to kitchen!");
+            if(!name || !table || !pay || cartData.length === 0) return alert("Please complete your information!");
 
+            const subtotal = cartData.reduce((acc, i) => acc + (i.price * i.qty), 0);
+            const tax = subtotal * 0.10;
+            const grandTotal = subtotal + tax;
             const orderID = "SESA_ORD_" + Date.now();
-            const now = new Date();
             
-            set(ref(db, 'orders/' + orderID), {
+            const orderObj = {
                 id: orderID,
-                customer: nameVal,
-                table: tableVal,
+                customer: name,
+                table: table,
                 note: document.getElementById('cust-note-lux').value,
-                payment: payVal.toUpperCase(),
+                payment: pay.toUpperCase(),
                 items: cartData,
-                total: cartData.reduce((acc, item) => acc + (item.price * item.qty), 0),
+                subtotal: subtotal,
+                tax: tax,
+                total: grandTotal,
                 status: 'MENUNGGU',
-                fullTime: now.toLocaleString('id-ID'),
-                month: now.toLocaleString('id-ID', {month: 'long'}).toUpperCase()
-            }).then(() => {
-                // Persistent Tracking for this user device
+                fullTime: new Date().toLocaleString('id-ID'),
+                month: new Date().toLocaleString('id-ID', {month: 'long'}).toUpperCase()
+            };
+
+            set(ref(db, 'orders/' + orderID), orderObj).then(() => {
                 let trackHistory = JSON.parse(localStorage.getItem('sesa_track_history')) || [];
                 trackHistory.push(orderID);
                 localStorage.setItem('sesa_track_history', JSON.stringify(trackHistory));
-                
                 localStorage.removeItem('sesa_cart');
-                alert("Order Placed Successfully! Your baristas have been notified.");
+                alert("Order Placed! Please wait for our staff.");
                 location.reload();
             });
         };
 
-        // --- REAL-TIME MULTI-TRACKER ---
-        const activeSessionIDs = JSON.parse(localStorage.getItem('sesa_track_history')) || [];
-        const sliderTarget = document.getElementById('tracking-slider-target');
+        // TRACKING LOGIC
+        const activeIDs = JSON.parse(localStorage.getItem('sesa_track_history')) || [];
+        const slider = document.getElementById('tracking-slider-target');
 
-        if(activeSessionIDs.length === 0) {
+        if(activeIDs.length === 0) {
             document.getElementById('tracking-view-lux').style.display = 'none';
         } else {
             document.getElementById('tracking-view-lux').style.display = 'block';
+            activeIDs.forEach(id => {
+                onValue(ref(db, 'orders/' + id), (snap) => {
+                    const data = snap.val();
+                    let existing = document.getElementById('node-' + id);
+                    
+                    if(!data) {
+                        if(existing) existing.innerHTML = `<div class="track-lux-card"><i class="fas fa-check-circle fa-5x" style="color:var(--success); margin-bottom:20px;"></i><h2>COMPLETED</h2><button class="btn-order-execute" onclick="dismissTrack('${id}')">DISMISS</button></div>`;
+                        return;
+                    }
+
+                    const html = `
+                        <div class="track-lux-card ${data.status === 'SIAP' ? 'ready-state' : ''}" id="node-${id}">
+                            <span class="status-label">ORDER ID: ${data.id}</span>
+                            <div class="luxury-clock-icon"><div class="clock-hand-lux h-hour-lux"></div><div class="clock-hand-lux h-min-lux"></div></div>
+                            <h2 class="status-val">${data.status}</h2>
+                            <p style="margin-top:20px;"><b>${data.customer}</b> | TABLE ${data.table}</p>
+                            ${data.status === 'PROSES' ? `<p style="color:var(--accent); font-weight:800; margin-top:10px;">Est: ${data.estTime} Mins</p>` : ''}
+                            ${data.status === 'SIAP' ? `<div class="ready-box">YOUR COFFEE IS SERVED!</div>` : ''}
+                        </div>`;
+
+                    if(existing) existing.outerHTML = html;
+                    else slider.innerHTML += html;
+                });
+            });
         }
 
-        activeSessionIDs.forEach(id => {
-            onValue(ref(db, 'orders/' + id), (snap) => {
-                const data = snap.val();
-                let existingCard = document.getElementById('track-node-' + id);
-                
-                if(!data) {
-                    if(existingCard) existingCard.innerHTML = `
-                        <div class="track-lux-card">
-                            <i class="fas fa-heart fa-5x" style="color:var(--accent); margin-bottom:30px;"></i>
-                            <h2 style="font-family:'Playfair Display'; margin-bottom:15px;">ORDER COMPLETE</h2>
-                            <p style="opacity:0.6; line-height:1.8;">Thank you for your visit. We hope you enjoyed your crafted SESA moment.</p>
-                            <button class="btn-order-execute" style="padding:15px; font-size:0.9rem;" onclick="dismissTrackID('${id}')">DISMISS INFO</button>
-                        </div>`;
-                    return;
-                }
-
-                const cardHTML = `
-                    <div class="track-lux-card ${data.status === 'SIAP' ? 'ready-state' : ''}" id="track-node-${id}">
-                        <span class="status-label-top">LIVE TRACKING: ${data.id}</span>
-                        <div class="luxury-clock-icon">
-                            <div class="clock-hand-lux h-hour-lux"></div>
-                            <div class="clock-hand-lux h-min-lux"></div>
-                        </div>
-                        <h2 class="status-main-val">${data.status}</h2>
-                        <div style="margin-top:25px; font-weight:700;">
-                            FOR <b>${data.customer}</b> <br>
-                            <span style="color:var(--accent);">TABLE ${data.table}</span>
-                        </div>
-                        ${data.status === 'PROSES' ? `<p style="margin-top:20px; font-weight:800; font-size:1.1rem; color:var(--primary);">Estimasi: <span style="color:var(--accent)">${data.estTime} Mins</span></p>` : ''}
-                        ${data.status === 'SIAP' ? `<div class="ready-notif-box"><i class="fas fa-concierge-bell"></i> YOUR ORDER IS COMING TO YOUR TABLE!</div>` : ''}
-                    </div>`;
-
-                if(existingCard) existingCard.outerHTML = cardHTML;
-                else sliderTarget.innerHTML += cardHTML;
-            });
-        });
-
-        window.dismissTrackID = (id) => {
-            let currentIDs = JSON.parse(localStorage.getItem('sesa_track_history'));
-            currentIDs = currentIDs.filter(item => item !== id);
-            localStorage.setItem('sesa_track_history', JSON.stringify(currentIDs));
+        window.dismissTrack = (id) => {
+            let ids = JSON.parse(localStorage.getItem('sesa_track_history'));
+            ids = ids.filter(i => i !== id);
+            localStorage.setItem('sesa_track_history', JSON.stringify(ids));
             location.reload();
         };
 
@@ -528,18 +480,10 @@
     </script>
 
     <script>
-        // Navbar Scroll Script
         window.addEventListener('scroll', () => {
-            const header = document.getElementById('main-header');
-            if (window.scrollY > 80) header.classList.add('scrolled');
-            else header.classList.remove('scrolled');
-        });
-
-        // Close mobile nav on click
-        document.querySelectorAll('.nav-links a').forEach(l => {
-            l.addEventListener('click', () => {
-                document.getElementById('nav-list-lux').classList.remove('show');
-            });
+            const h = document.getElementById('main-header');
+            if (window.scrollY > 80) h.classList.add('scrolled');
+            else h.classList.remove('scrolled');
         });
     </script>
 </body>
