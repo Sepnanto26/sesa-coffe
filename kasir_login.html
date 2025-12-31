@@ -3,271 +3,347 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SESA POS | Secure Cashier Authentication</title>
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>SESA POS | Imperial Sovereign Terminal v54.0</title>
+    
+    <!-- Premium Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <!-- QR Scanner Library -->
+    <script src="https://unpkg.com/html5-qrcode"></script>
     
     <style>
         :root {
-            --primary: #1a120b;
-            --secondary: #2c1b0e;
-            --accent: #c5a059;
+            --gold: #c5a059; 
+            --gold-bright: #f1c40f;
+            --dark: #0f0a06;
+            --secondary: #1d150e;
             --white: #ffffff;
-            --danger: #e74c3c;
+            --danger: #ff4757;
+            --success: #27ae60;
+            --glass: rgba(15, 10, 6, 0.95);
+            --shadow-lux: 0 30px 70px rgba(0,0,0,0.6);
+            --transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
+        /* --- GLOBAL BASE --- */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-
+        
         body {
-            background: linear-gradient(rgba(26, 18, 11, 0.85), rgba(26, 18, 11, 0.85)), 
-                        url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?q=80&w=1500&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: var(--white);
-            overflow: hidden;
+            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), 
+                        url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?q=80&w=2000');
+            background-size: cover; background-position: center;
+            height: 100vh; display: flex; justify-content: center; align-items: center;
+            color: var(--white); overflow: hidden;
         }
 
-        .login-container {
-            background: rgba(255, 255, 255, 0.07);
-            backdrop-filter: blur(20px);
-            padding: 50px 40px;
-            border-radius: 40px;
+        /* --- AUTH CARD (COMPACT & LUXURY) --- */
+        .auth-card {
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            padding: 60px 50px;
+            border-radius: 45px;
             width: 100%;
-            max-width: 420px;
+            max-width: 440px;
             text-align: center;
-            border: 1px solid rgba(197, 160, 89, 0.2);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
-            animation: slideUp 0.8s ease-out;
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .login-container h1 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
-            letter-spacing: 3px;
-            margin-bottom: 5px;
-        }
-        .login-container h1 span { color: var(--accent); }
-        .login-container p {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-bottom: 40px;
-            opacity: 0.6;
-        }
-
-        .input-group {
+            border: 1px solid rgba(197, 160, 89, 0.3);
+            box-shadow: var(--shadow-lux);
             position: relative;
-            margin-bottom: 25px;
+            animation: imperialEntrance 1.2s ease-out;
+            max-height: 95vh;
+            overflow-y: auto;
+        }
+        .auth-card::-webkit-scrollbar { width: 0; }
+
+        @keyframes imperialEntrance {
+            0% { opacity: 0; transform: scale(0.9) translateY(40px); filter: blur(10px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
         }
 
-        .input-group i {
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--accent);
-            font-size: 1.1rem;
-        }
+        /* Top Brand Logo */
+        .brand-logo { margin-bottom: 40px; }
+        .brand-logo h1 { font-family: 'Cinzel', serif; font-size: 2.8rem; letter-spacing: 5px; line-height: 1; }
+        .brand-logo h1 span { color: var(--gold); }
+        .brand-logo p { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 4px; color: var(--gold); margin-top: 10px; font-weight: 700; opacity: 0.8; }
 
-        .input-group input {
-            width: 100%;
-            padding: 18px 20px 18px 60px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid transparent;
-            border-radius: 20px;
-            color: white;
+        /* --- TABS --- */
+        .main-tabs {
+            display: flex; background: rgba(255,255,255,0.05);
+            padding: 6px; border-radius: 22px; margin-bottom: 35px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .tab-btn {
+            flex: 1; padding: 14px; border: none; background: none;
+            color: #777; font-weight: 800; font-size: 0.7rem;
+            text-transform: uppercase; cursor: pointer; transition: 0.3s;
+            border-radius: 18px;
+        }
+        .tab-btn.active { background: var(--gold); color: var(--dark); box-shadow: 0 5px 15px rgba(197, 160, 89, 0.3); }
+
+        /* --- SECTIONS --- */
+        .auth-section { display: none; }
+        .auth-section.active { display: block; animation: slideUp 0.6s ease; }
+
+        @keyframes slideUp { from { opacity:0; transform: translateY(30px); } to { opacity:1; transform: translateY(0); } }
+
+        /* Inputs */
+        .input-box { position: relative; margin-bottom: 22px; text-align: left; }
+        .input-box i { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--gold); font-size: 1.1rem; }
+        .input-box input, .input-box select, .input-box textarea {
+            width: 100%; padding: 18px 20px 18px 60px;
+            background: rgba(255,255,255,0.06); border: 1.5px solid transparent;
+            border-radius: 20px; color: white; outline: none; transition: 0.3s;
             font-size: 1rem;
-            outline: none;
-            transition: 0.3s;
         }
+        .input-box input:focus { border-color: var(--gold); background: rgba(255,255,255,0.12); box-shadow: 0 0 20px rgba(197, 160, 89, 0.1); }
 
-        .input-group input:focus {
-            border-color: var(--accent);
-            background: rgba(255, 255, 255, 0.15);
-            box-shadow: 0 0 15px rgba(197, 160, 89, 0.2);
+        /* Camera Containers */
+        .camera-wrapper {
+            width: 100%; border-radius: 25px; border: 3px solid var(--gold);
+            overflow: hidden; background: #000; margin-bottom: 20px;
+            position: relative; aspect-ratio: 1/1;
         }
+        #qr-reader-target, #absence-video { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* Scan Line Animation */
+        .scan-line {
+            position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+            background: var(--gold); box-shadow: 0 0 15px var(--gold);
+            animation: scanLine 2s infinite linear; z-index: 5;
+        }
+        @keyframes scanLine { 0% { top: 0; } 100% { top: 100%; } }
 
-        .btn-login {
-            background: var(--accent);
-            color: var(--primary);
-            border: none;
-            padding: 18px;
-            width: 100%;
-            border-radius: 20px;
-            font-size: 1rem;
-            font-weight: 800;
-            cursor: pointer;
-            transition: 0.4s;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-top: 10px;
-        }
+        .captured-photo { display: none; width: 100%; border-radius: 20px; border: 3px solid var(--success); margin-bottom: 20px; }
 
-        .btn-login:hover {
-            background: var(--white);
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        /* Buttons */
+        .btn-imperial {
+            background: linear-gradient(135deg, var(--gold), #8e6d31);
+            color: var(--dark); border: none; padding: 20px;
+            width: 100%; border-radius: 20px; font-weight: 800;
+            text-transform: uppercase; letter-spacing: 3px; cursor: pointer;
+            transition: 0.3s; box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            font-size: 0.9rem;
         }
+        .btn-imperial:hover { transform: translateY(-4px); filter: brightness(1.1); box-shadow: 0 15px 40px rgba(197, 160, 89, 0.3); }
 
-        .clock-section {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255,255,255,0.1);
+        /* Notification */
+        #alert-box {
+            position: fixed; top: 30px; right: -450px;
+            background: var(--danger); padding: 20px 40px; border-radius: 15px;
+            color: white; font-weight: 900; transition: 0.7s cubic-bezier(0.19, 1, 0.22, 1); 
+            z-index: 11000; box-shadow: var(--shadow-lux); text-transform: uppercase;
         }
+        .alert-active { right: 30px !important; }
 
-        #live-clock {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--accent);
-            letter-spacing: 1px;
-        }
+        /* Footer Clock */
+        .imperial-footer { margin-top: 40px; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.05); }
+        #live-clock { font-family: 'Cinzel'; font-size: 2.2rem; color: var(--gold); font-weight: 900; letter-spacing: 4px; }
 
-        #live-date {
-            font-size: 0.75rem;
-            opacity: 0.5;
-            margin-top: 5px;
-        }
-
-        /* Error Message */
-        #error-msg {
-            color: var(--danger);
-            font-size: 0.85rem;
-            margin-bottom: 20px;
-            font-weight: 600;
-            display: none;
-        }
     </style>
 </head>
 <body>
 
-    <div class="login-container">
-        <h1>SESA <span>POS</span></h1>
-        <p>Internal Staff Access</p>
+    <!-- Notification Engine -->
+    <div id="alert-box">Unauthorized Entry!</div>
 
-        <div id="error-msg">Username atau Password Salah!</div>
-
-        <!-- Login Form -->
-        <div class="input-group">
-            <i class="fas fa-user-circle"></i>
-            <input type="text" id="username" placeholder="Username Kasir" autocomplete="off">
+    <div class="auth-card">
+        <div class="brand-logo">
+            <h1>SESA <span>POS</span></h1>
+            <p>Sovereign Terminal Access</p>
         </div>
 
-        <div class="input-group">
-            <i class="fas fa-key"></i>
-            <input type="password" id="password" placeholder="Kata Sandi">
+        <!-- MAIN ACCESS TABS -->
+        <div class="main-tabs">
+            <button class="tab-btn active" id="btn-login-tab" onclick="switchSection('login', this)">Work Login</button>
+            <button class="tab-btn" id="btn-report-tab" onclick="switchSection('report', this)">Report Absence</button>
         </div>
 
-        <button class="btn-login" id="btnLogin" onclick="processLogin()">
-            BUKA SHIFT SEKARANG
-        </button>
+        <!-- SECTION 1: WORK LOGIN -->
+        <div id="login-section" class="auth-section active">
+            <div class="main-tabs" style="background: rgba(0,0,0,0.3); margin-bottom: 25px;">
+                <button class="tab-btn active" id="sub-manual" onclick="toggleLoginMode('manual')">Manual</button>
+                <button class="tab-btn" id="sub-qr" onclick="toggleLoginMode('qr')">QR Access</button>
+            </div>
 
-        <!-- Live Widget -->
-        <div class="clock-section">
+            <!-- Manual Form -->
+            <div id="form-manual">
+                <div class="input-box"><i class="fas fa-user-shield"></i><input type="text" id="login-user" placeholder="Staff Username"></div>
+                <div class="input-box"><i class="fas fa-key"></i><input type="password" id="login-pass" placeholder="Access Password"></div>
+                <button class="btn-imperial" onclick="handleAuth('manual')">Authorize Terminal</button>
+            </div>
+
+            <!-- QR Scanner (Instant Open) -->
+            <div id="form-qr" style="display:none;">
+                <div class="camera-wrapper">
+                    <div id="qr-reader-core"></div>
+                    <div class="scan-line"></div>
+                </div>
+                <p style="font-size: 0.7rem; color: #666; font-weight: 700;">PROXIMITY SCAN: SHOW YOUR IMPERIAL QR</p>
+            </div>
+        </div>
+
+        <!-- SECTION 2: REPORT ABSENCE -->
+        <div id="report-section" class="auth-section">
+            <div class="input-box"><i class="fas fa-id-card"></i><select id="rep-staff-name"></select></div>
+            <div class="input-box"><i class="fas fa-clinic-medical"></i><select id="rep-type"><option value="IJIN">Personal Leave (Ijin)</option><option value="SAKIT">Medical Leave (Sakit)</option></select></div>
+            <div class="input-box" style="padding-left:0;"><textarea id="rep-reason" placeholder="State your reason for absence..." rows="3" style="padding-left:20px;"></textarea></div>
+            
+            <label style="font-size: 0.7rem; color: var(--gold); font-weight: 800; display: block; margin-bottom: 10px; text-transform: uppercase;">Medical Proof / Attachment:</label>
+            
+            <div class="camera-wrapper" id="absence-cam-container">
+                <video id="absence-video" autoplay playsinline></video>
+            </div>
+            <img id="absence-photo-result" class="captured-photo">
+            <canvas id="absence-canvas" style="display:none;"></canvas>
+
+            <div style="display:flex; gap:10px;">
+                <button class="btn-imperial" style="background:#444; color:white; font-size: 0.8rem;" onclick="captureAbsencePhoto()">Capture</button>
+                <button class="btn-imperial" onclick="submitAbsence()">Transmit Report</button>
+            </div>
+        </div>
+
+        <div class="imperial-footer">
             <div id="live-clock">00:00:00</div>
-            <div id="live-date">Memuat Kalender...</div>
         </div>
     </div>
 
+    <!-- SCRIPT SYSTEM -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, get, child, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, onValue, get, child, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // Konfigurasi Firebase Anda
-        const firebaseConfig = {
-            databaseURL: "https://sesa-coffee-default-rtdb.asia-southeast1.firebasedatabase.app"
-        };
+        const firebaseConfig = { databaseURL: "https://sesa-coffee-default-rtdb.asia-southeast1.firebasedatabase.app" };
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        window.processLogin = async () => {
-            const btn = document.getElementById('btnLogin');
-            const errorEl = document.getElementById('error-msg');
-            const userInput = document.getElementById('username').value.toLowerCase().trim();
-            const passInput = document.getElementById('password').value;
+        let qrScanner = null;
+        let staffList = {};
+        let absencePhotoBase64 = "";
+        let cameraStream = null;
 
-            if(!userInput || !passInput) {
-                alert("Mohon masukkan Username dan Password!");
-                return;
-            }
+        // Sync Staff List for Dropdown
+        onValue(ref(db, 'staff'), (snap) => {
+            staffList = snap.val() || {};
+            const sel = document.getElementById('rep-staff-name');
+            sel.innerHTML = "<option value=''>Select Your Name...</option>";
+            Object.values(staffList).forEach(s => sel.innerHTML += `<option value="${s.fullName}">${s.fullName}</option>`);
+        });
 
-            // Tampilkan Loading
-            btn.innerText = "MENGECEK DATA...";
-            btn.disabled = true;
-            errorEl.style.display = 'none';
-
-            const dbRef = ref(db);
-            try {
-                // 1. Cari data di folder 'staff' berdasarkan Username
-                const snapshot = await get(child(dbRef, `staff/${userInput}`));
-                
-                if (snapshot.exists()) {
-                    const staffData = snapshot.val();
-                    
-                    // 2. Verifikasi Password
-                    if(staffData.password === passInput) {
-                        // JIKA BERHASIL: Buat Data Shift
-                        const shiftId = "shift_" + Date.now();
-                        const startTime = new Date().toLocaleString('id-ID');
-
-                        const newShift = {
-                            id: shiftId,
-                            cashierName: staffData.fullName, // Mengambil Nama Lengkap dari data pendaftaran
-                            username: staffData.username,
-                            startTime: startTime,
-                            totalIncome: 0,
-                            status: "OPEN"
-                        };
-
-                        // 3. Simpan aktivitas shift ke Firebase
-                        await set(ref(db, 'shifts/' + shiftId), newShift);
-
-                        // 4. Simpan ke Local Storage untuk digunakan di kasir.html
-                        localStorage.setItem('sesa_cashier_name', staffData.fullName);
-                        localStorage.setItem('sesa_shift_id', shiftId);
-                        
-                        // 5. Masuk ke halaman Kasir
-                        window.location.href = 'kasir.html';
-
-                    } else {
-                        showError("PASSWORD ANDA SALAH!");
-                    }
-                } else {
-                    showError("USERNAME TIDAK TERDAFTAR!");
-                }
-            } catch (error) {
-                console.error(error);
-                showError("KONEKSI BERMASALAH!");
-            } finally {
-                btn.innerText = "BUKA SHIFT SEKARANG";
-                btn.disabled = false;
-            }
+        // --- NAVIGATION ENGINE ---
+        window.switchSection = (target, btn) => {
+            stopAllCameras();
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.auth-section').forEach(s => s.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(target + '-section').classList.add('active');
+            
+            if(target === 'report') startAbsenceCamera();
         };
 
-        function showError(msg) {
-            const errorEl = document.getElementById('error-msg');
-            errorEl.innerText = msg;
-            errorEl.style.display = 'block';
+        window.toggleLoginMode = (mode) => {
+            document.getElementById('form-manual').style.display = (mode === 'manual') ? 'block' : 'none';
+            document.getElementById('form-qr').style.display = (mode === 'qr') ? 'block' : 'none';
+            document.getElementById('sub-manual').classList.toggle('active', mode === 'manual');
+            document.getElementById('sub-qr').classList.toggle('active', mode === 'qr');
+            
+            if(mode === 'qr') startInstantQR(); else stopQR();
+        };
+
+        // --- LOGIN ENGINE ---
+        window.handleAuth = async (mode) => {
+            const u = document.getElementById('login-user').value.toLowerCase().trim();
+            const p = document.getElementById('login-pass').value;
+            try {
+                const snap = await get(child(ref(db), `staff/${u}`));
+                if(snap.exists() && snap.val().password === p) {
+                    finalizeLogin(snap.val());
+                } else {
+                    notify("Invalid Credentials!");
+                }
+            } catch (e) { notify("Connection Error"); }
+        };
+
+        async function finalizeLogin(data) {
+            // --- DYNAMIC VOICE GREETING (Sesuai Shift) ---
+            const m = new SpeechSynthesisUtterance("Welcome " + data.fullName);
+            m.lang = 'en-US'; m.rate = 1; window.speechSynthesis.speak(m);
+
+            const shiftId = "shift_" + Date.now();
+            await set(ref(db, 'shifts/' + shiftId), { 
+                id: shiftId, cashierName: data.fullName, username: data.username, 
+                startTime: new Date().toLocaleString('id-ID'), status: "OPEN" 
+            });
+            localStorage.setItem('sesa_cashier_name', data.fullName);
+            localStorage.setItem('sesa_shift_id', shiftId);
+            
+            setTimeout(() => window.location.href = 'kasir.html', 1000);
         }
 
-        // Live Clock
-        function updateClock() {
-            const now = new Date();
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('live-clock').innerText = now.toLocaleTimeString('id-ID');
-            document.getElementById('live-date').innerText = now.toLocaleDateString('id-ID', options);
+        // --- QR SCANNER (INSTANT) ---
+        async function startInstantQR() {
+            qrScanner = new Html5Qrcode("qr-reader-core");
+            try {
+                await qrScanner.start({ facingMode: "user" }, { fps: 15, qrbox: 250 }, (decodedText) => {
+                    const found = Object.values(staffList).find(s => s.qrCodeData === decodedText);
+                    if(found) { qrScanner.stop(); finalizeLogin(found); }
+                    else notify("Invalid QR Access!");
+                });
+            } catch (e) { notify("Camera Denied!"); }
         }
-        setInterval(updateClock, 1000);
-        updateClock();
+
+        function stopQR() { if(qrScanner) qrScanner.stop().catch(()=>{}); }
+
+        // --- REPORTING SYSTEM ---
+        async function startAbsenceCamera() {
+            try {
+                cameraStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+                document.getElementById('absence-video').srcObject = cameraStream;
+                document.getElementById('absence-cam-container').style.display = "block";
+                document.getElementById('absence-photo-result').style.display = "none";
+            } catch (e) { notify("Enable Camera!"); }
+        }
+
+        window.captureAbsencePhoto = () => {
+            const vid = document.getElementById('absence-video');
+            const can = document.getElementById('absence-canvas');
+            can.width = vid.videoWidth; can.height = vid.videoHeight;
+            can.getContext('2d').drawImage(vid, 0, 0);
+            absencePhotoBase64 = can.toDataURL('image/jpeg');
+            document.getElementById('absence-photo-result').src = absencePhotoBase64;
+            document.getElementById('absence-photo-result').style.display = "block";
+            document.getElementById('absence-cam-container').style.display = "none";
+            if(cameraStream) cameraStream.getTracks().forEach(t => t.stop());
+        };
+
+        window.submitAbsence = async () => {
+            const name = document.getElementById('rep-staff-name').value;
+            const reason = document.getElementById('rep-reason').value;
+            if(!name || !reason || !absencePhotoBase64) return alert("Complete data and capture photo!");
+
+            const id = "rep_" + Date.now();
+            await set(ref(db, 'permits/' + id), {
+                id, name, reason, type: document.getElementById('rep-type').value,
+                date: new Date().toLocaleDateString('id-ID'),
+                proofImg: absencePhotoBase64, timestamp: Date.now()
+            });
+            alert("Imperial Report Transmitted!");
+            location.reload();
+        };
+
+        function stopAllCameras() {
+            stopQR();
+            if(cameraStream) cameraStream.getTracks().forEach(t => t.stop());
+            document.getElementById('absence-video').srcObject = null;
+        }
+
+        function notify(m) {
+            const b = document.getElementById('alert-box');
+            b.innerText = m; b.classList.add('alert-active');
+            setTimeout(() => b.classList.remove('alert-active'), 4000);
+        }
+
+        setInterval(() => { document.getElementById('live-clock').innerText = new Date().toLocaleTimeString('id-ID'); }, 1000);
     </script>
 </body>
 </html>

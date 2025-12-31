@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SESA MENU | Imperial Sovereign Menu Hub v56.0</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #0f0a06; --secondary: #1d150e; --accent: #d4af37;
+            --white: #ffffff; --bg: #f8f6f2; --shadow: 0 25px 60px rgba(0,0,0,0.18);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg); display: flex; min-height: 100vh; color: var(--primary); }
+
+        .sidebar { width: 320px; background: var(--secondary); color: white; display: flex; flex-direction: column; padding: 40px 25px; position: fixed; height: 100vh; z-index: 9000; border-right: 5px solid var(--accent); box-shadow: 10px 0 30px rgba(0,0,0,0.2); }
+        .sidebar h2 { font-family: 'Cinzel', serif; font-size: 2.2rem; color: var(--accent); text-align: center; margin-bottom: 50px; font-weight: 900; }
+        
+        .btn-back-dash { background: var(--primary); color: var(--accent); border: 2px solid var(--accent); padding: 15px; border-radius: 15px; margin-bottom: 30px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; }
+
+        .main-content { flex: 1; margin-left: 320px; padding: 50px 70px; width: calc(100% - 320px); }
+
+        .imperial-card { background: white; padding: 45px; border-radius: 50px; box-shadow: var(--shadow); margin-bottom: 45px; border: 1px solid rgba(212,175,55,0.1); }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-bottom: 30px; }
+        label { display: block; font-size: 0.8rem; font-weight: 800; color: #555; margin-bottom: 12px; text-transform: uppercase; }
+        input, select, textarea { width: 100%; padding: 20px; border-radius: 20px; border: 2px solid #f2f2f2; background: #fafafa; outline: none; transition: 0.3s; font-size: 1rem; }
+        input:focus { border-color: var(--accent); background: white; }
+
+        .promo-hub { background: #fffcf0; padding: 35px; border-radius: 40px; border: 2px solid var(--accent); margin-bottom: 30px; }
+        .btn-main { background: var(--secondary); color: white; border: none; padding: 20px; border-radius: 20px; cursor: pointer; font-weight: 800; text-transform: uppercase; width: 100%; letter-spacing: 2px; }
+
+        .table-wrap { overflow-x: auto; border-radius: 45px; background: white; box-shadow: var(--shadow); }
+        table { width: 100%; border-collapse: collapse; min-width: 1000px; }
+        th { background: #fafafa; padding: 25px; text-align: left; font-size: 0.75rem; color: #999; text-transform: uppercase; }
+        td { padding: 25px; border-bottom: 1px solid #f8f8f8; }
+        .menu-thumb { width: 60px; height: 60px; border-radius: 15px; object-fit: cover; }
+        
+        .badge { padding: 8px 18px; border-radius: 100px; font-weight: 800; font-size: 0.7rem; text-transform: uppercase; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>SESA</h2>
+        <a href="admin.html" class="btn-back-dash"><i class="fas fa-arrow-left"></i> Dashboard</a>
+        <p style="color:var(--accent); text-align:center; font-weight:900; letter-spacing:2px;">MENU MASTER HUB</p>
+    </div>
+
+    <div class="main-content">
+        <div class="imperial-card">
+            <h3 id="m-title" style="font-family:'Cinzel'; margin-bottom:30px; font-size:2rem;">Premium Menu Editor</h3>
+            <input type="hidden" id="edit-id">
+            <div class="form-grid">
+                <input type="text" id="m-img" placeholder="Link Foto HD" oninput="document.getElementById('p-img').src=this.value; document.getElementById('p-img').style.display='block'">
+                <input type="text" id="m-name" placeholder="Nama Menu">
+                <select id="m-cat" onchange="toggleUI()">
+                    <option value="menu_paket">Menu Paket</option><option value="makanan_berat">Makanan Berat</option><option value="coffee">Coffee Based</option><option value="cocktail">Cocktail</option><option value="mocktail">Mocktail</option>
+                </select>
+            </div>
+            <img id="p-img" style="width:200px; height:200px; object-fit:cover; border-radius:20px; margin-bottom:20px; display:none;">
+            <div id="ui-drink" class="form-grid" style="display:none;"><input type="number" id="p-hot" placeholder="Harga Panas"><input type="number" id="p-cold" placeholder="Harga Dingin"></div>
+            <div id="ui-food" class="form-grid"><input type="number" id="p-norm" placeholder="Harga Normal"></div>
+            
+            <div class="promo-hub">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                    <h4>SISTEM PROMO WEBSITE</h4>
+                    <label><input type="checkbox" id="m-best"> BEST SELLER ⭐</label>
+                </div>
+                <div class="form-grid">
+                    <label><input type="checkbox" id="chk-n"> Promo Normal</label><input type="number" id="pro-n">
+                    <label><input type="checkbox" id="chk-h"> Promo Panas</label><input type="number" id="pro-h">
+                    <label><input type="checkbox" id="chk-c"> Promo Dingin</label><input type="number" id="pro-c">
+                </div>
+            </div>
+            <textarea id="m-desc" placeholder="Deskripsi menu..." rows="3" style="margin-bottom:20px;"></textarea>
+            <button class="btn-main" onclick="saveMenu()">SINKRONISASI KE WEBSITE</button>
+        </div>
+
+        <div class="table-wrap">
+            <table><thead><tr><th>Foto</th><th>Nama</th><th>Kategori</th><th>Stok</th><th>Aksi</th></tr></thead><tbody id="menu-body"></tbody></table>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, onValue, set, remove, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        const db = getDatabase(initializeApp({ databaseURL: "https://sesa-coffee-default-rtdb.asia-southeast1.firebasedatabase.app" }));
+
+        onValue(ref(db, 'store_menu'), (s) => {
+            const b = document.getElementById('menu-body'); b.innerHTML = ""; if(!s.val()) return;
+            Object.values(s.val()).forEach(m => {
+                b.innerHTML += `<tr><td><img src="${m.img}" class="menu-thumb"></td><td><b>${m.name}</b> ${m.isBest?'⭐':''}</td><td>${m.cat.toUpperCase()}</td><td><button onclick="tog('${m.id}','${m.status}')" class="badge" style="background:${m.status==='ready'?'#e8f5e9':'#ffebee'}; color:${m.status==='ready'?'green':'red'}">${m.status}</button></td><td><button onclick="edM('${m.id}')" style="color:blue; border:none; background:none; font-weight:800; cursor:pointer;">Edit</button><button onclick="delM('${m.id}')" style="color:red; border:none; background:none; font-weight:800; cursor:pointer; margin-left:15px;">Hapus</button></td></tr>`;
+            });
+        });
+
+        window.saveMenu = () => {
+            const eid = document.getElementById('edit-id').value; const id = eid ? eid : "m_" + Date.now();
+            set(ref(db, 'store_menu/'+id), { 
+                id, name: document.getElementById('m-name').value, cat: document.getElementById('m-cat').value, img: document.getElementById('m-img').value, desc: document.getElementById('m-desc').value, status: 'ready', isBest: document.getElementById('m-best').checked,
+                isPromo: document.getElementById('chk-n').checked, isPromoHot: document.getElementById('chk-h').checked, isPromoCold: document.getElementById('chk-c').checked,
+                priceNormal: parseInt(document.getElementById('p-norm').value) || 0, priceHot: parseInt(document.getElementById('p-hot').value) || 0, priceCold: parseInt(document.getElementById('p-cold').value) || 0,
+                pricePromo: parseInt(document.getElementById('pro-n').value) || 0, priceHotPromo: parseInt(document.getElementById('pro-h').value) || 0, priceColdPromo: parseInt(document.getElementById('pro-c').value) || 0
+            }).then(() => { alert("Success!"); location.reload(); });
+        };
+
+        window.edM = (id) => onValue(ref(db, 'store_menu/'+id), (snap) => { const m = snap.val(); document.getElementById('edit-id').value = m.id; document.getElementById('m-name').value = m.name; document.getElementById('p-norm').value = m.priceNormal; toggleUI(); window.scrollTo(0,0); }, {onlyOnce:true});
+        window.delM = (id) => confirm("Hapus?") && remove(ref(db, 'store_menu/'+id));
+        window.tog = (id, cur) => update(ref(db, 'store_menu/'+id), { status: cur==='ready'?'habis':'ready' });
+        window.toggleUI = () => { const c = document.getElementById('m-cat').value; const isD = ['coffee'].includes(c); document.getElementById('ui-drink').style.display = isD ? 'grid' : 'none'; document.getElementById('ui-food').style.display = isD ? 'none' : 'grid'; };
+    </script>
+</body>
+</html>

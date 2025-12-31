@@ -3,456 +3,522 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SESA Coffee | Luxury Menu Collections v30.0</title>
-    <!-- Premium Luxury Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Font Awesome Pro Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>SESA Coffee | Luxury Menu Experience v45.0</title>
+    
+    <!-- Premium Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     
     <style>
         :root {
-            --primary: #1a120b;
-            --secondary: #2c1b0e;
-            --accent: #c5a059;
-            --cream: #fdfaf5;
+            --gold: #c5a059; 
+            --dark: #0f0a06;
+            --secondary: #1d150e;
             --white: #ffffff;
+            --cream: #fdfaf5;
             --danger: #e74c3c;
-            --success: #27ae60;
-            --shadow-lux: 0 20px 60px rgba(0,0,0,0.12);
-            --transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            --transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
         /* --- GLOBAL BASE --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Montserrat', sans-serif; }
         html { scroll-behavior: smooth; }
-        body { background-color: var(--cream); color: var(--primary); overflow-x: hidden; }
+        body { background-color: var(--cream); color: var(--dark); overflow-x: hidden; }
 
-        /* --- PREMIUM NAVIGATION (SAME AS HOME) --- */
+        /* --- STORE CLOSED OVERLAY (SINKRON ADMIN) --- */
+        #closed-overlay {
+            display: none; 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(15, 10, 6, 0.98); z-index: 20000; 
+            color: white; flex-direction: column; justify-content: center; 
+            align-items: center; text-align: center; padding: 40px; 
+            backdrop-filter: blur(25px);
+        }
+        #closed-overlay i { color: var(--gold); margin-bottom: 35px; filter: drop-shadow(0 0 25px rgba(197, 160, 89, 0.6)); }
+        #closed-overlay h1 { font-family: 'Cinzel', serif; font-size: 3.5rem; letter-spacing: 8px; color: var(--gold); }
+        #closed-overlay p { font-size: 1.3rem; margin-top: 30px; max-width: 750px; line-height: 2; opacity: 0.95; font-weight: 500; }
+        #closed-overlay .schedule-footer { margin-top: 60px; font-weight: 800; letter-spacing: 4px; color: var(--gold); text-transform: uppercase; border-top: 1px solid rgba(197,160,89,0.3); padding-top: 20px; }
+
+        /* --- NAVIGATION DESKTOP & TABLET --- */
         header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 9000;
-            transition: var(--transition);
-            padding: 1.5rem 0;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 30px rgba(0,0,0,0.05);
+            position: fixed; top: 0; width: 100%; z-index: 9000;
+            padding: 30px 0; background: transparent; transition: var(--transition);
+            border-bottom: 1px solid rgba(197, 160, 89, 0.1);
+        }
+        header.scrolled { padding: 15px 0; background: rgba(15, 10, 6, 0.98); backdrop-filter: blur(15px); box-shadow: 0 5px 30px rgba(0,0,0,0.3); }
+
+        .navbar { 
+            padding: 0 8%; display: flex; justify-content: space-between; 
+            align-items: center; max-width: 1600px; margin: auto; 
         }
 
-        .navbar {
-            padding: 0 8%;
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            max-width: 1600px;
-            margin: auto;
-        }
-
-        .logo { 
-            font-family: 'Playfair Display', serif; 
-            font-size: 2.2rem; 
-            font-weight: 900; 
-            color: var(--primary); 
-            text-decoration: none; 
-            letter-spacing: 1px;
-        }
-        .logo span { color: var(--accent); }
+        .logo { text-decoration: none; display: flex; align-items: center; transition: 0.3s; }
+        .logo .sesa { font-family: 'Cinzel', serif; font-size: 2.2rem; font-weight: 900; color: var(--white); }
+        .logo .coffee { font-family: 'Montserrat', sans-serif; font-size: 2.2rem; font-weight: 800; color: var(--gold); margin-left: 10px; }
 
         .nav-links { display: flex; gap: 40px; list-style: none; align-items: center; }
         .nav-links a { 
-            text-decoration: none; 
-            color: var(--primary); 
-            font-weight: 600; 
-            text-transform: uppercase; 
-            font-size: 0.85rem; 
-            letter-spacing: 2px; 
-            transition: var(--transition); 
-            position: relative; 
+            text-decoration: none; color: var(--white); font-weight: 700; 
+            text-transform: uppercase; font-size: 0.85rem; letter-spacing: 2px; 
+            position: relative; transition: 0.3s;
         }
-        .nav-links a::after { content: ''; position: absolute; width: 0; height: 3px; bottom: -8px; left: 0; background: var(--accent); transition: 0.3s; }
+
+        /* Gold Underline Logic */
+        .nav-links a::after {
+            content: ''; position: absolute; width: 0; height: 3px; 
+            bottom: -10px; left: 0; background: var(--gold); transition: 0.3s;
+        }
         .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
-        .nav-links a.active { color: var(--accent) !important; }
+        .nav-links a.active { color: var(--gold); }
 
-        .menu-toggle { display: none; cursor: pointer; font-size: 1.8rem; color: var(--primary); }
+        .menu-toggle { display: none; cursor: pointer; color: var(--white); font-size: 1.8rem; }
 
-        /* --- PAGE HEADER --- */
-        .page-header {
-            padding: 180px 5% 100px;
-            text-align: center;
-            background: var(--secondary);
-            color: var(--white);
-            border-bottom: 8px solid var(--accent);
-            margin-bottom: 60px;
+        /* --- MOBILE DRAWER (SETENGAH LAYAR - STANDART SIZE) --- */
+        #mobile-backdrop {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7); z-index: 9998; display: none; opacity: 0; transition: 0.5s;
         }
-        .page-header h1 { font-family: 'Playfair Display', serif; font-size: 4rem; font-weight: 900; letter-spacing: 2px; }
-        .page-header p { color: var(--accent); letter-spacing: 5px; text-transform: uppercase; font-weight: 600; margin-top: 15px; }
+        #mobile-backdrop.active { display: block; opacity: 1; }
+
+        .mobile-drawer {
+            position: fixed; top: 0; right: -80%; width: 75%; height: 100vh;
+            background: #0d0d0d; z-index: 9999; padding: 40px 30px;
+            display: flex; flex-direction: column; transition: 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: -15px 0 40px rgba(0,0,0,0.6); border-left: 2px solid var(--gold);
+        }
+        .mobile-drawer.active { right: 0; }
+        .close-drawer { align-self: flex-end; color: var(--white); font-size: 2.2rem; cursor: pointer; margin-bottom: 40px; transition: 0.3s; }
+        .close-drawer:hover { color: var(--gold); transform: rotate(90deg); }
+        
+        .drawer-links { list-style: none; text-align: center; margin-top: 20px; }
+        .drawer-links li { margin: 25px 0; overflow: hidden; }
+        .drawer-links a {
+            color: var(--white); text-decoration: none; font-size: 1.6rem;
+            font-weight: 800; text-transform: uppercase; letter-spacing: 4px;
+            position: relative; transition: 0.4s; display: inline-block;
+        }
+        .drawer-links a::after {
+            content: ''; position: absolute; width: 0; height: 3px; 
+            bottom: -10px; left: 50%; transform: translateX(-50%);
+            background: var(--gold); transition: 0.4s;
+        }
+        .drawer-links a.active::after { width: 70%; }
+
+        /* --- HERO --- */
+        .hero {
+            height: 55vh; background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.6)), 
+            url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=2000');
+            background-size: cover; background-position: center;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; color: white;
+            border-bottom: 12px solid var(--gold);
+        }
+        .hero h1 { font-family: 'Cinzel', serif; font-size: clamp(3rem, 8vw, 6rem); letter-spacing: 15px; text-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 
         /* --- CONTAINER --- */
-        .container { max-width: 1400px; margin: auto; padding: 0 8% 100px; min-height: 80vh; }
+        .container { max-width: 1400px; margin: auto; padding: 80px 8%; }
+
+        .section-header { text-align: center; max-width: 900px; margin: 0 auto 80px; animation: fadeInUp 1s ease; }
+        .section-header h2 { font-family: 'Cinzel', serif; font-size: 3rem; margin-bottom: 20px; color: var(--dark); }
+        .section-header p { line-height: 2; color: #555; font-size: 1.1rem; }
+
+        /* --- CATEGORY CARDS --- */
+        .cat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 40px; }
+        .cat-card {
+            background: var(--white); padding: 70px 45px; border-radius: 55px; text-align: center;
+            box-shadow: var(--shadow); cursor: pointer; transition: var(--transition);
+            border-top: 10px solid var(--gold); position: relative; overflow: hidden;
+        }
+        .cat-card:hover { transform: translateY(-20px) scale(1.02); box-shadow: 0 40px 80px rgba(0,0,0,0.15); }
+        .cat-card i { font-size: 4.5rem; color: var(--gold); margin-bottom: 35px; display: block; }
+        .cat-card h3 { font-family: 'Cinzel', serif; font-size: 2.2rem; margin-bottom: 25px; letter-spacing: 2px; }
+        .cat-card p { color: #666; font-size: 1rem; line-height: 1.8; }
+
+        /* --- PRODUCT GRID --- */
+        #menu-view { display: none; }
+        .back-btn { 
+            display: inline-flex; align-items: center; gap: 15px; background: var(--dark); 
+            color: white; padding: 18px 45px; border-radius: 100px; cursor: pointer; 
+            font-weight: 800; text-transform: uppercase; font-size: 0.8rem; margin-bottom: 60px;
+        }
+        .back-btn:hover { background: var(--gold); transform: translateX(-10px); }
+
+        .prod-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 45px; }
+        .prod-card {
+            background: var(--white); border-radius: 50px; overflow: hidden; position: relative;
+            box-shadow: var(--shadow); transition: var(--transition); cursor: pointer;
+            display: flex; flex-direction: column; height: auto;
+        }
+        .prod-card:hover { transform: translateY(-15px); }
+
+        /* SOLD OUT EFFECT */
+        .prod-card.is-habis { filter: grayscale(1); opacity: 0.7; pointer-events: none; }
+        .sold-out-badge {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4); display: flex; justify-content: center;
+            align-items: center; z-index: 30;
+        }
+        .sold-out-badge span {
+            background: white; color: var(--danger); font-weight: 900; 
+            font-size: 2rem; padding: 10px 30px; border: 5px solid var(--danger);
+            transform: rotate(-15deg); font-family: 'Cinzel', serif;
+        }
+
+        .prod-img { width: 100%; height: 380px; overflow: hidden; position: relative; }
+        .prod-img img { width: 100%; height: 100%; object-fit: cover; transition: 1.2s; }
+        .prod-card:hover .prod-img img { transform: scale(1.15); }
+
+        /* BADGES (FIXED POSITION) */
+        .badge-container { position: absolute; top: 25px; right: 25px; display: flex; flex-direction: column; gap: 10px; z-index: 20; }
+        .badge-lux { padding: 10px 22px; border-radius: 50px; font-weight: 800; font-size: 0.65rem; text-transform: uppercase; color: white; text-align: center; }
+        .badge-best { background: var(--gold); box-shadow: 0 5px 15px rgba(197, 160, 89, 0.4); }
+        .badge-promo { background: var(--danger); animation: glowPulse 2s infinite; }
+
+        .prod-info { padding: 35px; flex-grow: 1; display: flex; flex-direction: column; border-top: 1px solid #f2f2f2; }
+        .prod-info h3 { font-family: 'Cinzel', serif; font-size: 1.7rem; margin-bottom: 12px; line-height: 1.3; }
+        .prod-info .price { color: var(--gold); font-weight: 900; font-size: 1.6rem; margin-top: auto; }
+
+        /* --- LUXURY MODAL --- */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 9999; justify-content: center; align-items: center; padding: 20px;
+            backdrop-filter: blur(15px);
+        }
+        .modal-box {
+            background: white; width: 100%; max-width: 850px; border-radius: 50px;
+            padding: 75px 65px; position: relative; animation: zoomIn 0.5s ease;
+            max-height: 90vh; overflow-y: auto;
+        }
+        .close-modal { position: absolute; top: 35px; right: 45px; font-size: 3rem; cursor: pointer; color: #333; transition: 0.3s; }
+        .close-modal:hover { color: var(--gold); transform: rotate(90deg); }
         
-        /* --- CATEGORY GRID --- */
-        .cat-grid-wrapper { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 30px; animation: fadeInUp 0.8s ease; }
-        .cat-luxury-card { 
-            background: var(--white); 
-            padding: 50px 40px; 
-            border-radius: 45px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.03); 
-            cursor: pointer; 
-            border-left: 12px solid var(--accent); 
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow: hidden;
+        .m-cat { color: var(--gold); font-weight: 800; text-transform: uppercase; letter-spacing: 4px; font-size: 0.9rem; display: block; margin-bottom: 10px; }
+        .m-title { font-family: 'Cinzel', serif; font-size: 3.5rem; line-height: 1.1; margin-bottom: 25px; }
+        .m-desc { 
+            font-size: 1.2rem; line-height: 2; color: #444; 
+            border-left: 8px solid var(--gold); padding-left: 25px; margin-bottom: 45px; 
         }
-        .cat-luxury-card:hover { transform: translateY(-15px); box-shadow: var(--shadow-lux); background: #fffdf9; }
-        .cat-luxury-card i { font-size: 3.5rem; color: var(--accent); margin-bottom: 30px; }
-        .cat-luxury-card h3 { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-bottom: 15px; color: var(--primary); }
-        .cat-luxury-card p { font-size: 1rem; color: #666; line-height: 1.8; }
-
-        /* --- PRODUCT LIST VIEW --- */
-        #menu-list-container { display: none; }
         
-        .elegant-back-wrapper { margin-bottom: 50px; animation: fadeInLeft 0.6s ease; }
-        .elegant-back-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 15px;
-            background: var(--primary);
-            color: var(--white);
-            padding: 16px 40px;
-            border-radius: 100px;
-            font-weight: 800;
-            font-size: 0.9rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: var(--transition);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        .variant-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 45px; }
+        .variant-item {
+            border: 3px solid #eee; border-radius: 30px; padding: 30px; text-align: center; cursor: pointer; transition: 0.3s;
         }
-        .elegant-back-btn:hover { background: var(--accent); transform: translateX(-10px); }
+        .variant-item.active { border-color: var(--gold); background: #fffdf5; transform: scale(1.05); }
+        .variant-item b { display: block; font-size: 0.9rem; text-transform: uppercase; margin-bottom: 8px; }
+        .variant-item span { font-size: 1.8rem; font-weight: 900; color: var(--gold); }
+        .strike-price { font-size: 1rem; text-decoration: line-through; color: #bbb; display: block; margin-bottom: 5px; }
 
-        .category-heading { font-family: 'Playfair Display', serif; font-size: 3.5rem; margin-bottom: 50px; border-bottom: 6px solid var(--accent); display: inline-block; padding-bottom: 10px; }
-        
-        .product-grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 40px; }
-
-        /* PRODUCT CARDS */
-        .prod-card-luxury { 
-            background: var(--white); 
-            border-radius: 45px; 
-            overflow: hidden; 
-            position: relative; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.04); 
-            display: flex; 
-            flex-direction: column; 
-            transition: var(--transition); 
-            cursor: pointer;
+        .btn-order-master {
+            width: 100%; padding: 25px; background: var(--dark); color: white; border: none;
+            border-radius: 25px; font-size: 1.4rem; font-weight: 900; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 5px; transition: 0.4s;
         }
-        .prod-card-luxury:hover { transform: translateY(-12px); box-shadow: var(--shadow-lux); }
-        .prod-img-box { width: 100%; height: 320px; overflow: hidden; position: relative; }
-        .prod-img-box img { width: 100%; height: 100%; object-fit: cover; transition: 0.8s ease; }
-        .prod-card-luxury:hover img { transform: scale(1.1); }
-        
-        /* REAL-TIME HABIS OVERLAY */
-        .prod-card-luxury.is-habis { filter: grayscale(1); opacity: 0.6; pointer-events: none; }
-        .prod-card-luxury.is-habis::after { 
-            content: "HABIS"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-15deg); 
-            font-size: 3rem; font-weight: 900; color: var(--danger); border: 8px solid var(--danger); 
-            padding: 10px 30px; z-index: 20; background: white;
+        .btn-order-master:hover { background: var(--gold); transform: translateY(-5px); box-shadow: 0 20px 40px rgba(197, 160, 89, 0.3); }
+
+        /* --- CART FLOAT "ORDER NOW" (SMALLER & REFINED) --- */
+        .cart-float {
+            position: fixed; bottom: 45px; right: 45px; padding: 10px 30px 10px 10px;
+            background: var(--dark); color: white; border-radius: 100px; display: flex;
+            align-items: center; gap: 15px; box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+            text-decoration: none; z-index: 8500; transition: 0.4s; border: 2px solid var(--gold);
         }
+        .cart-float:hover { transform: scale(1.08); box-shadow: 0 25px 60px rgba(197,160,89,0.3); }
+        .cart-icon-box { width: 55px; height: 55px; background: var(--white); color: var(--dark); border-radius: 50%; display: flex; justify-content: center; align-items: center; position: relative; }
+        .cart-float span.order-text { font-family: 'Cinzel', serif; font-weight: 900; letter-spacing: 3px; font-size: 1.1rem; color: var(--white); }
+        .cart-num { position: absolute; top: -5px; right: -5px; background: var(--danger); width: 28px; height: 28px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 0.85rem; font-weight: 900; border: 3px solid var(--dark); color: white; }
 
-        .prod-body { padding: 35px; flex-grow: 1; display: flex; flex-direction: column; }
-        .prod-body h3 { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 15px; color: var(--primary); }
-        .prod-body p { font-size: 0.9rem; color: #888; line-height: 1.8; margin-bottom: 25px; }
-        
-        .price-now { color: var(--accent); font-weight: 800; font-size: 1.6rem; margin-top: auto; }
-        .badge-best-seller { position: absolute; top: 25px; right: 25px; background: var(--accent); color: white; padding: 8px 20px; border-radius: 50px; font-weight: 700; font-size: 0.75rem; z-index: 10; box-shadow: 0 5px 15px rgba(197,160,89,0.3); }
-
-        /* --- STORE CLOSED OVERLAY --- */
-        #store-closed-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 9999; color: white; justify-content: center; align-items: center; flex-direction: column; text-align: center; padding: 40px; backdrop-filter: blur(15px); }
-
-        /* --- MODAL DETAIL (SLIDABLE/SCROLLABLE) --- */
-        .modal-bg { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 9500; justify-content: center; align-items: center; padding: 20px; backdrop-filter: blur(8px); }
-        .modal-lux-content { 
-            background: white; padding: 55px; border-radius: 50px; 
-            max-width: 750px; width: 100%; max-height: 85vh; 
-            overflow-y: auto; position: relative; animation: zoomIn 0.4s ease; 
-        }
-        .modal-lux-content::-webkit-scrollbar { width: 8px; }
-        .modal-lux-content::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
-
-        .close-btn-modal { position: absolute; top: 30px; right: 35px; font-size: 2.5rem; cursor: pointer; color: #333; transition: 0.3s; }
-        .close-btn-modal:hover { color: var(--danger); transform: rotate(90deg); }
-
-        .modal-desc-text { font-size: 1.15rem; color: #555; line-height: 2; margin: 30px 0; }
-        
-        .product-info-card { background: #fcf8f2; padding: 35px; border-radius: 35px; margin-bottom: 40px; border-left: 10px solid var(--accent); }
-        .product-info-card h4 { font-size: 0.95rem; color: var(--accent); font-weight: 800; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1.5px; }
-
-        /* VARIANT SELECTOR (HOT/ICE) */
-        .variant-wrapper { margin-bottom: 35px; }
-        .variant-grid { display: flex; gap: 20px; }
-        .variant-btn { 
-            flex: 1; padding: 25px; border: 3px solid #f2f2f2; border-radius: 25px; 
-            text-align: center; cursor: pointer; font-weight: 800; transition: var(--transition); 
-        }
-        .variant-btn.active { border-color: var(--accent); background: #fffcf5; transform: scale(1.05); }
-
-        .btn-order-final-add { background: var(--primary); color: white; border: none; padding: 25px; border-radius: 30px; width: 100%; font-weight: 800; font-size: 1.3rem; cursor: pointer; transition: 0.4s; box-shadow: 0 15px 30px rgba(0,0,0,0.1); }
-        .btn-order-final-add:hover { background: var(--accent); transform: translateY(-5px); }
-
-        /* FLOATING CART */
-        .floating-cart-lux { position: fixed; bottom: 45px; right: 45px; background: var(--primary); color: white; width: 85px; height: 85px; border-radius: 50%; display: flex; justify-content: center; align-items: center; text-decoration: none; box-shadow: 0 20px 50px rgba(0,0,0,0.3); z-index: 5000; transition: var(--transition); }
-        .floating-cart-lux:hover { transform: scale(1.15) rotate(10deg); background: var(--accent); }
-        .cart-badge-num { position: absolute; top: -5px; right: -5px; background: var(--danger); color: white; width: 35px; height: 35px; border-radius: 50%; font-size: 1rem; display: flex; justify-content: center; align-items: center; font-weight: 800; border: 4px solid var(--white); }
-
-        /* --- RESPONSIVE --- */
-        @media (max-width: 768px) {
-            .navbar { padding: 1.2rem 6%; }
-            .nav-links { 
-                position: fixed; top: 0; right: -100%; width: 85%; height: 100vh;
-                background: rgba(26, 18, 11, 0.98); backdrop-filter: blur(20px);
-                flex-direction: column; justify-content: center; padding: 60px;
-                transition: 0.6s ease; z-index: 9998; gap: 30px;
-            }
-            .nav-links.show { right: 0; }
-            .nav-links a { color: white !important; font-size: 1.6rem; }
-            .menu-toggle { display: block; z-index: 9999; }
-            .page-header h1 { font-size: 2.8rem; }
-            .cat-grid-wrapper { grid-template-columns: 1fr; }
-            .product-grid-layout { grid-template-columns: 1fr; }
-            .elegant-back-btn { width: 100%; justify-content: center; }
-            .variant-grid { flex-direction: column; }
-        }
-
+        @keyframes glowPulse { 0% { box-shadow: 0 0 5px var(--danger); } 50% { box-shadow: 0 0 20px var(--danger); } 100% { box-shadow: 0 0 5px var(--danger); } }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes zoomIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        @media (max-width: 768px) {
+            header { padding: 20px 0; }
+            .nav-links { display: none; }
+            .menu-toggle { display: block; }
+            .hero h1 { font-size: 2.8rem; }
+            .container { padding: 40px 5%; }
+            .cat-grid { grid-template-columns: 1fr; }
+            .prod-grid { grid-template-columns: 1fr; }
+            .variant-grid { grid-template-columns: 1fr; }
+            .modal-box { padding: 50px 30px; }
+            .m-title { font-size: 2.2rem; }
+            .cart-float { bottom: 30px; right: 25px; padding: 8px 20px 8px 8px; }
+            .cart-icon-box { width: 45px; height: 45px; }
+            .cart-float span.order-text { font-size: 0.9rem; letter-spacing: 2px; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- STORE CLOSED SCREEN -->
-    <div id="store-closed-overlay">
-        <i class="fas fa-moon fa-7x" style="color:var(--accent); margin-bottom:40px;"></i>
-        <h1 style="font-family:'Playfair Display'; font-size:4rem; letter-spacing:3px;">SESA IS CLOSED</h1>
-        <p style="font-size:1.4rem; max-width:700px; margin-top:25px; line-height:2; opacity:0.8;">We are currently closed. Please visit us again during our next operational hours. See you soon!</p>
-        <a href="index.html" style="color:var(--accent); margin-top:60px; font-weight:800; text-decoration:none; border:3px solid var(--accent); padding:18px 60px; border-radius:100px; font-size:1.2rem;">RETURN TO HOME</a>
+    <!-- CLOSED OVERLAY -->
+    <div id="closed-overlay">
+        <i class="fas fa-moon fa-6x"></i>
+        <h1>SESA IS CLOSED</h1>
+        <p>Maaf toko tutup balik lagi jam 9 pagi sampe jam 10 malam kalo buat senin dan jumat, kalo sabtu dan minggu jam 10 sampe jam 12 malam.</p>
+        <div class="schedule-footer">SESA COFFEE & KITCHEN PIK 2</div>
     </div>
 
-    <!-- NAVIGATION -->
-    <header>
+    <!-- MOBILE DRAWER (75% WIDTH) -->
+    <div id="mobile-backdrop" onclick="toggleDrawer()"></div>
+    <div class="mobile-drawer" id="mobileDrawer">
+        <span class="close-drawer" onclick="toggleDrawer()">&times;</span>
+        <div style="text-align: center; margin-bottom: 20px;">
+            <a href="index.html" class="logo">
+                <span class="sesa" style="color:white">SESA</span>
+                <span class="coffee">COFFEE</span>
+            </a>
+        </div>
+        <ul class="drawer-links">
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="menu.html" class="active">MENU</a></li>
+            <li><a href="order.html">ORDER</a></li>
+            <li><a href="location.html">LOCATION</a></li>
+            <li><a href="contact.html">CONTACT</a></li>
+        </ul>
+    </div>
+
+    <!-- NAVBAR -->
+    <header id="header">
         <nav class="navbar">
-            <a href="index.html" class="logo">SESA <span>COFFEE</span></a>
-            <div class="menu-toggle" onclick="toggleLuxuryNav()"><i class="fas fa-ellipsis-v"></i></div>
-            <ul class="nav-links" id="luxury-nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="menu.html" class="active">Menu</a></li>
-                <li><a href="order.html">Order</a></li>
-                <li><a href="location.html">Location</a></li>
-                <li><a href="contact.html">Contact</a></li>
+            <a href="index.html" class="logo">
+                <span class="sesa">SESA</span>
+                <span class="coffee">COFFEE</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">HOME</a></li>
+                <li><a href="menu.html" class="active">MENU</a></li>
+                <li><a href="order.html">ORDER</a></li>
+                <li><a href="location.html">LOCATION</a></li>
+                <li><a href="contact.html">CONTACT</a></li>
             </ul>
+            <div class="menu-toggle" onclick="toggleDrawer()"><i class="fas fa-bars"></i></div>
         </nav>
     </header>
 
-    <!-- HEADER -->
-    <div class="page-header">
-        <p>Premium Selection</p>
-        <h1>Our Luxury Menu</h1>
+    <div class="hero">
+        <h1>THE MENU</h1>
     </div>
 
     <div class="container">
-        <!-- CATEGORY GRID (PAKET IS FIRST) -->
-        <div id="cat-selection-container">
-            <div class="cat-grid-wrapper">
-                <div class="cat-luxury-card" onclick="enterCategory('menu_paket')">
-                    <i class="fas fa-box-open"></i>
-                    <h3>Menu Paket</h3>
-                    <p>Exclusive meal bundles crafted for total satisfaction. Premium quality main courses at a value-driven price point. Best for a complete SESA experience.</p>
+        <div id="cat-view">
+            <div class="section-header">
+                <h2>Cuisine Masterpieces</h2>
+                <p>Welcome to SESA, where every ingredient is a promise of uncompromising quality. Our collections are meticulously curated to bring you the finest Nusantara heritage blended with the sophisticated elegance of modern artisanal craftsmanship. Experience luxury in every bite and every sip at PIK 2.</p>
+            </div>
+            <div class="cat-grid">
+                <div class="cat-card" onclick="openCat('menu_paket')">
+                    <i class="fas fa-crown"></i>
+                    <h3>Executive Bundles</h3>
+                    <p>A curated symphony of gourmet pairings designed for total satisfaction. Our premium set menus offer a holistic culinary journey, blending signature main courses with artisanal beverages for an unrivaled SESA experience.</p>
                 </div>
-                <div class="cat-luxury-card" onclick="enterCategory('makanan_berat')">
+                <div class="cat-card" onclick="openCat('makanan_berat')">
                     <i class="fas fa-utensils"></i>
-                    <h3>Makanan Berat</h3>
-                    <p>Authentic Nusantara main courses infused with rich traditional spices. Locally sourced ingredients cooked to perfection by our master chefs.</p>
+                    <h3>Imperial Mains</h3>
+                    <p>Traditional heritage recipes from across the archipelago, refined for the elite palate. Bold spices and modern culinary techniques unite in every exquisite, hand-crafted dish served at the highest standards.</p>
                 </div>
-                <div class="cat-luxury-card" onclick="enterCategory('cemilan')">
-                    <i class="fas fa-cookie-bite"></i>
-                    <h3>Cemilan / Snack</h3>
-                    <p>Crispy, savory, and artisanal light bites. The perfect companion for your social meetings or productive remote work sessions at SESA.</p>
-                </div>
-                <div class="cat-luxury-card" onclick="enterCategory('coffee')">
+                <div class="cat-card" onclick="openCat('coffee')">
                     <i class="fas fa-coffee"></i>
-                    <h3>Coffee Based</h3>
-                    <p>Precision-roasted Arabica beans. From clarify-driven manual brews to luxurious espresso creations, experience the soul of coffee in every cup.</p>
+                    <h3>Artisanal Coffee</h3>
+                    <p>Rare single-origin Arabica beans sourced from high-altitude estates. Precision-roasted and brewed by master baristas to deliver the perfect extraction of aroma, soul, and luxurious character in every cup.</p>
                 </div>
-                <div class="cat-luxury-card" onclick="enterCategory('non_coffee')">
-                    <i class="fas fa-mug-hot"></i>
-                    <h3>Non-Coffee Based</h3>
-                    <p>Premium Matcha, Decadent Artisan Chocolate, and fresh botanical blends. Sophisticated caffeine-free alternatives for your relaxation moments.</p>
-                </div>
-                <div class="cat-luxury-card" onclick="enterCategory('cocktail')">
+                <div class="cat-card" onclick="openCat('cocktail')">
                     <i class="fas fa-glass-martini-alt"></i>
-                    <h3>Signature Cocktail</h3>
-                    <p>Elegant alcoholic blends designed for a luxurious evening experience. Hand-mixed with high-quality spirits and fresh garden botanicals.</p>
+                    <h3>Signature Cocktails</h3>
+                    <p>Elite alcoholic fusions meticulously hand-mixed by our master mixologists. A sophisticated blend of premium spirits, house-made botanical syrups, and the freshest artisanal ingredients for your evening ritual.</p>
                 </div>
-                <div class="cat-luxury-card" onclick="enterCategory('mocktail')">
-                    <i class="fas fa-glass-whiskey"></i>
-                    <h3>Fresh Mocktail</h3>
-                    <p>Explosive fruit infusions with homemade syrups and sparkling soda. The ultimate thirst-quencher for your refreshing daytime visits.</p>
+                <div class="cat-card" onclick="openCat('mocktail')">
+                    <i class="fas fa-wine-glass"></i>
+                    <h3>Fresh Mocktails</h3>
+                    <p>A celebration of pure, explosive fruit infusions and sparkling botanical waters. Refreshing, vibrant elixirs designed to enchant your daytime experience with sophisticated flavors and no alcohol content.</p>
+                </div>
+                <div class="cat-card" onclick="openCat('non_coffee')">
+                    <i class="fas fa-leaf"></i>
+                    <h3>Elite Botanicals</h3>
+                    <p>Experience the finest ceremonial grade Matcha, decadent Artisan Chocolates, and soothing herbal blends. Sophisticated caffeine-free alternatives crafted for your ultimate moments of deep relaxation and wellness.</p>
                 </div>
             </div>
         </div>
 
-        <!-- PRODUCT VIEW -->
-        <div id="menu-list-container">
-            <div class="elegant-back-wrapper">
-                <div class="elegant-back-btn" onclick="location.reload()">
-                    <i class="fas fa-arrow-left"></i><span>Back to Collections</span>
-                </div>
-            </div>
-            <h2 id="cat-label" class="category-heading"></h2>
-            <div class="product-grid-layout" id="product-grid">
-                <!-- Products injected real-time -->
-            </div>
+        <div id="menu-view">
+            <div class="back-btn" onclick="exitCat()"><i class="fas fa-chevron-left"></i> BACK TO COLLECTIONS</div>
+            <h2 id="cat-label-top" style="font-family:'Cinzel'; font-size:3.5rem; margin-bottom:60px; border-bottom:8px solid var(--gold); display:inline-block; padding-bottom:10px;"></h2>
+            <div class="prod-grid" id="product-container"></div>
         </div>
     </div>
 
-    <!-- MODAL DETAIL -->
-    <div class="modal-bg" id="detailModal">
-        <div class="modal-lux-content">
-            <span class="close-btn-modal" onclick="closeLuxuryModal()">&times;</span>
-            <div id="modal-injector"></div>
+    <!-- DETAIL MODAL -->
+    <div class="modal-overlay" id="luxModal">
+        <div class="modal-box">
+            <span class="close-modal" onclick="closeModal()">&times;</span>
+            <div id="modal-content-injector"></div>
+            <button class="btn-order-master" onclick="addToCartFinal()">ORDER NOW <i class="fas fa-chevron-right" style="margin-left:10px"></i></button>
         </div>
     </div>
 
-    <!-- FLOATING CART -->
-    <a href="order.html" class="floating-cart-lux">
-        <i class="fas fa-shopping-cart fa-2x"></i>
-        <span class="cart-badge-num" id="cBadge">0</span>
+    <!-- CART FLOAT "ORDER NOW" -->
+    <a href="order.html" class="cart-float">
+        <div class="cart-icon-box">
+            <i class="fas fa-shopping-bag fa-xl"></i>
+            <span class="cart-num" id="cCount">0</span>
+        </div>
+        <span class="order-text" id="orderText">ORDER NOW</span>
     </a>
 
-    <!-- FIREBASE & CORE LOGIC -->
+    <!-- SYSTEM SCRIPT -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBAB3uy7JyIA38KMKGOFJb9_r5lJ3hTaNE",
-            authDomain: "sesa-coffee.firebaseapp.com",
-            databaseURL: "https://sesa-coffee-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "sesa-coffee",
-            storageBucket: "sesa-coffee.firebasestorage.app",
-            messagingSenderId: "767835800976",
-            appId: "1:767835800976:web:21ab01c3ff9bb29aae5f15"
-        };
+        const firebaseConfig = { databaseURL: "https://sesa-coffee-default-rtdb.asia-southeast1.firebasedatabase.app" };
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
-        
+
         let menuCache = {};
-        let activeCategory = null;
+        let activeCat = null;
 
-        // REAL-TIME STORE STATUS
+        // Sync Store Status
         onValue(ref(db, 'store_config/is_open'), (snap) => {
-            document.getElementById('store-closed-overlay').style.display = snap.val() ? 'none' : 'flex';
+            const isOpen = snap.val();
+            document.getElementById('closed-overlay').style.display = isOpen ? 'none' : 'flex';
         });
 
-        // REAL-TIME MENU LISTENER
-        onValue(ref(db, 'store_menu'), (snap) => {
-            menuCache = snap.val() || {};
-            if(activeCategory) renderCategoryGrid(activeCategory);
-        });
-
-        window.enterCategory = (cat) => {
-            activeCategory = cat;
-            document.getElementById('cat-selection-container').style.display = 'none';
-            document.getElementById('menu-list-container').style.display = 'block';
-            document.getElementById('cat-label').innerText = cat.replace('_',' ').toUpperCase();
-            renderCategoryGrid(cat);
-            window.scrollTo(0,0);
+        // Scroll Navbar
+        window.onscroll = () => {
+            const h = document.getElementById('header');
+            if(window.scrollY > 80) h.classList.add('scrolled');
+            else h.classList.remove('scrolled');
         };
 
-        function renderCategoryGrid(cat) {
-            const grid = document.getElementById('product-grid');
+        window.toggleDrawer = () => {
+            document.getElementById('mobileDrawer').classList.toggle('active');
+            document.getElementById('mobile-backdrop').classList.toggle('active');
+        };
+
+        // Realtime Data
+        onValue(ref(db, 'store_menu'), (snap) => {
+            menuCache = snap.val() || {};
+            if(activeCat) renderProducts(activeCat);
+        });
+
+        window.openCat = (cat) => {
+            activeCat = cat;
+            document.getElementById('cat-view').style.display = 'none';
+            document.getElementById('menu-view').style.display = 'block';
+            document.getElementById('cat-label-top').innerText = cat.replace('_',' ').toUpperCase();
+            renderProducts(cat);
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        };
+
+        window.exitCat = () => {
+            activeCat = null;
+            document.getElementById('cat-view').style.display = 'block';
+            document.getElementById('menu-view').style.display = 'none';
+        };
+
+        function renderProducts(cat) {
+            const grid = document.getElementById('product-container');
             grid.innerHTML = "";
             Object.values(menuCache).filter(m => m.cat === cat).forEach(m => {
+                const isDrink = ['coffee', 'non_coffee', 'cocktail', 'mocktail'].includes(m.cat);
+                const hasPromo = m.isPromo || m.isPromoHot || m.isPromoCold;
                 const isHabis = m.status === 'habis';
-                const isDrink = (m.cat === 'coffee' || m.cat === 'non_coffee');
-
-                // Promo logic check
-                const now = new Date();
-                const today = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"][now.getDay()];
-                const hr = now.getHours();
                 
-                let pNow = m.priceNormal;
-                let onP = false;
-                if(m.isPromo && (m.promoDay === today || m.promoDay === "Setiap Hari") && hr >= m.promoStart && hr < m.promoEnd) {
-                    onP = true; pNow = isDrink ? m.priceHotPromo : m.pricePromo;
-                } else if(isDrink) {
-                    pNow = m.priceHot;
+                let pDisp = m.priceNormal;
+                if(isDrink) {
+                    const pH = m.isPromoHot ? m.priceHotPromo : m.priceHot;
+                    const pC = m.isPromoCold ? m.priceColdPromo : m.priceCold;
+                    pDisp = Math.min(pH || 999999, pC || 999999);
+                } else if(m.isPromo) {
+                    pDisp = m.pricePromo;
                 }
 
                 grid.innerHTML += `
-                    <div class="prod-card-luxury ${isHabis ? 'is-habis' : ''}" onclick="showLuxuryDetail('${m.id}')">
-                        ${m.isBest ? '<div class="badge-best-seller"><i class="fas fa-thumbs-up"></i> BEST SELLER</div>' : ''}
-                        <div class="prod-img-box"><img src="${m.img}" onerror="this.src='https://images.unsplash.com/photo-1541167760496-1628856ab772?q=80&w=800'"></div>
-                        <div class="prod-body">
+                    <div class="prod-card ${isHabis ? 'is-habis' : ''}" onclick="${isHabis ? '' : `openDetail('${m.id}')`}">
+                        ${isHabis ? `<div class="sold-out-badge"><span>SOLD OUT</span></div>` : ''}
+                        <div class="badge-container">
+                            ${m.isBest ? '<div class="badge-lux badge-best">Best Seller</div>' : ''}
+                            ${hasPromo ? '<div class="badge-lux badge-promo">On Sale</div>' : ''}
+                        </div>
+                        <div class="prod-img"><img src="${m.img}" onerror="this.src='https://images.unsplash.com/photo-1541167760496-1628856ab772?q=80&w=800'"></div>
+                        <div class="prod-info">
                             <h3>${m.name}</h3>
-                            <p>${m.desc.substring(0, 100)}...</p>
-                            <div class="price-now">Rp ${pNow.toLocaleString()}</div>
+                            <p class="price">Rp ${pDisp.toLocaleString()}</p>
                         </div>
                     </div>`;
             });
         }
 
-        window.showLuxuryDetail = (id) => {
-            const m = menuCache[id]; const isDrink = (m.cat === 'coffee' || m.cat === 'non_coffee');
-            const target = document.getElementById('modal-injector');
+        window.openDetail = (id) => {
+            const m = menuCache[id];
+            const isDrink = ['coffee', 'non_coffee', 'cocktail', 'mocktail'].includes(m.cat);
+            const target = document.getElementById('modal-content-injector');
             
-            const now = new Date();
-            const today = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"][now.getDay()];
-            const hr = now.getHours();
-            const isP = (m.isPromo && (m.promoDay === today || m.promoDay === "Setiap Hari") && hr >= m.promoStart && hr < m.promoEnd);
-
             target.innerHTML = `
-                <h2 style="font-family:'Playfair Display'; font-size:2.8rem; color:var(--primary);">${m.name}</h2>
-                <div class="modal-desc-text">${m.desc}</div>
-                <div class="product-info-card">
-                    <h4>SESA Premium Info</h4>
-                    <p>Hand-crafted with the finest ingredients from our <b>${m.cat.replace('_',' ')}</b> collection. Designed to deliver an unparalleled taste experience at PIK 2.</p>
-                </div>
+                <span class="m-cat">${m.cat.replace('_',' ')}</span>
+                <h2 class="m-title">${m.name}</h2>
+                <div class="m-desc">${m.desc || 'A signature SESA creation, meticulously prepared using the finest ingredients to ensure a luxurious sensory experience.'}</div>
+                
                 ${isDrink ? `
-                    <div class="variant-wrapper">
-                        <h4 style="font-weight:800; margin-bottom:20px;">CHOOSE VARIATION:</h4>
-                        <div class="variant-grid">
-                            <div class="variant-btn active" id="lux-hot" onclick="setLuxuryVar('HOT', ${isP ? m.priceHotPromo : m.priceHot})">HOT SERVING<br><small>Rp ${(isP ? m.priceHotPromo : m.priceHot).toLocaleString()}</small></div>
-                            <div class="variant-btn" id="lux-ice" onclick="setLuxuryVar('ICE', ${isP ? m.priceColdPromo : m.priceCold})">ICE SERVING<br><small>Rp ${(isP ? m.priceColdPromo : m.priceCold).toLocaleString()}</small></div>
-                        </div>
-                    </div>` : ''}
-                <button class="btn-order-final-add" onclick="pushToFinalOrder('${m.id}')">ADD TO ORDER <i class="fas fa-shopping-basket"></i></button>
+                <span style="font-weight:800; font-size:0.8rem; text-transform:uppercase; margin-bottom:20px; display:block; letter-spacing:2px">Choose Serving:</span>
+                <div class="variant-grid">
+                    <div class="variant-item active" id="v-hot" onclick="setV('HOT', ${m.isPromoHot ? m.priceHotPromo : m.priceHot})">
+                        <b>WARM SERVING (HOT)</b>
+                        ${m.isPromoHot ? `<small class="strike-price">Rp ${m.priceHot.toLocaleString()}</small>` : ''}
+                        <span>Rp ${(m.isPromoHot ? m.priceHotPromo : m.priceHot).toLocaleString()}</span>
+                    </div>
+                    <div class="variant-item" id="v-ice" onclick="setV('ICE', ${m.isPromoCold ? m.priceColdPromo : m.priceCold})">
+                        <b>CHILLED SERVING (COLD)</b>
+                        ${m.isPromoCold ? `<small class="strike-price">Rp ${m.priceCold.toLocaleString()}</small>` : ''}
+                        <span>Rp ${(m.isPromoCold ? m.priceColdPromo : m.priceCold).toLocaleString()}</span>
+                    </div>
+                </div>` : `
+                <div style="margin-bottom:40px">
+                    ${m.isPromo ? `<small class="strike-price">Rp ${m.priceNormal.toLocaleString()}</small>` : ''}
+                    <span style="font-size:2.8rem; font-weight:900; color:var(--gold)">Rp ${(m.isPromo ? m.pricePromo : m.priceNormal).toLocaleString()}</span>
+                </div>`}
             `;
-            
-            let initialPrice = isP ? (isDrink ? m.priceHotPromo : m.pricePromo) : (isDrink ? m.priceHot : m.priceNormal);
-            window.finalSelection = { id: m.id, type: isDrink ? 'HOT' : 'NORMAL', price: initialPrice };
-            document.getElementById('detailModal').style.display = "flex";
+
+            let initialP = isDrink ? (m.isPromoHot ? m.priceHotPromo : m.priceHot) : (m.isPromo ? m.pricePromo : m.priceNormal);
+            window.currentOrder = { id: m.id, type: isDrink ? 'HOT' : 'Standard', price: initialP };
+            document.getElementById('luxModal').style.display = 'flex';
         };
 
-        window.setLuxuryVar = (type, price) => {
-            document.querySelectorAll('.variant-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('lux-'+(type==='HOT'?'hot':'ice')).classList.add('active');
-            window.finalSelection.type = type; window.finalSelection.price = price;
+        window.setV = (type, price) => {
+            document.querySelectorAll('.variant-item').forEach(v => v.classList.remove('active'));
+            document.getElementById('v-' + type.toLowerCase()).classList.add('active');
+            window.currentOrder.type = type;
+            window.currentOrder.price = price;
         };
 
-        window.pushToFinalOrder = (id) => {
+        window.addToCartFinal = () => {
+            const m = menuCache[window.currentOrder.id];
             let cart = JSON.parse(localStorage.getItem('sesa_cart')) || [];
-            cart.push({ name: `${menuCache[id].name} (${window.finalSelection.type})`, price: window.finalSelection.price, qty: 1 });
+            
+            const isP = (window.currentOrder.type === 'HOT' && m.isPromoHot) || 
+                       (window.currentOrder.type === 'ICE' && m.isPromoCold) || 
+                       (window.currentOrder.type === 'Standard' && m.isPromo);
+
+            cart.push({
+                name: `${m.name} (${window.currentOrder.type})`,
+                price: window.currentOrder.price,
+                qty: 1,
+                isPromo: isP
+            });
+
             localStorage.setItem('sesa_cart', JSON.stringify(cart));
-            updateCartBadge(); alert("Added to cart!"); closeLuxuryModal();
+            updateBadge(); 
+            closeModal(); // Otomatis tutup modal setelah order
+            alert("Perfect choice. Added to your order.");
         };
 
-        window.updateCartBadge = () => { const c = JSON.parse(localStorage.getItem('sesa_cart')) || []; document.getElementById('cBadge').innerText = c.length; };
-        window.closeLuxuryModal = () => document.getElementById('detailModal').style.display = "none";
-        window.toggleLuxuryNav = () => document.getElementById('luxury-nav-links').classList.toggle('show');
-        window.onload = updateCartBadge;
+        window.updateBadge = () => {
+            const c = JSON.parse(localStorage.getItem('sesa_cart')) || [];
+            const count = c.length;
+            document.getElementById('cCount').innerText = count;
+            document.getElementById('orderText').innerText = count > 0 ? `${count} ITEMS - ORDER NOW` : 'ORDER NOW';
+        };
+
+        window.closeModal = () => document.getElementById('luxModal').style.display = 'none';
+        window.onload = updateBadge;
     </script>
 </body>
 </html>

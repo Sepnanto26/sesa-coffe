@@ -3,368 +3,304 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SESA ADMIN | Pusat Komando Tertinggi v18.0</title>
+    <title>SESA ADMIN | Imperial Sovereign Throne v61.0</title>
     
-    <!-- Font & Ikon Premium -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Premium Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     
-    <!-- Library Ekspor PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <!-- Core Tools -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
         :root {
-            --primary: #1a120b; --secondary: #2c1b0e; --accent: #c5a059;
-            --bg: #f8f6f2; --white: #ffffff; --success: #27ae60;
-            --danger: #e74c3c; --shadow: 0 15px 50px rgba(0,0,0,0.12);
+            --primary: #0f0a06; 
+            --secondary: #1d150e; 
+            --accent: #d4af37;
+            --gold-gradient: linear-gradient(135deg, #d4af37, #f1c40f, #8e6d31);
+            --white: #ffffff; 
+            --bg: #f8f6f2; 
+            --success: #27ae60;
+            --danger: #e74c3c; 
+            --shadow: 0 30px 70px rgba(0,0,0,0.2);
+            --transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
+        /* --- GLOBAL BASE --- */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
         body { background-color: var(--bg); display: flex; min-height: 100vh; color: var(--primary); overflow-x: hidden; }
 
-        /* --- SIDEBAR --- */
+        /* --- SIDEBAR PULLABLE & SCROLLABLE --- */
         .sidebar {
             width: 320px; background: var(--secondary); color: white;
-            display: flex; flex-direction: column; padding: 40px 25px;
-            position: fixed; height: 100vh; z-index: 5000; border-right: 5px solid var(--accent);
-            box-shadow: 10px 0 30px rgba(0,0,0,0.2);
+            display: flex; flex-direction: column; padding: 45px 25px;
+            position: fixed; height: 100vh; z-index: 9000; border-right: 5px solid var(--accent);
+            box-shadow: 15px 0 40px rgba(0,0,0,0.3); transition: var(--transition);
+            overflow-y: auto;
         }
-        .sidebar h2 { font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-bottom: 50px; text-align: center; color: var(--accent); letter-spacing: 3px; font-weight: 900; border-bottom: 1px solid rgba(197, 160, 89, 0.2); padding-bottom: 15px; }
+        .sidebar::-webkit-scrollbar { width: 3px; }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
         
-        .nav-item {
-            padding: 16px 20px; border-radius: 18px; margin-bottom: 8px;
-            cursor: pointer; display: flex; align-items: center; gap: 15px;
-            color: #bdc3c7; transition: 0.4s; border: none; background: none; width: 100%; text-align: left;
-            font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+        .sidebar.closed { transform: translateX(-240px); }
+        .sidebar h2 { font-family: 'Cinzel', serif; font-size: 2.8rem; color: var(--accent); text-align: center; margin-bottom: 50px; font-weight: 900; letter-spacing: 5px; text-shadow: 0 0 15px rgba(212,175,55,0.3); }
+        
+        .sidebar-toggle {
+            position: absolute; right: -40px; top: 50%; width: 40px; height: 80px;
+            background: var(--accent); color: var(--primary); display: flex; 
+            justify-content: center; align-items: center; cursor: pointer;
+            border-radius: 0 15px 15px 0; font-size: 1.5rem; z-index: 9001;
         }
-        .nav-item i { font-size: 1.1rem; width: 25px; text-align: center; }
-        .nav-item.active { background: var(--accent); color: var(--primary); box-shadow: 0 10px 25px rgba(197, 160, 89, 0.4); transform: scale(1.05); }
-        .nav-item:hover:not(.active) { background: rgba(255,255,255,0.05); color: white; padding-left: 30px; }
+
+        .nav-item {
+            padding: 20px 25px; border-radius: 20px; margin-bottom: 12px;
+            cursor: pointer; display: flex; align-items: center; gap: 20px;
+            color: #888; transition: 0.4s; border: none; background: none; width: 100%; text-align: left;
+            font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; text-decoration: none;
+        }
+        .nav-item i { font-size: 1.3rem; width: 25px; text-align: center; }
+        .nav-item.active { background: var(--accent); color: var(--primary); box-shadow: 0 15px 30px rgba(212,175,55,0.4); transform: scale(1.03); }
+        .nav-item:hover:not(.active) { background: rgba(255,255,255,0.05); color: white; padding-left: 35px; }
+
+        .special-nav-box { border: 2px solid var(--accent); margin: 30px 0; border-radius: 30px; padding: 20px; background: rgba(0,0,0,0.2); }
+        .special-nav-box p { font-size: 0.7rem; color: var(--accent); text-align: center; font-weight: 900; letter-spacing: 3px; margin-bottom: 15px; text-transform: uppercase; }
 
         /* --- MAIN CONTENT --- */
-        .main-content { flex: 1; margin-left: 320px; padding: 50px 70px; width: calc(100% - 320px); transition: 0.5s; }
-        .header-flex { display: flex; justify-content: space-between; align-items: center; margin-bottom: 50px; }
-        .header-flex h1 { font-family: 'Playfair Display', serif; font-size: 2.8rem; font-weight: 900; }
+        .main-content { flex: 1; margin-left: 320px; padding: 60px 80px; transition: var(--transition); width: calc(100% - 320px); overflow-y: auto; height: 100vh; }
+        .main-content.expanded { margin-left: 80px; width: calc(100% - 80px); }
+
+        .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 60px; }
+        .header-title h1 { font-family: 'Cinzel', serif; font-size: 3.5rem; font-weight: 900; color: var(--primary); }
         
-        .clock-widget { background: white; padding: 25px 45px; border-radius: 35px; box-shadow: var(--shadow); border-right: 10px solid var(--accent); text-align: right; }
-        #live-time { font-size: 2.4rem; font-weight: 900; color: var(--primary); display: block; line-height: 1; }
-        #live-date { font-size: 0.85rem; color: var(--accent); font-weight: 700; text-transform: uppercase; margin-top: 8px; display: block; }
+        .clock-widget { background: white; padding: 25px 45px; border-radius: 35px; box-shadow: var(--shadow); border-right: 12px solid var(--accent); text-align: right; }
+        #live-time { font-size: 2.8rem; font-weight: 900; color: var(--primary); line-height: 1; font-family: 'Montserrat'; }
 
-        .admin-card { background: white; padding: 45px; border-radius: 45px; box-shadow: var(--shadow); margin-bottom: 45px; border: 1px solid rgba(197, 160, 89, 0.1); position: relative; }
-        .greet-card { background: linear-gradient(135deg, var(--secondary), var(--primary)); color: white; padding: 60px; border-radius: 50px; margin-bottom: 50px; border-bottom: 10px solid var(--accent); }
+        /* --- IMPERIAL CARDS --- */
+        .imperial-card { background: white; padding: 50px; border-radius: 55px; box-shadow: var(--shadow); margin-bottom: 50px; border: 1px solid rgba(212,175,55,0.1); }
+        .greet-card { background: linear-gradient(135deg, var(--secondary), var(--primary)); color: white; padding: 70px; border-radius: 60px; margin-bottom: 50px; border-bottom: 15px solid var(--accent); position: relative; overflow: hidden; }
+        .greet-card::after { content: "\f0ad"; font-family: "Font Awesome 6 Pro"; position: absolute; right: -30px; bottom: -30px; font-size: 15rem; opacity: 0.05; color: var(--accent); }
 
-        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; margin-bottom: 45px; }
-        .stat-card { background: white; padding: 35px; border-radius: 40px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 25px; border-bottom: 6px solid var(--accent); transition: 0.3s; }
-        .stat-card i { font-size: 3rem; color: var(--accent); }
-        .stat-card h2 { font-size: 2.2rem; font-weight: 900; }
+        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 40px; margin-bottom: 50px; }
+        .stat-box { background: white; padding: 45px; border-radius: 50px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 35px; border-bottom: 10px solid var(--accent); transition: 0.3s; }
+        .stat-box i { font-size: 4.5rem; color: var(--accent); }
+        .stat-box h2 { font-size: 2.5rem; font-weight: 900; color: var(--primary); }
 
-        /* --- TABLES --- */
-        .table-container { overflow-x: auto; border-radius: 40px; box-shadow: var(--shadow); background: white; }
-        .data-table { width: 100%; border-collapse: collapse; min-width: 1100px; }
-        .data-table th { background: #fafafa; padding: 30px 25px; text-align: left; font-size: 0.75rem; color: #aaa; text-transform: uppercase; border-bottom: 2px solid #f8f8f8; }
-        .data-table td { padding: 30px 25px; border-bottom: 1px solid #f8f8f8; font-size: 1rem; vertical-align: top; }
-
-        /* --- BADGES --- */
-        .badge { padding: 6px 16px; border-radius: 100px; font-weight: 800; font-size: 0.65rem; text-transform: uppercase; }
-        .bg-success { background: #e8f5e9; color: #2e7d32; }
-        .bg-danger { background: #ffebee; color: #c62828; }
-        .pw-badge { background: #fdf6e3; color: #b8860b; border: 1px solid #eee8d5; font-family: monospace; padding: 5px 12px; border-radius: 10px; font-weight: 900; }
-
-        /* --- FORMS --- */
-        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 30px; margin-bottom: 30px; }
-        label { display: block; font-size: 0.8rem; font-weight: 800; color: #555; margin-bottom: 12px; text-transform: uppercase; }
-        input, select, textarea { width: 100%; padding: 18px; border-radius: 20px; border: 2px solid #f2f2f2; outline: none; background: #fafafa; transition: 0.3s; font-size: 1rem; }
-        input:focus { border-color: var(--accent); background: white; }
-
-        .img-preview { width: 100%; height: 350px; background: #f0f0f0; border-radius: 40px; border: 3px dashed var(--accent); overflow: hidden; display: flex; align-items: center; justify-content: center; margin-bottom: 30px; }
-        .img-preview img { width: 100%; height: 100%; object-fit: cover; display: none; }
-
-        .btn-act { background: var(--secondary); color: white; border: none; padding: 20px 35px; border-radius: 20px; cursor: pointer; font-weight: 800; text-transform: uppercase; transition: 0.4s; width: 100%; }
-        .btn-act:hover { background: var(--accent); color: var(--primary); transform: translateY(-3px); box-shadow: 0 15px 30px rgba(197,160,89,0.3); }
-
-        .web-viewer { width: 100%; height: 850px; border: 10px solid white; border-radius: 50px; box-shadow: var(--shadow); }
-        .feedback-card { background: white; padding: 40px; border-radius: 45px; box-shadow: var(--shadow); border-left: 12px solid var(--accent); margin-bottom: 30px; position: relative; }
-        .reply-box { background: #fdfaf5; padding: 25px; border-radius: 30px; margin-top: 20px; border: 1px solid #eee; }
-
-        @media (max-width: 1200px) {
-            .sidebar { width: 90px; padding: 30px 10px; }
-            .sidebar h2, .nav-item span { display: none; }
-            .main-content { margin-left: 90px; padding: 30px; width: calc(100% - 90px); }
+        /* --- AKUN KASIR DESIGN (MEGAH & DETAIL) --- */
+        .staff-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(480px, 1fr)); gap: 45px; }
+        .staff-id-card { 
+            background: white; padding: 50px; border-radius: 60px; box-shadow: var(--shadow); 
+            border-top: 20px solid var(--accent); position: relative; text-align: center;
+            transition: 0.4s;
         }
+        .staff-id-card:hover { transform: translateY(-10px); }
+        .staff-id-card h3 { font-family: 'Cinzel', serif; font-size: 2.4rem; font-weight: 900; color: var(--primary); margin-bottom: 10px; }
+        
+        /* Box Rincian Akun */
+        .staff-account-details {
+            background: #fdfdfd; border: 1px solid #eee; padding: 25px; border-radius: 30px;
+            margin-bottom: 35px; text-align: left;
+        }
+        .detail-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #f2f2f2; font-size: 0.95rem; }
+        .detail-row:last-child { border: none; }
+        .detail-row label { color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+        .detail-row span { color: var(--secondary); font-weight: 800; }
+
+        .qr-identity-hub { background: #fff; border: 2px solid #eee; border-radius: 40px; padding: 40px; margin-bottom: 40px; display: flex; flex-direction: column; align-items: center; }
+        .qr-identity-hub canvas { border: 10px solid white; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .qr-id-tag { margin-top: 15px; font-weight: 900; color: var(--accent); letter-spacing: 3px; font-size: 0.8rem; }
+
+        .dispatch-hub { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+        .btn-dispatch { 
+            padding: 20px; border-radius: 20px; border: none; color: white; font-weight: 800; 
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; 
+            transition: 0.3s; font-size: 0.85rem; text-transform: uppercase;
+        }
+        .btn-wa { background: #2ecc71; } .btn-mail { background: #e74c3c; } .btn-save { background: var(--primary); }
+        .btn-dispatch:hover { transform: translateY(-5px); filter: brightness(1.1); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+
+        .btn-delete-staff { background: none; border: none; color: var(--danger); font-weight: 900; margin-top: 25px; cursor: pointer; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px; }
+        .btn-delete-staff:hover { text-decoration: underline; }
+
+        /* --- REVIEWS --- */
+        .review-card { background: white; padding: 50px; border-radius: 50px; box-shadow: var(--shadow); border-left: 15px solid var(--accent); margin-bottom: 40px; position: relative; }
+        .review-card h4 { font-family: 'Cinzel'; font-size: 2.2rem; margin-bottom: 15px; }
+        .reply-box { margin-top: 30px; background: #fafafa; padding: 30px; border-radius: 35px; border: 1px solid #eee; }
+
+        /* --- BUTTONS --- */
+        .btn-sovereign { background: var(--primary); color: var(--accent); border: 2px solid var(--accent); padding: 22px 45px; border-radius: 25px; cursor: pointer; font-weight: 900; text-transform: uppercase; width: 100%; transition: 0.4s; letter-spacing: 5px; }
+        .btn-sovereign:hover { background: var(--accent); color: var(--primary); box-shadow: 0 20px 40px var(--accent-glow); }
+
+        .badge { padding: 12px 25px; border-radius: 100px; font-weight: 900; font-size: 0.8rem; text-transform: uppercase; }
+        .bg-green { background: #e8f5e9; color: #2e7d32; }
+        .bg-red { background: #ffebee; color: #c62828; }
+
+        @media (max-width: 1200px) { .sidebar { width: 80px; } .sidebar h2, .nav-item span, .sidebar-toggle, .special-nav-box { display: none; } .main-content { margin-left: 80px; width: calc(100% - 80px); } }
     </style>
 </head>
 <body>
 
-    <!-- SIDEBAR UTAMA -->
-    <div class="sidebar">
-        <h2>SESA <span>ADMIN</span></h2>
-        <button class="nav-item active" onclick="switchTab('tab-dash', this)"><i class="fas fa-chart-line"></i> <span>Beranda</span></button>
-        <button class="nav-item" onclick="switchTab('tab-payroll', this)"><i class="fas fa-hand-holding-usd"></i> <span>Gaji & Payroll</span></button>
-        <button class="nav-item" onclick="switchTab('tab-absensi', this)"><i class="fas fa-calendar-check"></i> <span>Absensi & Ijin</span></button>
-        <button class="nav-item" onclick="switchTab('tab-staff', this)"><i class="fas fa-user-shield"></i> <span>Akun Kasir</span></button>
-        <button class="nav-item" onclick="switchTab('tab-feedback', this)"><i class="fas fa-comments"></i> <span>Ulasan Tamu</span></button>
-        <button class="nav-item" onclick="switchTab('tab-manage', this)"><i class="fas fa-utensils"></i> <span>Kelola Menu</span></button>
-        <button class="nav-item" onclick="switchTab('tab-hrd', this)"><i class="fas fa-file-invoice-dollar"></i> <span>Laporan Keuangan</span></button>
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-toggle" onclick="toggleImperialSidebar()"><i class="fas fa-chevron-right" id="side-icon"></i></div>
+        <h2>SESA</h2>
+        <button class="nav-item active" onclick="switchTab('tab-dash', this)"><i class="fas fa-chart-line"></i> <span>Dashboard</span></button>
+        <button class="nav-item" onclick="switchTab('tab-staff', this)"><i class="fas fa-id-card-alt"></i> <span>Akun Kasir</span></button>
+        <button class="nav-item" onclick="switchTab('tab-feedback', this)"><i class="fas fa-comment-dots"></i> <span>Ulasan Tamu</span></button>
         <button class="nav-item" onclick="switchTab('tab-web', this)"><i class="fas fa-eye"></i> <span>Cek Toko Web</span></button>
-        <a href="index.html" target="_blank" class="nav-item" style="margin-top: auto; color: var(--accent);"><i class="fas fa-external-link-alt"></i> <span>Buka Website</span></a>
+
+        <div class="special-nav-box">
+            <p>Sovereign Hubs</p>
+            <a href="admin_hrd.html" class="nav-item" style="color: #2ecc71; border: 1px solid #2ecc71; margin-bottom: 10px;"><i class="fas fa-users-cog"></i> <span>HRD & Payroll</span></a>
+            <a href="admin_menu.html" class="nav-item" style="color: #3498db; border: 1px solid #3498db; margin-bottom: 10px;"><i class="fas fa-utensils"></i> <span>Kelola Menu</span></a>
+            <a href="admin_finance.html" class="nav-item" style="color: #e67e22; border: 1px solid #e67e22;"><i class="fas fa-file-invoice-dollar"></i> <span>Keuangan Detail</span></a>
+        </div>
+        
+        <button onclick="logoutAdmin()" class="nav-item" style="margin-top:auto; color:var(--danger); border:1px solid var(--danger);"><i class="fas fa-power-off"></i> <span>Logout Master</span></button>
     </div>
 
-    <div class="main-content">
-        <div class="header-flex">
-            <div>
-                <h1 id="page-title" style="font-family:'Playfair Display'">Dashboard</h1>
-                <p id="live-day-text" style="color:var(--accent); font-weight:800; letter-spacing:2px;"></p>
+    <!-- MAIN AREA -->
+    <div class="main-content" id="main-content">
+        <div class="top-header">
+            <div class="header-title">
+                <h1 id="page-name">Dashboard</h1>
+                <p id="live-day" style="color:var(--accent); font-weight:800; letter-spacing:4px; text-transform:uppercase;"></p>
             </div>
-            <div class="clock-widget">
-                <span id="live-time">00:00:00</span>
-                <span id="live-date">Memuat kalender...</span>
-            </div>
+            <div class="clock-widget"><span id="live-time">00:00:00</span></div>
         </div>
 
-        <!-- 1. BERANDA -->
+        <!-- 1. DASHBOARD -->
         <div id="tab-dash" class="tab-content">
             <div class="greet-card">
-                <h2>Selamat Pagi, Owner SESA.</h2>
-                <p>Status operasional bisnis SESA Coffee PIK 2 secara real-time.</p>
+                <h2 style="font-family:'Cinzel'; font-size:4rem;">IMPERIAL MASTER</h2>
+                <p style="font-size:1.3rem; opacity:0.8; margin-top:10px;">Welcome Back, Owner. Global systems are operational.</p>
             </div>
             <div class="stat-grid">
-                <div class="stat-card">
-                    <i class="fas fa-wallet"></i>
-                    <div><p>Omset Bulan <span id="month-label">...</span></p><h2 id="omset-month">Rp 0</h2></div>
-                </div>
-                <div class="stat-card">
-                    <i class="fas fa-users-viewfinder"></i>
-                    <div><p>Staff On-Duty Hari Ini</p><h2 id="staff-on-count">0 Orang</h2></div>
-                </div>
+                <div class="stat-box"><i class="fas fa-coins"></i><div><p>Omset Bulan Ini</p><h2 id="omset-val">Rp 0</h2></div></div>
+                <div class="stat-box"><i class="fas fa-users-viewfinder"></i><div><p>Staff On-Duty (Live)</p><h2 id="staff-online">0 Orang</h2></div></div>
             </div>
-            <div class="admin-card" style="border:3px dashed var(--accent);">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <div><h3>STATUS TOKO GLOBAL</h3><p>Kontrol akses pesanan website pelanggan.</p></div>
-                    <div style="display:flex; align-items:center; gap:25px;">
-                        <span id="status-pill" class="badge bg-success" style="font-size:1.2rem; padding:10px 25px;">OPEN</span>
-                        <button onclick="toggleStore()" class="btn-act" style="width:auto; padding:15px 40px; font-size:0.8rem;">GANTI STATUS</button>
-                    </div>
+            <div class="imperial-card" style="display:flex; justify-content:space-between; align-items:center;">
+                <div><h3>Operational System Status</h3><p>Aktifkan atau matikan akses pesanan website pelanggan.</p></div>
+                <div style="display:flex; align-items:center; gap:30px;">
+                    <span id="st-badge" class="badge bg-green" style="font-size:1.5rem; padding:15px 40px;">OPEN</span>
+                    <button onclick="toggleGlobalStore()" class="btn-sovereign" style="width:auto; padding:15px 35px; font-size:0.8rem;">GANTI STATUS</button>
                 </div>
             </div>
         </div>
 
-        <!-- 2. GAJI & PAYROLL -->
-        <div id="tab-payroll" class="tab-content" style="display:none;">
-            <div id="payroll-container" class="stat-grid"></div>
-        </div>
-
-        <!-- 3. ABSENSI & IJIN -->
-        <div id="tab-absensi" class="tab-content" style="display:none;">
-            <div class="admin-card">
-                <h3>Formulir Ijin Staff</h3>
-                <div class="form-grid" style="margin-top:25px;">
-                    <div><label>Pilih Staff</label><select id="ijin-staff-name"></select></div>
-                    <div><label>Jenis Ijin</label><select id="ijin-type"><option value="IJIN">Ijin (Potong Gaji)</option><option value="SAKIT">Sakit</option><option value="CUTI">Cuti</option></select></div>
-                    <div><label>Alasan</label><input type="text" id="ijin-reason" placeholder="Detail alasan..."></div>
-                    <div style="display:flex; align-items:flex-end;"><button class="btn-act" onclick="submitPermit()">SIMPAN IJIN</button></div>
-                </div>
-            </div>
-            <div class="table-container"><table class="data-table"><thead><tr><th>Nama</th><th>Waktu</th><th>Status</th><th>Keterangan</th></tr></thead><tbody id="absensi-body"></tbody></table></div>
-        </div>
-
-        <!-- 4. AKUN KASIR LENGKAP -->
+        <!-- 2. AKUN KASIR (MEGAH & DETAIL) -->
         <div id="tab-staff" class="tab-content" style="display:none;">
-            <div class="admin-card">
-                <h3>Pendaftaran Staff Kasir</h3>
-                <div class="form-grid">
-                    <div><label>Nama Lengkap</label><input type="text" id="s-fullname"></div>
-                    <div><label>WhatsApp</label><input type="number" id="s-phone"></div>
-                    <div><label>Gaji Pokok (Rp)</label><input type="number" id="s-salary" value="5000000"></div>
-                    <div><label>Email & Tgl Lahir</label><input type="text" id="s-email" placeholder="Email"><br><input type="date" id="s-dob" style="margin-top:10px;"></div>
-                    <div><label>Login (User & Pass)</label><input type="text" id="s-user" placeholder="Username"><br><input type="text" id="s-pass" placeholder="Password" style="margin-top:10px;"></div>
+            <div class="imperial-card">
+                <h2 style="font-family:'Cinzel'; margin-bottom: 30px;">Register Imperial Staff</h2>
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:25px;">
+                    <div><label>Full Name</label><input type="text" id="s-fullname" placeholder="Nama Lengkap" style="width:100%; padding:18px; border-radius:15px; border:2px solid #eee;"></div>
+                    <div><label>WhatsApp Number</label><input type="number" id="s-phone" placeholder="62812..." style="width:100%; padding:18px; border-radius:15px; border:2px solid #eee;"></div>
+                    <div><label>Official Email</label><input type="email" id="s-email" placeholder="email@gmail.com" style="width:100%; padding:18px; border-radius:15px; border:2px solid #eee;"></div>
+                    <div><label>Base Salary (Rp)</label><input type="number" id="s-salary" placeholder="Contoh: 5000000" style="width:100%; padding:18px; border-radius:15px; border:2px solid #eee;"></div>
+                    <div><label>Username ID</label><input type="text" id="s-user" placeholder="Login ID" style="width:100%; padding:18px; border-radius:15px; border:2px solid #eee;"></div>
+                    <div><label>Master Password</label><input type="text" id="s-pass" placeholder="Password" style="width:100%; padding:18px; border-radius:15px; border:2px solid #eee;"></div>
                 </div>
-                <button class="btn-act" onclick="regStaff()">DAFTARKAN KASIR</button>
+                <button class="btn-sovereign" onclick="registerStaffAccount()" style="margin-top:40px;">DAFTARKAN KASIR KE SISTEM</button>
             </div>
-            <div class="table-container"><table class="data-table"><thead><tr><th>User</th><th>Password</th><th>Nama</th><th>Gaji Pokok</th><th>Aksi</th></tr></thead><tbody id="staff-list-body"></tbody></table></div>
+            <div class="staff-grid" id="staff-container-list"></div>
         </div>
 
-        <!-- 5. FEEDBACK TAMU -->
-        <div id="tab-feedback" class="tab-content" style="display:none;">
-            <div id="feedback-container" class="feedback-grid"></div>
-        </div>
+        <!-- 3. ULASAN -->
+        <div id="tab-feedback" class="tab-content" style="display:none;"><div id="feedback-list-hub"></div></div>
 
-        <!-- 6. KELOLA MENU (LOGIKA HARGA TERBARU) -->
-        <div id="tab-manage" class="tab-content" style="display:none;">
-            <div class="admin-card">
-                <h3 id="m-mode-title">Editor Menu SESA</h3>
-                <input type="hidden" id="edit-id">
-                <div class="img-preview" id="p-box"><span id="p-text">Preview HD</span><img id="p-img"></div>
-                <div class="form-grid">
-                    <div><label>Link Foto HD</label><input type="text" id="m-img" oninput="prev(this.value)"></div>
-                    <div><label>Nama Menu</label><input type="text" id="m-name"></div>
-                    <div><label>Kategori</label>
-                        <select id="m-cat" onchange="togglePriceFields()">
-                            <option value="menu_paket">Menu Paket</option>
-                            <option value="makanan_berat">Makanan Berat</option>
-                            <option value="cemilan">Cemilan</option>
-                            <option value="coffee">Coffee Based</option>
-                            <option value="non_coffee">Non-Coffee</option>
-                            <option value="cocktail">Signature Cocktail</option>
-                            <option value="mocktail">Fresh Mocktail</option>
-                        </select>
-                    </div>
-                </div>
-                <!-- Harga Panas Dingin HANYA untuk Kopi & Non-Kopi -->
-                <div id="drink-prices" class="form-grid" style="display:none;">
-                    <div><label>Harga Panas</label><input type="number" id="m-price-hot"></div>
-                    <div><label>Harga Dingin</label><input type="number" id="m-price-cold"></div>
-                </div>
-                <!-- Harga Normal untuk sisanya (Food, Cocktail, Mocktail) -->
-                <div id="food-prices" class="form-grid">
-                    <div><label>Harga Normal (Fixed)</label><input type="number" id="m-price-normal"></div>
-                </div>
-                <div class="form-grid">
-                    <div><label style="display:flex; align-items:center; gap:12px;"><input type="checkbox" id="m-is-promo" onchange="togglePromoFields()"> AKTIFKAN PROMO?</label></div>
-                    <div><label style="display:flex; align-items:center; gap:12px;"><input type="checkbox" id="m-is-best"> BEST SELLER ⭐</label></div>
-                </div>
-                <div id="promo-box" style="display:none; background:#fff8e1; padding:30px; border-radius:30px; border:2px dashed var(--accent); margin-bottom:30px;">
-                    <div class="form-grid">
-                        <div id="pf" style="display:none;"><label>Promo Harga Normal</label><input type="number" id="m-price-promo"></div>
-                        <div id="pdh" style="display:none;"><label>Promo Panas</label><input type="number" id="m-price-hot-promo"></div>
-                        <div id="pdc" style="display:none;"><label>Promo Dingin</label><input type="number" id="m-price-cold-promo"></div>
-                    </div>
-                </div>
-                <div><label>Deskripsi Menu</label><textarea id="m-desc" rows="3"></textarea></div>
-                <button class="btn-act" id="btn-save" onclick="saveMenu()">SIMPAN KE CLOUD</button>
-                <button class="btn-act" id="btn-cancel" onclick="resetForm()" style="display:none; margin-top:10px; background:#999;">BATALKAN EDIT</button>
-            </div>
-            <div class="table-container"><table class="data-table"><thead><tr><th>Produk</th><th>Kat</th><th>Stok</th><th>Opsi</th></tr></thead><tbody id="product-list-body"></tbody></table></div>
-        </div>
-
-        <!-- 7. LAPORAN DETAIL -->
-        <div id="tab-hrd" class="tab-content" style="display:none;">
-            <div class="admin-card">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px;">
-                    <h3>Laporan Penjualan & Status Promo</h3>
-                    <button class="btn-act" onclick="genPDF()" style="width:auto; background:var(--success); padding:15px 40px;">EKSPOR PDF</button>
-                </div>
-                <div class="table-container"><table class="data-table" id="pdf-table"><thead><tr><th>Bulan</th><th>Waktu</th><th>Nama</th><th>Items (Promo Check)</th><th>Kasir</th><th>Total</th></tr></thead><tbody id="history-display-body"></tbody></table></div>
-            </div>
-        </div>
-
-        <!-- 8. CEK TOKO WEB -->
+        <!-- 4. CEK WEB -->
         <div id="tab-web" class="tab-content" style="display:none;">
-            <div class="admin-card" style="padding:10px;"><iframe src="index.html" class="web-viewer"></iframe></div>
+            <iframe src="index.html" style="width:100%; height:900px; border:none; border-radius:65px; box-shadow:var(--shadow);"></iframe>
         </div>
     </div>
 
-    <!-- FIREBASE & CORE LOGIC -->
+    <!-- LOGIC DATABASE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, onValue, set, remove, update, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, onValue, set, remove, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        const db = getDatabase(initializeApp({ databaseURL: "https://sesa-coffee-default-rtdb.asia-southeast1.firebasedatabase.app" }));
 
-        const firebaseConfig = { databaseURL: "https://sesa-coffee-default-rtdb.asia-southeast1.firebasedatabase.app" };
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-
-        const currMonth = new Date().toLocaleString('id-ID', {month: 'long'}).toUpperCase();
-
-        // --- GLOBAL OMSET MONITORING ---
-        onValue(ref(db, 'history'), (snapshot) => {
-            const data = snapshot.val();
-            document.getElementById('month-label').innerText = currMonth;
-            let income = 0; const hBody = document.getElementById('history-display-body'); hBody.innerHTML = "";
-            if(data) {
-                Object.values(data).reverse().forEach(h => {
-                    if(h.month === currMonth) income += h.total;
-                    let itemsHtml = "<ul>";
-                    if(h.items) h.items.forEach(item => {
-                        const statusBadge = item.isPromo ? '<span class="badge bg-danger">PROMO</span>' : '<span class="badge bg-success">NORMAL</span>';
-                        itemsHtml += `<li style="margin-bottom:8px;">• ${item.name} (x${item.qty}) ${statusBadge}</li>`;
-                    });
-                    itemsHtml += "</ul>";
-                    hBody.innerHTML += `<tr><td>${h.month}</td><td>${h.fullTime}</td><td><b>${h.customer}</b><br><small>Meja:${h.table}</small></td><td>${itemsHtml}</td><td>${h.cashier}</td><td style="color:var(--accent); font-weight:900;">Rp ${h.total.toLocaleString()}</td></tr>`;
-                });
-            }
-            document.getElementById('omset-month').innerText = "Rp " + income.toLocaleString();
+        // No-Loading Initialization
+        window.addEventListener('load', () => { 
+            document.getElementById('loading-screen').style.display = 'none';
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance("Welcome to Admin")); 
         });
 
-        // --- staff & PAYROLL ---
-        let staffData = {}; let shiftData = []; let permitData = [];
-        onValue(ref(db, 'staff'), (s) => { staffData = s.val() || {}; renderStaffList(); renderPayroll(); updateIjinDropdown(); });
-        onValue(ref(db, 'shifts'), (s) => { shiftData = s.val() ? Object.values(s.val()) : []; renderAttendance(); renderPayroll(); });
-        onValue(ref(db, 'permits'), (s) => { permitData = s.val() ? Object.values(s.val()) : []; renderAttendance(); renderPayroll(); });
+        const currMonth = new Date().toLocaleString('id-ID', { month: 'long' }).toUpperCase();
+        if(localStorage.getItem('role') !== 'admin') window.location.href = 'admin_login.html';
 
-        function renderPayroll() {
-            const container = document.getElementById('payroll-container'); container.innerHTML = "";
-            Object.values(staffData).forEach(staff => {
-                const base = parseInt(staff.baseSalary) || 0;
-                const harian = base / 30;
-                const hadir = shiftData.filter(s => s.cashierName === staff.fullName && s.startTime.includes(currMonth)).length;
-                const ijin = permitData.filter(p => p.name === staff.fullName && p.date.includes(currMonth) && p.type === 'IJIN').length;
-                const total = base - (ijin * harian);
-                container.innerHTML += `<div class="stat-card" style="flex-direction:column; align-items:start;"><b>${staff.fullName}</b><p>Gaji Pokok: Rp ${base.toLocaleString()}</p><p>Hadir: ${hadir} Hari</p><p style="color:red;">Potongan Ijin: -Rp ${(ijin*harian).toLocaleString()}</p><hr style="width:100%"><h3 style="color:var(--accent);">Gaji Bersih: Rp ${total.toLocaleString()}</h3></div>`;
+        // --- DASHBOARD REALTIME ---
+        onValue(ref(db, 'history'), (snap) => {
+            let income = 0; if(!snap.val()) return;
+            Object.values(snap.val()).forEach(h => { if(h.month === currMonth) income += h.total; });
+            document.getElementById('omset-val').innerText = "Rp " + income.toLocaleString();
+        });
+
+        onValue(ref(db, 'shifts'), (snap) => {
+            let onlineNames = []; if(!snap.val()) return;
+            const today = new Date().toLocaleDateString('id-ID');
+            Object.values(snap.val()).forEach(s => { if(s.status === "OPEN" && s.startTime.includes(today)) onlineNames.push(s.cashierName); });
+            document.getElementById('staff-online').innerText = onlineNames.length > 0 ? onlineNames.join(', ') : "0 Orang";
+        });
+
+        // --- STAFF MANAGEMENT ---
+        let sData = {};
+        onValue(ref(db, 'staff'), (s) => { sData = s.val() || {}; renderStaffList(); });
+
+        window.registerStaffAccount = () => {
+            const u = document.getElementById('s-user').value.toLowerCase().trim();
+            const qr = "SESA-QR-" + Math.floor(1000 + Math.random()*9000);
+            if(!u) return alert("Isi Username!");
+            set(ref(db, 'staff/'+u), { 
+                username: u, password: document.getElementById('s-pass').value, fullName: document.getElementById('s-fullname').value, 
+                phone: document.getElementById('s-phone').value, email: document.getElementById('s-email').value, 
+                baseSalary: document.getElementById('s-salary').value, qrCodeData: qr 
+            }).then(() => { alert("Staff Authorized!"); location.reload(); });
+        };
+
+        function renderStaffList() {
+            const cont = document.getElementById('staff-container-list'); cont.innerHTML = "";
+            Object.values(sData).forEach(x => {
+                cont.innerHTML += `
+                <div class="staff-id-card" id="cap-${x.username}">
+                    <h3>${x.username}</h3>
+                    <div class="staff-account-details">
+                        <div class="detail-row"><label>Full Name</label><span>${x.fullName}</span></div>
+                        <div class="detail-row"><label>Password</label><span>${x.password}</span></div>
+                        <div class="detail-row"><label>WhatsApp</label><span>+${x.phone}</span></div>
+                        <div class="detail-row"><label>Official Email</label><span>${x.email}</span></div>
+                    </div>
+                    <div class="qr-identity-hub"><div id="qrc-${x.username}"></div><p class="qr-id-tag">ACCESS ID: ${x.qrCodeData}</p></div>
+                    <div class="dispatch-hub">
+                        <button class="btn-dispatch btn-wa" onclick="window.open('https://wa.me/${x.phone}?text=ID QR SESA Kamu: ${x.qrCodeData}')"><i class="fab fa-whatsapp"></i> WA</button>
+                        <button class="btn-dispatch btn-email" onclick="window.open('mailto:${x.email}?subject=Akses Kasir SESA')"><i class="fas fa-envelope"></i> EMAIL</button>
+                        <button class="btn-dispatch btn-save" onclick="dlQR('${x.username}')"><i class="fas fa-download"></i> SAVE</button>
+                    </div>
+                    <button class="btn-delete-staff" onclick="delStaffAccount('${x.username}')"><i class="fas fa-trash"></i> HAPUS AKUN</button>
+                </div>`;
+                setTimeout(() => { new QRCode(document.getElementById("qrc-"+x.username), { text: x.qrCodeData, width: 100, height: 100 }); }, 200);
             });
         }
+        window.dlQR = (u) => html2canvas(document.getElementById("cap-"+u)).then(c => { const l=document.createElement('a'); l.download=`QR_${u}.png`; l.href=c.toDataURL(); l.click(); });
+        window.delStaffAccount = (id) => confirm("Hapus Selamanya?") && remove(ref(db, 'staff/'+id));
 
-        function renderAttendance() {
-            const body = document.getElementById('absensi-body'); body.innerHTML = "";
-            const today = new Date().toLocaleDateString('id-ID');
-            let count = 0;
-            shiftData.forEach(s => { if(s.startTime.includes(today)) { count++; body.innerHTML += `<tr><td><b>${s.cashierName}</b></td><td>${s.startTime}</td><td><span class="badge bg-success">HADIR</span></td><td>Shift Aktif</td></tr>`; } });
-            permitData.forEach(p => { if(p.date === today) { body.innerHTML += `<tr><td><b>${p.name}</b></td><td>${p.date}</td><td><span class="badge bg-warning">${p.type}</span></td><td>Alasan: ${p.reason}</td></tr>`; } });
-            document.getElementById('staff-count').innerText = count + " Orang";
-        }
-
-        // --- MENU SYSTEM ---
-        window.saveMenu = () => {
-            const editId = document.getElementById('edit-id').value; const id = editId ? editId : "p_" + Date.now();
-            set(ref(db, 'store_menu/'+id), {
-                id, name: document.getElementById('m-name').value, cat: document.getElementById('m-cat').value, img: document.getElementById('m-img').value, status: 'ready', isBest: document.getElementById('m-is-best').checked, isPromo: document.getElementById('m-is-promo').checked,
-                priceNormal: parseInt(document.getElementById('m-price-normal').value) || 0, priceHot: parseInt(document.getElementById('m-price-hot').value) || 0, priceCold: parseInt(document.getElementById('m-price-cold').value) || 0,
-                pricePromo: parseInt(document.getElementById('m-price-promo').value) || 0, priceHotPromo: parseInt(document.getElementById('m-price-hot-promo').value) || 0, priceColdPromo: parseInt(document.getElementById('m-price-cold-promo').value) || 0, desc: document.getElementById('m-desc').value
-            }).then(() => { alert("Tersimpan!"); resetForm(); });
-        };
-        onValue(ref(db, 'store_menu'), (s) => {
-            const b = document.getElementById('product-list-body'); b.innerHTML = ""; const d = s.val(); if(!d) return;
-            Object.values(d).forEach(m => { b.innerHTML += `<tr><td><b>${m.name}</b></td><td>${m.cat.toUpperCase()}</td><td><button onclick="togStock('${m.id}','${m.status}')" style="background:${m.status==='ready'?'#e8f5e9':'#ffebee'}; color:${m.status==='ready'?'green':'red'}" class="badge">${m.status}</button></td><td><button onclick="editMenu('${m.id}')" style="color:blue; border:none; background:none; margin-right:15px; cursor:pointer;"><i class="fas fa-edit"></i></button><button onclick="delP('${m.id}')" style="color:red; border:none; background:none; cursor:pointer;"><i class="fas fa-trash"></i></button></td></tr>`; });
+        // --- FEEDBACK ---
+        onValue(ref(db, 'guest_feedback'), (snap) => {
+            const l = document.getElementById('feedback-list-hub'); l.innerHTML = ""; if(!snap.val()) return;
+            Object.entries(snap.val()).reverse().forEach(([id, f]) => {
+                l.innerHTML += `<div class="review-card"><h4>${f.name}</h4><p>"${f.message}"</p><div class="reply-box"><textarea id="rep-${id}" rows="2" style="width:100%; border-radius:15px; padding:15px; border:1px solid #ddd;">${f.ownerReply || ""}</textarea><button onclick="replyF('${id}')" class="btn-sovereign" style="width:auto; padding:10px 25px; font-size:0.7rem; margin-top:10px;">BALAS</button></div></div>`;
+            });
         });
+        window.replyF = (id) => update(ref(db, 'guest_feedback/'+id), { ownerReply: document.getElementById('rep-'+id).value }).then(()=>alert("Sent!"));
 
         // --- HELPERS ---
-        window.switchTab = (id, el) => { document.querySelectorAll('.tab-content, .nav-item').forEach(x => { x.classList.remove('active'); if(x.className==='tab-content') x.style.display='none'; }); document.getElementById(id).style.display = 'block'; el.classList.add('active'); document.getElementById('page-title').innerText = el.innerText.trim(); };
-        window.prev = (u) => { const i = document.getElementById('p-img'); const t = document.getElementById('p-text'); if(u){ i.src=u; i.style.display='block'; t.style.display='none'; } else { i.style.display='none'; t.style.display='block'; } };
-        window.resetForm = () => { document.querySelectorAll('#tab-manage input, #tab-manage textarea').forEach(i => { i.value = ""; i.checked = false; }); document.getElementById('edit-id').value = ""; document.getElementById('btn-save').innerText = "SIMPAN"; document.getElementById('btn-cancel').style.display="none"; prev(""); togglePriceFields(); togglePromoFields(); };
-        window.toggleStore = () => onValue(ref(db, 'store_config/is_open'), (s) => set(ref(db, 'store_config/is_open'), !s.val()), {onlyOnce:true});
-        onValue(ref(db, 'store_config/is_open'), (s) => { const open = s.val(); const p = document.getElementById('status-pill'); p.innerText = open ? "OPEN" : "CLOSED"; p.className = open ? "badge bg-success" : "badge bg-danger"; });
-        window.regStaff = () => { set(ref(db, 'staff/'+document.getElementById('s-user').value.toLowerCase()), { username: document.getElementById('s-user').value.toLowerCase(), password: document.getElementById('s-pass').value, fullName: document.getElementById('s-fullname').value, phone: document.getElementById('s-phone').value, baseSalary: document.getElementById('s-salary').value, email: document.getElementById('s-email').value, dob: document.getElementById('s-dob').value }).then(() => alert("Berhasil!")); };
-        function renderStaffList() { const b = document.getElementById('staff-list-body'); b.innerHTML = ""; Object.values(staffData).forEach(x => { b.innerHTML += `<tr><td><b>${x.username}</b></td><td><span class="pw-badge">${x.password}</span></td><td>${x.fullName}</td><td>Rp ${parseInt(x.baseSalary).toLocaleString()}</td><td><button onclick="delStaff('${x.username}')" style="color:red; background:none; border:none;"><i class="fas fa-trash"></i></button></td></tr>`; }); }
-        function updateIjinDropdown() { const sel = document.getElementById('ijin-staff-name'); sel.innerHTML = "<option>Pilih Staff...</option>"; Object.values(staffData).forEach(s => sel.innerHTML += `<option value="${s.fullName}">${s.fullName}</option>`); }
-        window.submitPermit = () => { push(ref(db, 'permits'), { name: document.getElementById('ijin-staff-name').value, type: document.getElementById('ijin-type').value, reason: document.getElementById('ijin-reason').value, date: new Date().toLocaleDateString('id-ID') }).then(() => alert("Berhasil!")); };
-        window.delStaff = (id) => confirm("Hapus?") && remove(ref(db, 'staff/'+id));
-        window.delP = (id) => confirm("Hapus?") && remove(ref(db, 'store_menu/'+id));
-        window.togStock = (id, cur) => update(ref(db, 'store_menu/'+id), { status: cur==='ready'?'habis':'ready' });
-        window.editMenu = (id) => { onValue(ref(db, 'store_menu/'+id), (s) => { const m = s.val(); document.getElementById('edit-id').value = m.id; document.getElementById('m-name').value = m.name; document.getElementById('m-cat').value = m.cat; document.getElementById('m-img').value = m.img; document.getElementById('m-is-best').checked = m.isBest; document.getElementById('m-is-promo').checked = m.isPromo; document.getElementById('m-price-normal').value = m.priceNormal; document.getElementById('m-price-hot').value = m.priceHot; document.getElementById('m-price-cold').value = m.priceCold; document.getElementById('m-price-promo').value = m.pricePromo; document.getElementById('m-price-hot-promo').value = m.priceHotPromo; document.getElementById('m-price-cold-promo').value = m.priceColdPromo; document.getElementById('m-desc').value = m.desc; prev(m.img); togglePriceFields(); togglePromoFields(); document.getElementById('m-mode-title').innerText = "Edit: " + m.name; document.getElementById('btn-save').innerText = "UPDATE"; document.getElementById('btn-cancel').style.display = "block"; window.scrollTo(0,0); }, {onlyOnce:true}); };
-        onValue(ref(db, 'guest_feedback'), (snap) => { const c = document.getElementById('feedback-container'); c.innerHTML = ""; if(!snap.val()) return; Object.keys(snap.val()).reverse().forEach(id => { const f = snap.val()[id]; c.innerHTML += `<div class="feedback-card"><h4>${f.name}</h4><p>"${f.message}"</p><div class="reply-box"><textarea id="rep-${id}" rows="2" style="width:100%; border:1px solid #ddd; padding:5px;">${f.ownerReply || ""}</textarea><button class="btn-act" style="font-size:0.6rem; padding:8px; margin-top:5px; width:auto;" onclick="postReply('${id}')">BALAS KOMEN</button></div><button onclick="delF('${id}')" style="background:none; border:none; color:red; position:absolute; top:35px; right:35px; cursor:pointer;"><i class="fas fa-trash"></i></button></div>`; }); });
-        window.postReply = (id) => { update(ref(db, `guest_feedback/${id}`), {ownerReply: document.getElementById('rep-'+id).value}).then(()=>alert("Terbalas!")); };
-        window.delF = (id) => confirm("Hapus?") && remove(ref(db, `guest_feedback/${id}`));
-        window.genPDF = () => { const { jsPDF } = window.jspdf; const doc = new jsPDF('l','mm','a4'); doc.text("LAPORAN SESA COFFEE", 14, 15); doc.autoTable({ html: '#pdf-table', startY: 25 }); doc.save("Laporan_SESA.pdf"); };
-    </script>
+        window.toggleImperialSidebar = () => { document.getElementById('sidebar').classList.toggle('closed'); document.getElementById('main-content').classList.toggle('expanded'); document.getElementById('side-icon').classList.toggle('fa-chevron-right'); document.getElementById('side-icon').classList.toggle('fa-chevron-left'); };
+        window.switchTab = (id, el) => { document.querySelectorAll('.tab-content, .nav-item').forEach(x => { x.classList.remove('active'); if(x.className==='tab-content') x.style.display='none'; }); document.getElementById(id).style.display = 'block'; el.classList.add('active'); document.getElementById('page-name').innerText = el.innerText.trim(); };
+        window.logoutAdmin = () => confirm("Logout?") && (localStorage.clear() || (window.location.href='admin_login.html'));
+        window.toggleGlobalStore = () => onValue(ref(db, 'store_config/is_open'), (snap) => set(ref(db, 'store_config/is_open'), !snap.val()), {onlyOnce:true});
+        onValue(ref(db, 'store_config/is_open'), (snap) => { const op = snap.val(); document.getElementById('st-badge').innerText = op ? "OPEN" : "CLOSED"; document.getElementById('st-badge').className = op ? "badge bg-green" : "badge bg-red"; });
 
-    <script>
-        function togglePriceFields() {
-            const c = document.getElementById('m-cat').value;
-            const isDrink = ['coffee', 'non_coffee'].includes(c);
-            document.getElementById('drink-prices').style.display = isDrink ? 'grid' : 'none';
-            document.getElementById('food-prices').style.display = isDrink ? 'none' : 'grid';
-            togglePromoFields();
-        }
-        function togglePromoFields() {
-            const isP = document.getElementById('m-is-promo').checked;
-            const isD = ['coffee', 'non_coffee'].includes(document.getElementById('m-cat').value);
-            document.getElementById('promo-box').style.display = isP ? 'block' : 'none';
-            document.getElementById('pf').style.display = (isP && !isD) ? 'block' : 'none';
-            document.getElementById('pdh').style.display = (isP && isD) ? 'block' : 'none';
-            document.getElementById('pdc').style.display = (isP && isD) ? 'block' : 'none';
-        }
-        setInterval(() => { const n = new Date(); document.getElementById('live-time').innerText = n.toLocaleTimeString('id-ID'); document.getElementById('live-date').innerText = n.toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'}); document.getElementById('live-day-text').innerText = ["MINGGU","SENIN","SELASA","RABU","KAMIS","JUMAT","SABTU"][n.getDay()]; }, 1000);
+        setInterval(() => { const n = new Date(); document.getElementById('live-time').innerText = n.toLocaleTimeString('id-ID'); document.getElementById('live-day').innerText = ["MINGGU","SENIN","SELASA","RABU","KAMIS","JUMAT","SABTU"][n.getDay()] + ", " + n.toLocaleDateString('id-ID'); }, 1000);
     </script>
 </body>
 </html>

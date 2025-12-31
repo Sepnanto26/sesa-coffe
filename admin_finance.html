@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SESA FINANCE | Imperial Sovereign Hub v59.0</title>
+    
+    <!-- Premium Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Poppins:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Pro -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <!-- PDF Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    
+    <style>
+        :root {
+            --primary: #0f0a06; 
+            --secondary: #1d150e; 
+            --accent: #d4af37;
+            --accent-glow: rgba(212, 175, 55, 0.4);
+            --white: #ffffff; 
+            --bg: #f8f6f2; 
+            --success: #27ae60;
+            --danger: #e74c3c; 
+            --shadow: 0 25px 60px rgba(0,0,0,0.18);
+            --transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        /* --- GLOBAL BASE --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg); display: flex; min-height: 100vh; color: var(--primary); overflow-x: hidden; }
+
+        /* --- SMART LOADING SCREEN --- */
+        #loading-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), 
+                        url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=2000');
+            background-size: cover; background-position: center;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10000;
+            transition: opacity 0.8s ease;
+        }
+        .loader-logo { font-family: 'Cinzel', serif; font-size: 6rem; color: var(--accent); font-weight: 900; letter-spacing: 20px; text-shadow: 0 0 30px rgba(255, 255, 255, 0.3); }
+        #loader-text { color: var(--white); margin-top: 25px; letter-spacing: 5px; font-weight: 800; text-transform: uppercase; font-size: 1.1rem; }
+        .loader-bar-wrap { width: 350px; height: 6px; background: rgba(255,255,255,0.2); border-radius: 10px; margin-top: 30px; overflow: hidden; }
+        .loader-bar-fill { width: 0%; height: 100%; background: var(--accent); animation: loadProgress 5s linear forwards; }
+        @keyframes loadProgress { 0% { width: 0%; } 100% { width: 100%; } }
+
+        /* --- SIDEBAR PULLABLE --- */
+        .sidebar {
+            width: 320px; background: var(--secondary); color: white;
+            display: flex; flex-direction: column; padding: 40px 25px;
+            position: fixed; height: 100vh; z-index: 9000; border-right: 5px solid var(--accent);
+            box-shadow: 10px 0 30px rgba(0,0,0,0.2); transition: var(--transition);
+            overflow-y: auto;
+        }
+        .sidebar::-webkit-scrollbar { width: 4px; }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+        .sidebar.closed { transform: translateX(-240px); }
+
+        .sidebar h2 { font-family: 'Cinzel', serif; font-size: 2.5rem; color: var(--accent); text-align: center; margin-bottom: 50px; font-weight: 900; letter-spacing: 5px; }
+        
+        .sidebar-toggle {
+            position: absolute; right: -40px; top: 50%; width: 40px; height: 80px;
+            background: var(--accent); color: var(--primary); display: flex; 
+            justify-content: center; align-items: center; cursor: pointer;
+            border-radius: 0 15px 15px 0; font-size: 1.5rem; z-index: 9001;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-back-dash {
+            background: var(--primary); color: var(--accent); border: 2px solid var(--accent);
+            padding: 15px; border-radius: 20px; margin-bottom: 30px; text-decoration: none;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            font-weight: 800; font-size: 0.85rem; text-transform: uppercase; transition: 0.3s;
+        }
+        .btn-back-dash:hover { background: var(--accent); color: var(--primary); }
+
+        .nav-item {
+            padding: 18px 20px; border-radius: 20px; margin-bottom: 10px;
+            cursor: pointer; display: flex; align-items: center; gap: 20px;
+            color: #888; transition: 0.4s; border: none; background: none; width: 100%; text-align: left;
+            font-weight: 700; font-size: 0.85rem; text-transform: uppercase; text-decoration: none;
+        }
+        .nav-item.active { background: var(--accent); color: var(--primary); box-shadow: 0 15px 30px rgba(212,175,55,0.3); }
+
+        /* --- MAIN CONTENT --- */
+        .main-content { flex: 1; margin-left: 320px; padding: 50px 70px; transition: var(--transition); width: calc(100% - 320px); overflow-y: auto; height: 100vh; }
+        .main-content.expanded { margin-left: 80px; width: calc(100% - 80px); }
+
+        .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 50px; }
+        .header-title h1 { font-family: 'Cinzel', serif; font-size: 3.2rem; font-weight: 900; color: var(--primary); }
+        
+        .clock-widget { background: white; padding: 25px 40px; border-radius: 35px; box-shadow: var(--shadow); border-right: 12px solid var(--accent); text-align: right; }
+        #live-time { font-size: 2.5rem; font-weight: 900; color: var(--primary); display: block; line-height: 1; }
+
+        /* --- FINANCE CARDS --- */
+        .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 35px; margin-bottom: 50px; }
+        .stat-box { background: white; padding: 40px; border-radius: 45px; box-shadow: var(--shadow); display: flex; align-items: center; gap: 30px; border-bottom: 8px solid var(--accent); transition: 0.3s; }
+        .stat-box i { font-size: 4rem; color: var(--accent); }
+        .stat-box h2 { font-size: 2.2rem; font-weight: 900; }
+
+        /* --- TABLES --- */
+        .imperial-card { background: white; padding: 45px; border-radius: 50px; box-shadow: var(--shadow); margin-bottom: 45px; border: 1px solid rgba(212,175,55,0.1); }
+        .table-wrap { overflow-x: auto; border-radius: 50px; background: white; box-shadow: var(--shadow); }
+        table { width: 100%; border-collapse: collapse; min-width: 1300px; }
+        th { background: #fafafa; padding: 30px 25px; text-align: left; font-size: 0.85rem; color: #aaa; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #f4f4f4; }
+        td { padding: 30px 25px; border-bottom: 1px solid #f8f8f8; font-size: 1rem; vertical-align: top; }
+
+        .badge { padding: 8px 18px; border-radius: 100px; font-weight: 800; font-size: 0.7rem; text-transform: uppercase; }
+        .bg-green { background: #e8f5e9; color: #2e7d32; }
+        .bg-red { background: #ffebee; color: #c62828; }
+        .bg-blue { background: #e3f2fd; color: #1565c0; }
+
+        .btn-export { background: var(--success); color: white; border: none; padding: 15px 35px; border-radius: 15px; cursor: pointer; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; }
+        .btn-export:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(39, 174, 96, 0.3); }
+
+        @media (max-width: 1200px) { .sidebar { width: 80px; } .sidebar h2, .nav-item span, .sidebar-toggle, .btn-back-dash span { display: none; } .main-content { margin-left: 80px; width: calc(100% - 80px); } }
+    </style>
+</head>
+<body>
+
+    <!-- SMART LOADING SCREEN -->
+    <div id="loading-screen">
+        <div class="loader-logo">SESA</div>
+        <p id="loader-text">Analyzing Financial Sovereignty...</p>
+        <div class="loader-bar-wrap"><div class="loader-bar-fill"></div></div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-toggle" onclick="toggleImperialSidebar()"><i class="fas fa-chevron-right" id="side-icon"></i></div>
+        <h2>SESA</h2>
+        <a href="admin.html" class="btn-back-dash"><i class="fas fa-arrow-left"></i> <span>Dashboard</span></a>
+        
+        <button class="nav-item active"><i class="fas fa-file-invoice-dollar"></i> <span>Keuangan Detail</span></button>
+        <p style="color:var(--accent); text-align:center; font-weight:900; letter-spacing:2px; margin-top:20px; font-size:0.6rem;">FINANCE HUB</p>
+    </div>
+
+    <!-- MAIN AREA -->
+    <div class="main-content" id="main-content">
+        <div class="top-header">
+            <div class="header-title">
+                <h1 id="page-name">Financial Intelligence</h1>
+                <p id="period-text" style="color:var(--accent); font-weight:800; letter-spacing:2px; text-transform:uppercase;"></p>
+            </div>
+            <div class="clock-widget"><span id="live-time">00:00:00</span></div>
+        </div>
+
+        <!-- SUMMARY CARDS -->
+        <div class="stat-grid">
+            <div class="stat-box"><i class="fas fa-vault"></i><div><p>Omset Bersih (Bulan Ini)</p><h2 id="total-revenue">Rp 0</h2></div></div>
+            <div class="stat-box"><i class="fas fa-hand-holding-dollar"></i><div><p>Total Pajak (10%)</p><h2 id="total-tax">Rp 0</h2></div></div>
+            <div class="stat-box"><i class="fas fa-receipt"></i><div><p>Total Transaksi</p><h2 id="total-trx">0 TRX</h2></div></div>
+        </div>
+
+        <!-- DETAILED FINANCE TABLE -->
+        <div class="imperial-card">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px;">
+                <h2>Master Transaction Log</h2>
+                <button class="btn-export" onclick="exportFinancePDF()"><i class="fas fa-file-pdf"></i> Export Monthly Report</button>
+            </div>
+            <div class="table-wrap">
+                <table id="finance-table-master">
+                    <thead>
+                        <tr>
+                            <th>Waktu & Tanggal</th>
+                            <th>Pelanggan / Meja</th>
+                            <th>Rincian Item (Promo Check)</th>
+                            <th>Metode Bayar</th>
+                            <th>Subtotal</th>
+                            <th>Pajak</th>
+                            <th>Grand Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="finance-body-list">
+                        <!-- Data injected by Firebase -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        const db = getDatabase(initializeApp({ databaseURL: "https://sesa-coffee-default-rtdb.asia-southeast1.firebasedatabase.app" }));
+
+        // --- SMART LOADING SYSTEM ---
+        const skipLoad = sessionStorage.getItem('sesa_admin_loaded');
+        if (skipLoad) {
+            document.getElementById('loading-screen').style.display = 'none';
+        } else {
+            setTimeout(() => { 
+                document.getElementById('loading-screen').style.opacity = '0'; 
+                setTimeout(()=>document.getElementById('loading-screen').style.display='none', 800); 
+                sessionStorage.setItem('sesa_admin_loaded', 'true');
+            }, 5000);
+        }
+
+        const currMonth = new Date().toLocaleString('id-ID', { month: 'long' }).toUpperCase();
+        document.getElementById('period-text').innerText = "Periode: " + currMonth;
+
+        // --- FETCH FINANCE DATA ---
+        onValue(ref(db, 'history'), (snap) => {
+            const body = document.getElementById('finance-body-list');
+            body.innerHTML = "";
+            let revenue = 0; let taxTotal = 0; let trxCount = 0;
+            
+            if(!snap.val()) return;
+
+            Object.values(snap.val()).reverse().forEach(h => {
+                if(h.month === currMonth) {
+                    revenue += h.total;
+                    taxTotal += (h.tax || 0);
+                    trxCount++;
+
+                    let itemsHtml = "<ul>";
+                    h.items.forEach(it => {
+                        const statusBadge = it.isPromo ? '<span class="badge bg-red">PROMO</span>' : '<span class="badge bg-green">NORMAL</span>';
+                        itemsHtml += `<li style="margin-bottom:8px">• ${it.name} (x${it.qty}) ${statusBadge}</li>`;
+                    });
+                    itemsHtml += "</ul>";
+
+                    body.innerHTML += `
+                        <tr>
+                            <td><b>${h.fullTime}</b></td>
+                            <td>${h.customer}<br><small class="badge bg-gold" style="color:black">MEJA ${h.table}</small></td>
+                            <td>${itemsHtml}</td>
+                            <td><span class="badge bg-blue">${h.payment || 'CASH'}</span></td>
+                            <td>Rp ${(h.subtotal || h.total).toLocaleString()}</td>
+                            <td>Rp ${(h.tax || 0).toLocaleString()}</td>
+                            <td style="color:var(--accent); font-weight:900">Rp ${h.total.toLocaleString()}</td>
+                        </tr>
+                    `;
+                }
+            });
+
+            document.getElementById('total-revenue').innerText = "Rp " + revenue.toLocaleString();
+            document.getElementById('total-tax').innerText = "Rp " + taxTotal.toLocaleString();
+            document.getElementById('total-trx').innerText = trxCount + " TRX";
+        });
+
+        // --- PDF ENGINE ---
+        window.exportFinancePDF = () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('l','mm','a4');
+            doc.setFont("Cinzel", "bold");
+            doc.text("SESA COFFEE & KITCHEN - FINANCIAL REPORT", 149, 15, { align: "center" });
+            doc.setFontSize(10);
+            doc.text(`Periode: ${currMonth}`, 149, 22, { align: "center" });
+            doc.autoTable({ html: '#finance-table-master', startY: 30, theme: 'grid' });
+            doc.save(`SESA_Finance_${currMonth}.pdf`);
+        };
+
+        // --- HELPERS ---
+        window.toggleImperialSidebar = () => { 
+            document.getElementById('sidebar').classList.toggle('closed'); 
+            document.getElementById('main-content').classList.toggle('expanded'); 
+            document.getElementById('side-icon').classList.toggle('fa-chevron-right'); 
+            document.getElementById('side-icon').classList.toggle('fa-chevron-left'); 
+        };
+
+        setInterval(() => { document.getElementById('live-time').innerText = new Date().toLocaleTimeString('id-ID'); }, 1000);
+    </script>
+</body>
+</html>

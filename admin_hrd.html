@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SESA HRD | Imperial Sovereign HR Hub v56.0</title>
+    
+    <!-- Premium Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #0f0a06; --secondary: #1d150e; --accent: #d4af37;
+            --white: #ffffff; --bg: #f8f6f2; --success: #27ae60;
+            --danger: #e74c3c; --shadow: 0 25px 60px rgba(0,0,0,0.18);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--bg); display: flex; min-height: 100vh; color: var(--primary); overflow-x: hidden; }
+
+        /* --- SIDEBAR PULLABLE --- */
+        .sidebar {
+            width: 320px; background: var(--secondary); color: white;
+            display: flex; flex-direction: column; padding: 40px 25px;
+            position: fixed; height: 100vh; z-index: 9000; border-right: 5px solid var(--accent);
+            box-shadow: 10px 0 30px rgba(0,0,0,0.2); overflow-y: auto; transition: 0.5s ease;
+        }
+        .sidebar.closed { transform: translateX(-240px); }
+        .sidebar h2 { font-family: 'Cinzel', serif; font-size: 2.2rem; color: var(--accent); text-align: center; margin-bottom: 50px; font-weight: 900; }
+        
+        .sidebar-toggle {
+            position: absolute; right: -40px; top: 50%; width: 40px; height: 80px;
+            background: var(--accent); color: var(--primary); display: flex; 
+            justify-content: center; align-items: center; cursor: pointer;
+            border-radius: 0 15px 15px 0; font-size: 1.5rem;
+        }
+
+        .nav-item {
+            padding: 18px 20px; border-radius: 20px; margin-bottom: 10px;
+            cursor: pointer; display: flex; align-items: center; gap: 20px;
+            color: #888; transition: 0.4s; border: none; background: none; width: 100%; text-align: left;
+            font-weight: 700; font-size: 0.85rem; text-transform: uppercase;
+        }
+        .nav-item.active { background: var(--accent); color: var(--primary); box-shadow: 0 15px 30px rgba(212,175,55,0.3); }
+        .nav-item:hover:not(.active) { background: rgba(255,255,255,0.05); color: white; }
+
+        .btn-back-dash {
+            background: var(--primary); color: var(--accent); border: 2px solid var(--accent);
+            padding: 15px; border-radius: 15px; margin-bottom: 30px; text-decoration: none;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            font-weight: 800; font-size: 0.8rem; text-transform: uppercase; transition: 0.3s;
+        }
+        .btn-back-dash:hover { background: var(--accent); color: var(--primary); }
+
+        /* --- MAIN --- */
+        .main-content { flex: 1; margin-left: 320px; padding: 50px 70px; transition: 0.5s; width: calc(100% - 320px); }
+        .main-content.expanded { margin-left: 80px; width: calc(100% - 80px); }
+
+        .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 50px; }
+        .header-title h1 { font-family: 'Cinzel', serif; font-size: 3rem; font-weight: 900; }
+
+        .clock-widget { background: white; padding: 20px 35px; border-radius: 30px; box-shadow: var(--shadow); border-right: 10px solid var(--accent); text-align: right; }
+        #live-time { font-size: 2.2rem; font-weight: 900; color: var(--primary); }
+
+        /* --- PAYROLL SLIPS --- */
+        .payroll-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 35px; margin-top: 30px; }
+        .salary-slip { background: white; padding: 40px; border-radius: 45px; box-shadow: var(--shadow); border-left: 12px solid var(--accent); position: relative; }
+        .p-row { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #f2f2f2; font-size: 1rem; }
+        .p-row.total { border: none; font-weight: 900; font-size: 1.8rem; color: var(--success); margin-top: 20px; border-top: 2px dashed #ddd; padding-top: 20px; }
+        .ijin-list-box { background: #fffcf0; padding: 20px; border-radius: 20px; margin: 15px 0; border: 1px solid #f2e1ac; font-size: 0.9rem; }
+
+        /* --- MONITORING --- */
+        .monitor-card { background: var(--secondary); color: white; padding: 30px; border-radius: 40px; margin-bottom: 40px; border-bottom: 10px solid var(--accent); }
+        .online-pill { background: rgba(39, 174, 96, 0.2); color: #2ecc71; padding: 8px 18px; border-radius: 50px; font-weight: 800; border: 1px solid #2ecc71; display: inline-flex; align-items: center; gap: 8px; margin: 5px; }
+
+        /* --- TABLES --- */
+        .table-wrap { overflow-x: auto; border-radius: 45px; background: white; box-shadow: var(--shadow); }
+        table { width: 100%; border-collapse: collapse; min-width: 1100px; }
+        th { background: #fafafa; padding: 25px; text-align: left; font-size: 0.8rem; color: #999; text-transform: uppercase; }
+        td { padding: 25px; border-bottom: 1px solid #f8f8f8; }
+
+        .badge { padding: 8px 18px; border-radius: 50px; font-weight: 800; font-size: 0.7rem; text-transform: uppercase; }
+        .bg-red { background: #ffebee; color: #c62828; }
+        .bg-green { background: #e8f5e9; color: #2e7d32; }
+
+        /* --- PROOF MODAL --- */
+        #proofModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 15000; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
+        .proof-box { background: white; padding: 40px; border-radius: 40px; max-width: 600px; width: 90%; text-align: center; }
+        .proof-box img { width: 100%; max-height: 450px; object-fit: contain; border-radius: 20px; border: 4px solid var(--accent); margin-bottom: 20px; }
+
+        @media (max-width: 1200px) { .sidebar { width: 80px; } .sidebar h2, .nav-item span { display: none; } .main-content { margin-left: 80px; width: calc(100% - 80px); } }
+    </style>
+</head>
+<body>
+
+    <div id="proofModal"><div class="proof-box"><h3 style="font-family:'Cinzel'">Leave Evidence</h3><img id="img-proof" src=""><br><button onclick="closeProof()" style="padding:10px 30px; background:var(--primary); color:var(--accent); border:none; border-radius:10px; cursor:pointer;">CLOSE</button></div></div>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-toggle" onclick="toggleSidebar()"><i class="fas fa-chevron-right" id="side-icon"></i></div>
+        <h2>SESA</h2>
+        <a href="admin.html" class="btn-back-dash"><i class="fas fa-arrow-left"></i> <span>Dashboard</span></a>
+        <button class="nav-item active" onclick="switchTab('tab-payroll', this)"><i class="fas fa-money-check-alt"></i> <span>Payroll Hub</span></button>
+        <button class="nav-item" onclick="switchTab('tab-absensi', this)"><i class="fas fa-calendar-check"></i> <span>Absensi Logs</span></button>
+    </div>
+
+    <div class="main-content" id="main-content">
+        <div class="top-header">
+            <div class="header-title"><h1 id="page-name">Payroll & HR Hub</h1></div>
+            <div class="clock-widget"><span id="live-time">00:00:00</span></div>
+        </div>
+
+        <!-- 1. PAYROLL HUB -->
+        <div id="tab-payroll" class="tab-content">
+            <div class="monitor-card">
+                <h3 style="margin-bottom:15px; font-family:'Cinzel'; color:var(--accent);">LIVE TERMINAL SURVEILLANCE</h3>
+                <div id="online-list"></div>
+            </div>
+            <div class="payroll-grid" id="payroll-container"></div>
+        </div>
+
+        <!-- 2. ABSENSI LOGS -->
+        <div id="tab-absensi" class="tab-content" style="display:none;">
+            <div class="table-wrap">
+                <table>
+                    <thead><tr><th>Name</th><th>Date & Day</th><th>Status</th><th>Reason</th><th>Proof</th></tr></thead>
+                    <tbody id="absensi-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        const db = getDatabase(initializeApp({ databaseURL: "https://sesa-coffee-default-rtdb.asia-southeast1.firebasedatabase.app" }));
+
+        const currMonth = new Date().toLocaleString('id-ID', { month: 'long' }).toUpperCase();
+
+        // Monitor Online Kasir
+        onValue(ref(db, 'shifts'), (snap) => {
+            const cont = document.getElementById('online-list'); cont.innerHTML = "";
+            const today = new Date().toLocaleDateString('id-ID');
+            if(snap.exists()){
+                Object.values(snap.val()).forEach(s => {
+                    if(s.status === "OPEN" && s.startTime.includes(today)) cont.innerHTML += `<div class="online-pill">${s.cashierName}</div>`;
+                });
+            }
+        });
+
+        // Payroll & Attendance Logic
+        let staff = {}; let permits = []; let shifts = [];
+        onValue(ref(db, 'staff'), (s) => { staff = s.val() || {}; renderAll(); });
+        onValue(ref(db, 'permits'), (s) => { permits = s.val() ? Object.values(s.val()) : []; renderAll(); });
+        onValue(ref(db, 'shifts'), (s) => { shifts = s.val() ? Object.values(s.val()) : []; renderAll(); });
+
+        function renderAll() {
+            const pCont = document.getElementById('payroll-container'); pCont.innerHTML = "";
+            const aBody = document.getElementById('absensi-body'); aBody.innerHTML = "";
+
+            Object.values(staff).forEach(st => {
+                const base = parseInt(st.baseSalary) || 0; const daily = Math.round(base / 30);
+                const ijinL = permits.filter(p => p.name === st.fullName && p.date.includes(currMonth) && p.type === 'IJIN');
+                const workS = shifts.filter(s => s.cashierName === st.fullName && s.startTime.includes(currMonth));
+                const total = base - (ijinL.length * daily);
+                pCont.innerHTML += `<div class="salary-slip"><h3>${st.fullName}</h3><div class="p-row"><span>Base Salary</span><b>Rp ${base.toLocaleString()}</b></div><div class="p-row"><span>Worked</span><b>${workS.length} Days</b></div><div class="p-row" style="color:red"><span>Unpaid Leave</span><b>${ijinL.length} Days (-Rp ${(ijinL.length*daily).toLocaleString()})</b></div><div class="p-row total"><span>NET SALARY</span><span>Rp ${total.toLocaleString()}</span></div></div>`;
+            });
+
+            permits.reverse().forEach(p => {
+                aBody.innerHTML += `<tr><td><b>${p.name}</b></td><td>${p.date}</td><td><span class="badge ${p.type==='IJIN'?'bg-red':'bg-gold'}">${p.type}</span></td><td>${p.reason}</td><td>${p.proofImg ? `<button onclick="viewProof('${p.proofImg}')" class="badge bg-gold" style="color:black; cursor:pointer">VIEW PROOF</button>` : '-'} <button onclick="delLog('${p.id}')" style="color:red; background:none; border:none; margin-left:10px; cursor:pointer;"><i class="fas fa-trash"></i></button></td></tr>`;
+            });
+        }
+
+        window.viewProof = (src) => { document.getElementById('proof-img').src = src; document.getElementById('proofModal').style.display='flex'; };
+        window.closeProof = () => document.getElementById('proofModal').style.display='none';
+        window.delLog = (id) => confirm("Delete?") && remove(ref(db, 'permits/'+id));
+        window.toggleSidebar = () => { document.getElementById('sidebar').classList.toggle('closed'); document.getElementById('main-content').classList.toggle('expanded'); };
+        window.switchTab = (id, el) => { document.querySelectorAll('.tab-content, .nav-item').forEach(x => { x.classList.remove('active'); if(x.className==='tab-content') x.style.display='none'; }); document.getElementById(id).style.display = 'block'; el.classList.add('active'); };
+
+        setInterval(() => { document.getElementById('live-time').innerText = new Date().toLocaleTimeString('id-ID'); }, 1000);
+        setTimeout(() => { document.getElementById('loading-screen').style.opacity = '0'; setTimeout(()=>document.getElementById('loading-screen').style.display='none', 800); }, 3000);
+    </script>
+</body>
+</html>
